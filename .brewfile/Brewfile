@@ -1,0 +1,268 @@
+# tap repositories and their packages
+
+tap argon/mas
+brew mas
+cask android-studio-canary
+cask iterm2-beta
+cask mongodb-compass
+cask toggldesktop-beta
+
+tap caskroom/cask
+cask 5kplayer
+cask alfred
+cask alternote
+cask appcleaner
+cask application-loader
+cask atom
+cask bettertouchtool
+cask brackets
+cask caffeine
+cask ccleaner
+cask chatwork
+cask cheatsheet
+cask coteditor
+cask dash
+cask disk-inventory-x
+cask docker
+cask electron
+cask emacs
+cask etcher
+cask filezilla
+cask firefox
+cask flash-player
+cask flux
+cask genymotion
+cask github-desktop
+cask gitkraken
+cask google-chrome
+cask google-hangouts
+cask google-japanese-ime
+cask horndis
+cask insomniax
+cask java
+cask jd-gui
+cask karabiner-elements
+cask karabiner
+cask keka
+cask kindle
+cask kobo
+cask kodi
+cask messenger
+cask mplayerx
+cask mysqlworkbench
+cask openemu
+cask quip
+cask resolutionator
+cask sequel-pro
+cask simple-comic
+cask sketch
+cask skype
+cask slack
+cask slicy
+cask sourcetree
+cask spark
+cask spotify
+cask sqlitebrowser
+cask stamp
+cask the-unarchiver
+cask vagrant
+cask viber
+cask virtualbox
+cask visual-studio-code
+cask xmind
+cask zeplin
+
+tap caskroom/fonts
+cask font-gandom
+cask font-go-mono
+cask font-go
+cask font-inconsolata
+cask font-ricty-diminished
+cask font-source-code-pro
+cask font-ubuntu
+
+tap caskroom/versions
+
+tap codeclimate/formulae
+brew codeclimate
+
+tap homebrew/boneyard
+
+tap homebrew/bundle
+
+tap homebrew/core
+brew mobile-shell
+brew jpeg
+brew git-review
+brew zsh-completions
+brew gcc@4.9
+brew mysql
+brew go
+brew gdbm
+brew gobject-introspection
+brew glide
+brew fontconfig
+brew subversion
+brew gdk-pixbuf
+brew gmp
+brew nmap
+brew pixman
+brew freetype
+brew python
+brew stow
+brew watch
+brew apr-util
+brew nginx
+brew pidcat
+brew tmux
+brew gnutls
+brew pango
+brew pyenv-virtualenv
+brew python3
+brew isl@0.12
+brew p11-kit
+brew libyaml
+brew mercurial
+brew dbus
+brew gradle
+brew micro
+brew dnsmasq
+brew colordiff
+brew htop
+brew shared-mime-info
+brew cairo
+brew nodebrew
+brew nodenv
+brew apktool
+brew libunistring
+brew redis
+brew automake
+brew axel
+brew sshrc
+brew node-build
+brew libpng
+brew bison
+brew boost
+brew unar
+brew imagemagick
+brew camlp4
+brew jq
+brew gawk
+brew zsh-history-substring-search
+brew wget
+brew bazaar
+brew httping
+brew openssl
+brew postgresql
+brew ack
+brew extract_url
+brew opam
+brew ocaml
+brew icu4c
+brew utf8proc
+brew isl
+brew pkg-config
+brew awscli
+brew git-ssh
+brew apr
+brew libtiff
+brew harfbuzz
+brew vim
+brew xz
+brew terraform
+brew stern
+brew pyenv
+brew readline
+brew pcre
+brew git
+brew mpfr@2
+brew kubernetes-helm
+brew libev
+brew tree
+brew perl
+brew heroku
+brew docker-swarm
+brew emacs
+brew clasp
+brew gmp@4
+brew ctags
+brew fzf
+brew glib
+brew hub
+brew gibo
+brew nomad
+brew libevent
+brew ruby
+brew peco
+brew cmigemo
+brew libtasn1
+brew cask
+brew libmpc@0.8
+brew smali
+brew reattach-to-user-namespace
+brew aspcud
+brew autoconf
+brew gnu-sed
+brew rename
+brew sqlite
+brew libxml2
+brew libcroco
+brew ocamlbuild
+brew cloog
+brew gringo
+brew ansible
+brew urlview
+brew curl
+brew texinfo
+brew oniguruma
+brew nkf
+brew zplug
+brew iproute2mac
+brew librsvg
+brew scons
+brew tig
+brew pstree
+brew ruby-build
+brew node
+brew protobuf
+brew mongodb
+brew libtool
+brew openssl@1.1
+brew libffi
+brew dos2unix
+brew gettext
+brew nettle
+brew docker
+brew rbenv
+brew mpfr
+
+tap homebrew/services
+tap homebrew/versions
+
+tap rcmdnk/file
+brew brew-file
+
+# Cask applications
+cask google-drive
+cask mongohub
+cask robomongo
+
+# App Store applications
+appstore 808647808 ActivityTimer (2.0.5)
+appstore 824171161 Affinity Designer (1.5.5)
+appstore 1028838684 Artpaper (2.3.0)
+appstore 406056744 Evernote (6.11.1)
+appstore 682658836 GarageBand (10.2.0)
+appstore 408981434 iMovie (10.1.6)
+appstore 408981381 iPhoto (9.6.1)
+appstore 723185815 iZip Viewer (2.8.0)
+appstore 409183694 Keynote (7.2)
+appstore 539883307 LINE (5.2.2)
+appstore 715768417 Microsoft Remote Desktop (8.0.27312)
+appstore 409203825 Numbers (4.2)
+appstore 409201541 Pages (6.2)
+appstore 568494494 Pocket (1.6.2)
+appstore 866773894 Quiver (3.0.7)
+appstore 411277085 Resizer (1.4)
+appstore 485812721 TweetDeck (3.9.889)
+appstore 497799835 Xcode (8.3.3)
