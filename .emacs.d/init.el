@@ -1,40 +1,67 @@
+;;; init.el --- Global Initialization for local emacs
+;; Author: Koichi Yoshigoe <koichi.yoshigoe@gmail.com>
+;; Ver. 0.1.0
+
+;;; Visualize boot
+;(add-to-list 'load-path "~/.emacs.d/lisp/")
+;(require 'initchart)
+;(initchart-record-execution-time-of load file)
+;(initchart-record-execution-time-of require feature)
+;;; end of visualize
+
+;;; Code:
 ;; Basics
 (setq backup-inhibited t)
 (setq inhibit-startup-message t)
 (setq delete-auto-save-files t)
+(desktop-save-mode 1)
+
+;; Debug
+(setq debug-on-error t)
+
+;; cask & pallet
+;; cask
+(require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
+(cask-initialize)
+;; pallet
+(require 'pallet)
+
+;; use-package, bind-key
+(require 'use-package)
+(require 'bind-key)
+(unless (require 'use-package nil t)
+  (defmacro use-package (&rest args))
+  (defmacro bind-key (&rest args)) )
 
 ;; others
-(add-to-list 'load-path "~/.emacs.d/lisp/")
 (add-to-list 'load-path "~/.emacs.d/elpa/")
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 
-;; packages melpa
+;; packages elpa & melpa
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-
-;; cask
-(require 'cask)
-(cask-initialize)
+(add-to-list 'package-archives
+             '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 (package-initialize)
+(elpy-enable)
 
-(require 'use-package)
+;; bind-key
+;; (bind-key "<C-return>" 'other-window)
+(bind-key "C-c i" 'indent-region)
+(bind-key "C-c C-i" 'dabbrev-expand)
+(bind-key "C-c /" 'comment-region)
+(bind-key "C-c ;" 'uncomment-region)
+(bind-key "C-c s" 'query-replace)
+(bind-key "C-u" 'scroll-down)
+(bind-key "C-h" 'delete-backward-char)
+(bind-key "M-?" 'help-for-help)
+(bind-key "M-n" 'goto-line)
 
-(global-set-key (kbd "C-c i") 'indent-region)
-(global-set-key (kbd "C-c C-i") 'dabbrev-expand)
-(global-set-key (kbd "C-c /") 'comment-region)
-(global-set-key (kbd "C-c ;") 'uncomment-region)
-(global-set-key (kbd "C-c s") 'query-replace)
-(global-set-key (kbd "C-u") 'scroll-down)
-(global-set-key (kbd "C-h") 'delete-backward-char)
-(global-set-key (kbd "M-?") 'help-for-help)
-(global-set-key (kbd "M-n") 'goto-line)
-(global-linum-mode t)
-
-(setq mouse-wheel-follow-mouse t)
-
-(setq default-tab-width 2)
+;(setq mouse-wheel-follow-mouse t)
 (setq tab-width 2)
-;;(setq indent-tabs-mode nil)
+(setq indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil)
 ;; (defvaralias 'c-basic-offsett 'tab-width)
 ;; (defvaralias 'cperl-indent-level 'tab-width)
 
@@ -44,51 +71,63 @@
 (auto-compression-mode t)
 (show-paren-mode 1)
 
-;; smartparens
-(use-package smartparens)
-(smartparens-global-mode t)
+;; hi-line
+(require 'hl-line)
+(defun global-hl-line-timer-function ()
+  (global-hl-line-unhighlight-all)
+  (let ((global-hl-line-mode t))
+    (global-hl-line-highlight)))
+(setq global-hl-line-timer
+      (run-with-idle-timer 0.3 t 'global-hl-line-timer-function))
+;; (cancel-timer global-hl-line-timer)
+
+;; linum
+;; (global-linum-mode t)
+;; (setq linum-delay t)
+;; (defadvice linum-schedule (around my-linum-schedule () activate)
+;;   (run-with-idle-timer 0.2 nil #'linum-update-current))
 
 ;; whitespace
 (use-package whitespace)
 (setq whitespace-style '(face
-												 trailing
-												 tabs
-												 spaces
-												 empty
-												 space-mark
-												 tab-mark
-												 ))
+                         trailing
+                         tabs
+                         spaces
+                         empty
+                         space-mark
+                         tab-mark
+                         ))
 (setq whitespace-display-mappings
-			'((space-mark ?\u3000 [?\u25a1])
-				;; WARNING: the mapping below has a problem.
-				;; When a TAB occupies exactly one column, it will display the
-				;; character ?\xBB at that column followed by a TAB which goes to
-				;; the next TAB column.
-				;; If this is a problem for you, please, comment the line below.
-				(tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])))
+      '((space-mark ?\u3000 [?\u25a1])
+        ;; WARNING: the mapping below has a problem.
+        ;; When a TAB occupies exactly one column, it will display the
+        ;; character ?\xBB at that column followed by a TAB which goes to
+        ;; the next TAB column.
+        ;; If this is a problem for you, please, comment the line below.
+        (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])))
 ;;(setq whitespace-space-regexp "\\(\u3000+\\)")
 
 ;; color theme
 (load-theme 'ample-zen t)
-;(load-theme 'zenburn t)
+;;(load-theme 'zenburn t)
 
 ;; Color for White spaces
 (setq whitespace-action '(auto-cleanup))
 (defvar my/bg-color "#262626")
 (set-face-attribute 'whitespace-trailing nil
-										:background my/bg-color
-										:foreground "DarkBlue"
-										:underline t)
+                    :background my/bg-color
+                    :foreground "DarkBlue"
+                    :underline t)
 (set-face-attribute 'whitespace-tab nil
-										:background my/bg-color
-										:foreground "LightSkyBlue"
-										:underline t)
+                    :background my/bg-color
+                    :foreground "LightSkyBlue"
+                    :underline t)
 (set-face-attribute 'whitespace-space nil
-										:background my/bg-color
-										:foreground "GreenYellow"
-										:weight 'bold)
+                    :background my/bg-color
+                    :foreground "GreenYellow"
+                    :weight 'bold)
 (set-face-attribute 'whitespace-empty nil
-										:background my/bg-color)
+                    :background my/bg-color)
 (global-whitespace-mode 1)
 
 ;;; 補完機能
@@ -114,8 +153,6 @@
 (setq locale-config-system 'utf-8-hfs)
 ;;(set-language-environment "Japanese")
 
-; (setq debug-on-error t)
-
 ;; evernote-mode
 ;;(add-to-list 'load-path "~/.emacs.d/evernote-mode/")
 ;;(use-package evernote-mode)
@@ -130,7 +167,7 @@
 ;; (global-set-key "\C-cep" 'evernote-post-region)
 ;; (global-set-key "\C-ceb" 'evernote-browser)
 ;; (dolist (dir (list
-;;		"~/.rbenv/versions/2.1.2/bin"
+;;     "~/.rbenv/versions/2.1.2/bin"
 ;; ))
 ;; (when (and (file-exists-p dir) (not (member dir exec-path)))
 ;; (setenv "PATH" (concat dir ":" (getenv "PATH")))
@@ -142,148 +179,6 @@
 ;; If there is more than one, they won't work right.
 ;; '(evernote-developer-token "S=s21:U=206b30:E=14fd6e01eb2:C=1487f2ef180:P=1cd:A=en-devtoken:V=2:H=92b5761c623a64fda94c526df58d9668")
 
-;; PowerLine
-(powerline-default-theme)
-(setq powerline-arrow-shape 'arrow)
-
-;; rainbow-delimiters
-;(use-package rainbow-delimiters)(
-(rainbow-delimiters-mode)
-
-;; mutiple-cursors
-;(use-package multiple-cursors)
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-(global-unset-key (kbd "M-<down-mouse-1>"))
-(global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
-
-;; helm
-;(use-package helm)
-(global-set-key (kbd "C-c h") 'helm-mini)
-(use-package helm-config)
-(helm-descbinds-mode)
-(when (require 'helm-config nil t)
-	(helm-mode 1))
-(define-key helm-map (kbd "C-h") 'delete-backward-char)
-(define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
-;; Emulate `kill-line' in helm minibuffer
-(setq helm-delete-minibuffer-contents-from-point t)
-(defadvice helm-delete-minibuffer-contents (before helm-emulate-kill-line activate)
-	"Emulate `kill-line' in helm minibuffer"
-	(kill-new (buffer-substring (point) (field-end))))
-;; For find-file etc.
-(define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
-;; For helm-find-files etc.
-(define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
-
-;; migemo
-(use-package helm-migemo)
-(with-eval-after-load "helm-migemo"
-	(defun helm-compile-source--candidates-in-buffer (source)
-		(helm-aif (assoc 'candidates-in-buffer source)
-				(append source
-								`((candidates
-									 . ,(or (cdr it)
-													(lambda ()
-														;; Do not use `source' because other plugins
-														;; (such as helm-migemo) may change it
-														(helm-candidates-in-buffer (helm-get-current-source)))))
-									(volatile) (match identity)))
-			source))
-	(defalias 'helm-mp-3-get-patterns 'helm-mm-3-get-patterns)
-	(defalias 'helm-mp-3-search-base 'helm-mm-3-search-base))
-(setq helm-use-migemo t)
-(setq migemo-command "cmigemo")
-(setq migemo-options '("-q" "--emacs"))
-(setq migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict")
-(load-library "migemo")
-(migemo-init)
-
-;; json-mode
-;;(use-package json-mode)
-;;(use-package flymake-json)
-(setq js-indent-level 2)
-(add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
-(add-hook 'json-mode-hook 'flymake-json-load)
-
-;; python
-;;(setq python-indent 2)
-;;(setq py-indent-offset 2)
-(use-package jedi)
-(use-package python-mode)
-(add-to-list 'auto-mode-alist '("\.py$" . python-mode))
-(setq-default py-shell-name "ipython")
-(setq-default py-which-bufname "IPython")
-(setq py-python-command-args
-			'("--gui=wx" "--pylab=wx" "-colors" "Linux"))
-;; switch to the interpreter after executing code
-(setq py-shell-switch-buffers-on-execute-p t)
-(setq py-switch-buffers-on-execute-p t)
-;; don't split windows
-;; (setq py-split-windows-on-execute-p nil)
-;; try to automagically figure out indentation
-(setq py-smart-indentation t)
-(setq py-force-py-shell-name-p t)
-(autoload 'pylookup-lookup "pylookup")
-(autoload 'pylookup-update "pylookup")
-(add-hook 'python-mode-hook 'jedi:setup)
-(add-hook 'python-mode-hook 'jedi:ac-setup)
-(add-hook 'python-mode-hook 'jedi:complete-on-dot)
-(add-hook 'python-mode-hook 'guess-style-guess-tabs-mode)
-(add-hook 'python-mode-hook 'anaconda-mode)
-(add-hook 'python-mode-hook 'eldoc-mode)
-(add-hook 'python-mode-hook 'elpy-enable)
-(add-hook 'python-mode-hook (lambda()
-															(when indent-tabs-mode
-																(guess-style-guess-tab-width))))
-(define-key python-mode-map (kbd "C-;") 'jedi:complete)
-
-;; php
-;; (setq php-mode-force-pear t)
-;; (add-hook 'php-mode-hook
-;; 					(lambda ()
-;; 						(use-package php-completion) ))
-;;						'my-fetch-php-completions))
-;; (defun my-fetch-php-completions ()
-;;		(if (and (boundp 'my-php-symbol-list)
-;;						 my-php-symbol-list)
-;;				my-php-symbol-list
-;;			(message "Fetching completion list...")
-;;			(with-current-buffer
-;;					(url-retrieve-synchronously "http://www.php.net/manual/en/indexes.functions.php")
-;;				(goto-char (point-min))
-;;				(message "Collecting function names...")
-;;				(setq my-php-symbol-list nil)
-;;				(while (re-search-forward "<a[^>]*class=\"index\"[^>]*>\\([^<]+\\)</a>" nil t)
-;;					(push (match-string-no-properties 1) my-php-symbol-list))
-;;				my-php-symbol-list)))
-
-
-;; ido-mode
-;; (use-package ido)
-;; (ido-mode 1)
-
-;; tabbar
-;; (tabbar-mode 1)
-
-;; neotree
-(use-package neotree)
-(global-set-key [f8] 'neotree-toggle)
-
-
-
-;; Markdown Mode
-;; (use-package markdown-mode
-;;							 :mode ("\\.md\\'" . gfm-mode))
-
-;; ;; smart-newline
-;; (use-package smart-newline
-;;							 :config
-;;							 (progn
-;;								 (bind-key "C-m" 'smart-newline)))
-
 ;; menu-bar
 (menu-bar-mode -1)
 
@@ -294,8 +189,8 @@
 ;; yasnippet
 (use-package yasnippet)
 (setq yas-snippet-dirs
-			'("~/.emacs.d/snippet"
-				))
+      '("~/.emacs.d/snippets"
+        ))
 (yas-global-mode 1)
 
 ;; paradox
@@ -304,10 +199,10 @@
 ;;----------------------------------------------------------------------------
 (use-package server)
 (unless (server-running-p)
-		(server-start))
+  (server-start))
 
 ;; indent-guide
-;; (use-package indent-guide)
+(use-package indent-guide)
 ;; (indent-guide-global-mode)
 ;; (setq indent-guide-delay 0.1)
 ;; (custom-set-variables
@@ -319,11 +214,45 @@
 ;;		 (quote
 ;;			("3ed645b3c08080a43a2a15e5768b893c27f6a02ca3282576e3bc09f3d9fa3aaa" "28ec8ccf6190f6a73812df9bc91df54ce1d6132f18b4c8fcc85d45298569eb53" "19352d62ea0395879be564fc36bc0b4780d9768a964d26dfae8aad218062858d" default)))
 
-;; '(python-shell-interpreter "ipython"))
-
 ;; async
 (autoload 'dired-async-mode "dired-async.el" nil t)
 (dired-async-mode 1)
 
 ;; shell-mode
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+;; flycheck
+(use-package flycheck)
+(flycheck-mode 1)
+(global-flycheck-mode 1)
+(setq flycheck-check-syntax-automatically '(mode-enabled save))
+
+;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-idle-delay t)
+ '(helm-ag-insert-at-point (quote symbol))
+ '(helm-candidate-number-limit 500)
+ '(helm-command-prefix-key nil)
+ '(helm-exit-idle-delay 0)
+ '(helm-find-files-doc-header "" t)
+ '(helm-gtags-pulse-at-cursor nil)
+ '(helm-input-idle-delay 0)
+ '(package-selected-packages
+   (quote
+    (kotlin-mode nginx-mode zenburn-theme yascroll yaml-mode wgrep vagrant-tramp use-package tss tree-mode tide terraform-mode ssh-config-mode smartrep smart-newline sequential-command rainbow-delimiters qiita python-mode py-yapf projectile prodigy powerline popwin php-mode pbcopy pallet nyan-mode neotree multiple-cursors mmm-mode markdown-preview-eww magit jinja2-mode jedi jade-mode idle-highlight-mode htmlize highlight-symbol helm-themes helm-migemo helm-ls-git helm-gtags helm-git-grep helm-git helm-ghq helm-describe-modes helm-descbinds graphene golden-ratio go-mode gitignore-mode git-modes git-gutter git gist flymake-yaml flymake-python-pyflakes flymake-json flycheck-cask expand-region drag-stuff dockerfile-mode docker dash-functional company-quickhelp company-jedi column-marker col-highlight coffee-mode auto-yasnippet auto-install anzu ansible android-mode anaconda-mode ample-zen-theme)))
+ '(pyenv-mode t)
+ '(safe-local-variable-values (quote ((encoding . utf-8)))))
+
+(defadvice flymake-post-syntax-check (before flymake-force-check-was-interrupted)
+  (setq flymake-check-was-interrupted t))
+(ad-activate 'flymake-post-syntax-check)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
