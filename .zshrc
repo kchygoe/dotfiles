@@ -237,7 +237,7 @@ if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
 # Homebrew
-export HOMEBREW_GITHUB_API_TOKEN='6edd03f51e0d45cb869819a306b3b59f351fba49'
+#export HOMEBREW_GITHUB_API_TOKEN='xx'
 
 # Delay
 export KEYTIMEOUT=0
