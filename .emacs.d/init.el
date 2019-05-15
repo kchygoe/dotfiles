@@ -6,8 +6,10 @@
 ;;; profile-start
 ;; (profiler-start 'cpu)
 
-;;; My lisps
-(add-to-list 'load-path "~/.emacs.d/lisp/")
+;;; mylisps/site-lisp
+(add-to-list 'load-path
+             "~/.emacs.d/lisp/"
+             "~/.emacs.d/site-lisp/")
 (setq init-loader-byte-compile t)
 
 ;;; Visualize boot
@@ -25,9 +27,12 @@
 ; (setq make-backup-files nil)
 (setq frame-title-format "%f")
 (fset 'yes-or-no-p 'y-or-n-p)
+
+;; desktop file
 (desktop-save-mode 1)
 (setq desktop-save t)
 (setq desktop-restore-eager 10)
+(setq desktop-path '("~/.emacs.d/desktop"))
 (global-auto-revert-mode 1)
 
 ;; Debug
@@ -56,8 +61,7 @@
 ;(require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
-(add-to-list 'package-archives
-	     '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+(add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 ;(package-initialize)
 ; (elpy-enable)
 
@@ -216,7 +220,7 @@
 ;;----------------------------------------------------------------------------
 ;; Allow access from emacsclient
 ;;----------------------------------------------------------------------------
-(use-package server)
+;;(use-package server)
 ;; (unless (server-running-p)
 ;;   (server-start))
 
@@ -263,9 +267,7 @@
   :hook (after-init . which-key-mode))
 
 ;; pyenv
-(use-package pyenv-mode
-  :hook
-  (pyenv-mode))
+(use-package pyenv-mode)
 
 ;;;
 ;;; init.el ends here
@@ -288,7 +290,7 @@
  '(ivy-mode t)
  '(package-selected-packages
    (quote
-    (pyenv-mode-auto company-lsp lsp-ui lsp-mode helm-company helm-go-package helm-google helm-grepint company-c-headers init-loader which-key amx zenburn-theme yascroll wgrep-helm vagrant-tramp use-package tss tree-mode tide terraform-mode ssh-config-mode smartrep smart-newline sequential-command rainbow-delimiters qiita python-mode py-yapf projectile prodigy powerline popwin php-mode pbcopy pallet nyan-mode nginx-mode neotree multiple-cursors mmm-mode markdown-preview-mode markdown-preview-eww markdown-mode+ kubernetes-evil k8s-mode jinja2-mode jedi jade-mode indent-guide idle-highlight-mode htmlize highlight-symbol helm-themes helm-migemo helm-ls-git helm-gtags helm-git-grep helm-git helm-ghq helm-describe-modes helm-descbinds graphene golden-ratio go-autocomplete gitignore-mode git-gutter git gist ghub flymake-yaml flymake-python-pyflakes flymake-json flycheck-cask expand-region elpy drag-stuff dockerfile-mode docker dash-functional company-quickhelp company-jedi company-go coffee-mode auto-yasnippet apache-mode anzu ansible android-mode ample-zen-theme)))
+    (helm-lsp lsp-go lsp-python lsp-sh pyenv-mode-auto company-lsp lsp-ui lsp-mode helm-company helm-go-package helm-google helm-grepint company-c-headers init-loader which-key amx zenburn-theme yascroll wgrep-helm vagrant-tramp use-package tss tree-mode tide terraform-mode ssh-config-mode smartrep smart-newline sequential-command rainbow-delimiters qiita python-mode py-yapf projectile prodigy powerline popwin php-mode pbcopy pallet nyan-mode nginx-mode neotree multiple-cursors mmm-mode markdown-preview-mode markdown-preview-eww markdown-mode+ kubernetes-evil k8s-mode jinja2-mode jedi jade-mode indent-guide idle-highlight-mode htmlize highlight-symbol helm-themes helm-migemo helm-ls-git helm-gtags helm-git-grep helm-git helm-ghq helm-describe-modes helm-descbinds graphene golden-ratio go-autocomplete gitignore-mode git-gutter git gist ghub flymake-yaml flymake-python-pyflakes flymake-json flycheck-cask expand-region elpy drag-stuff dockerfile-mode docker dash-functional company-quickhelp company-jedi company-go coffee-mode auto-yasnippet apache-mode anzu ansible android-mode ample-zen-theme)))
  '(pyenv-mode t)
  '(safe-local-variable-values (quote ((encoding . utf-8))))
  '(which-key-mode t))

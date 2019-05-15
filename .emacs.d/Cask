@@ -98,6 +98,8 @@
 (depends-on "log4e")
 (depends-on "logito")
 (depends-on "lsp-mode")
+(depends-on "lsp-python")
+(depends-on "lsp-sh")
 (depends-on "lsp-ui")
 (depends-on "magit")
 (depends-on "magit-popup")

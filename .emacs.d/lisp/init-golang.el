@@ -5,6 +5,14 @@
 (add-to-list 'exec-path (expand-file-name "~/.go/bin"))
 (use-package go-mode)
 (use-package company-go)
+(use-package lsp-go
+  :after (lsp-mode go-mode)
+  :custom (lsp-go-language-server-flags '(
+    "-gocodecompletion"
+    "-diagnostics"
+    "-lint-tool=golint"))
+  :hook (go-mode . lsp-go-enable)
+  :commands lsp-go-enable)
 
 ;; (add-hook 'go-mode-hook (lambda()
 ;;                           (add-hook 'before-save-hook 'gofmt-before-save)
