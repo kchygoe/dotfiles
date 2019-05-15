@@ -5,7 +5,7 @@
 ;;(require 'python)
 
 (use-package pyenv-mode)
-n(use-package jedi)
+(use-package jedi)
 (use-package python-mode)
 (add-to-list 'auto-mode-alist '("\.py\'" . python-mode))
 (setq python-shell-interpreter "ipython"
@@ -49,7 +49,6 @@ n(use-package jedi)
 (define-key python-mode-map (kbd "C-c j") 'jedi:complete)
 
 (use-package pip-requirements)
-
 (provide 'init-python)
 
 ;;; init-python.el ends here
