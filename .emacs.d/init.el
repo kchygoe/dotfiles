@@ -234,9 +234,16 @@
 
 ;; flycheck
 (use-package flycheck)
-(flycheck-mode 1)
 (global-flycheck-mode 1)
 (setq flycheck-check-syntax-automatically '(mode-enabled save))
+
+;; lsp-mode
+(use-package lsp-mode
+  :commands lsp)
+(use-package lsp-ui
+  :commands lsp-ui-mode)
+(use-package company-lsp
+  :commands comapny-lsp)
 
 ;; neotree
 (setq neo-theme 'icon)
@@ -254,6 +261,11 @@
 (use-package which-key
   :diminish which-key-mode
   :hook (after-init . which-key-mode))
+
+;; pyenv
+(use-package pyenv-mode
+  :hook
+  (pyenv-mode))
 
 ;;;
 ;;; init.el ends here
@@ -276,7 +288,7 @@
  '(ivy-mode t)
  '(package-selected-packages
    (quote
-    (helm-company helm-go-package helm-google helm-grepint company-c-headers init-loader which-key amx zenburn-theme yascroll wgrep-helm vagrant-tramp use-package tss tree-mode tide terraform-mode ssh-config-mode smartrep smart-newline sequential-command rainbow-delimiters qiita python-mode py-yapf projectile prodigy powerline popwin php-mode pbcopy pallet nyan-mode nginx-mode neotree multiple-cursors mmm-mode markdown-preview-mode markdown-preview-eww markdown-mode+ kubernetes-evil k8s-mode jinja2-mode jedi jade-mode indent-guide idle-highlight-mode htmlize highlight-symbol helm-themes helm-migemo helm-ls-git helm-gtags helm-git-grep helm-git helm-ghq helm-describe-modes helm-descbinds graphene golden-ratio go-autocomplete gitignore-mode git-gutter git gist ghub flymake-yaml flymake-python-pyflakes flymake-json flycheck-cask expand-region elpy drag-stuff dockerfile-mode docker dash-functional company-quickhelp company-jedi company-go coffee-mode auto-yasnippet apache-mode anzu ansible android-mode ample-zen-theme)))
+    (pyenv-mode-auto company-lsp lsp-ui lsp-mode helm-company helm-go-package helm-google helm-grepint company-c-headers init-loader which-key amx zenburn-theme yascroll wgrep-helm vagrant-tramp use-package tss tree-mode tide terraform-mode ssh-config-mode smartrep smart-newline sequential-command rainbow-delimiters qiita python-mode py-yapf projectile prodigy powerline popwin php-mode pbcopy pallet nyan-mode nginx-mode neotree multiple-cursors mmm-mode markdown-preview-mode markdown-preview-eww markdown-mode+ kubernetes-evil k8s-mode jinja2-mode jedi jade-mode indent-guide idle-highlight-mode htmlize highlight-symbol helm-themes helm-migemo helm-ls-git helm-gtags helm-git-grep helm-git helm-ghq helm-describe-modes helm-descbinds graphene golden-ratio go-autocomplete gitignore-mode git-gutter git gist ghub flymake-yaml flymake-python-pyflakes flymake-json flycheck-cask expand-region elpy drag-stuff dockerfile-mode docker dash-functional company-quickhelp company-jedi company-go coffee-mode auto-yasnippet apache-mode anzu ansible android-mode ample-zen-theme)))
  '(pyenv-mode t)
  '(safe-local-variable-values (quote ((encoding . utf-8))))
  '(which-key-mode t))
