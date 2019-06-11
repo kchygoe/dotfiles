@@ -5,6 +5,8 @@
 (add-to-list 'exec-path (expand-file-name "~/.go/bin"))
 (use-package go-mode)
 (use-package company-go)
+(use-package go-autocomplete)
+(use-package go-flymake)
 (use-package lsp-go
   :after (lsp-mode go-mode)
   :custom (lsp-go-language-server-flags '(

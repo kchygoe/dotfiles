@@ -65,7 +65,6 @@
 ;(package-initialize)
 ; (elpy-enable)
 
-
 ;; bind-key
 ;; (bind-key "<C-return>" 'other-window)
 (bind-key "C-c i" 'indent-region)
@@ -190,7 +189,7 @@
 (define-key company-active-map (kbd "C-f") 'company-complete-selection)
 (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
 
-;; yasnippetとの連携
+;; company with yasnippet
 (defvar company-mode/enable-yas t
   "Enable yasnippet for all backends.")
 (defun company-mode/backend-with-yas (backend)
@@ -247,7 +246,7 @@
 (use-package lsp-ui
   :commands lsp-ui-mode)
 (use-package company-lsp
-  :commands comapny-lsp)
+  :commands company-lsp)
 
 ;; neotree
 (setq neo-theme 'icon)
@@ -290,7 +289,7 @@
  '(ivy-mode t)
  '(package-selected-packages
    (quote
-    (helm-lsp lsp-go lsp-python lsp-sh pyenv-mode-auto company-lsp lsp-ui lsp-mode helm-company helm-go-package helm-google helm-grepint company-c-headers init-loader which-key amx zenburn-theme yascroll wgrep-helm vagrant-tramp use-package tss tree-mode tide terraform-mode ssh-config-mode smartrep smart-newline sequential-command rainbow-delimiters qiita python-mode py-yapf projectile prodigy powerline popwin php-mode pbcopy pallet nyan-mode nginx-mode neotree multiple-cursors mmm-mode markdown-preview-mode markdown-preview-eww markdown-mode+ kubernetes-evil k8s-mode jinja2-mode jedi jade-mode indent-guide idle-highlight-mode htmlize highlight-symbol helm-themes helm-migemo helm-ls-git helm-gtags helm-git-grep helm-git helm-ghq helm-describe-modes helm-descbinds graphene golden-ratio go-autocomplete gitignore-mode git-gutter git gist ghub flymake-yaml flymake-python-pyflakes flymake-json flycheck-cask expand-region elpy drag-stuff dockerfile-mode docker dash-functional company-quickhelp company-jedi company-go coffee-mode auto-yasnippet apache-mode anzu ansible android-mode ample-zen-theme)))
+    (vue-html-mode vue-mode github-browse-file github-issues github-search helm-open-github kubernetes magit page-break-lines smartparens transient web-mode helm-flymake dashboard dashboard-hackernews dashboard-project-status helm-lsp lsp-go lsp-python lsp-sh pyenv-mode-auto company-lsp lsp-ui lsp-mode helm-company helm-go-package helm-google helm-grepint company-c-headers init-loader which-key amx zenburn-theme yascroll wgrep-helm vagrant-tramp use-package tss tree-mode tide terraform-mode ssh-config-mode smartrep smart-newline sequential-command rainbow-delimiters qiita python-mode py-yapf projectile prodigy powerline popwin php-mode pbcopy pallet nyan-mode nginx-mode neotree multiple-cursors mmm-mode markdown-preview-mode markdown-preview-eww markdown-mode+ kubernetes-evil k8s-mode jinja2-mode jedi jade-mode indent-guide idle-highlight-mode htmlize highlight-symbol helm-themes helm-migemo helm-ls-git helm-gtags helm-git-grep helm-git helm-ghq helm-describe-modes helm-descbinds graphene golden-ratio go-autocomplete gitignore-mode git-gutter git gist ghub flymake-yaml flymake-python-pyflakes flymake-json flycheck-cask expand-region elpy drag-stuff dockerfile-mode docker dash-functional company-quickhelp company-jedi company-go coffee-mode auto-yasnippet apache-mode anzu ansible android-mode ample-zen-theme)))
  '(pyenv-mode t)
  '(safe-local-variable-values (quote ((encoding . utf-8))))
  '(which-key-mode t))
