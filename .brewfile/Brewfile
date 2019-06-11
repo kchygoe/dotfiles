@@ -1,10 +1,11 @@
+
 # tap repositories and their packages
 
 tap argon/mas
 brew mas
 cask android-studio-canary
 cask iterm2-beta
-cask mongodb-compass
+cask mongodb-compass-beta
 cask toggldesktop-beta
 
 tap caskroom/cask
@@ -237,6 +238,7 @@ brew rbenv
 brew mpfr
 
 tap homebrew/services
+
 tap homebrew/versions
 
 tap rcmdnk/file
