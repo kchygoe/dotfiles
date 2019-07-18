@@ -1,30 +1,36 @@
 ;;; init-helm -- helm config
+;;; Commentary:
 ;;; Code:
 
-(use-package helm)
+(use-package helm
+  :bind (("M-x" . helm-M-x)
+         ("C-c h" . helm-mini)
+         ("C-c r" . helm-recentf)
+         ("C-c C-h i" . helm-imenu)
+         ("C-c C-h k" . helm-show-kill-ring)
+         :map helm-map
+         ("C-h" . delete-backward-char)
+         ("TAB" . helm-execute-persistent-action)
+         ("C-z" . helm-select-action))
+  :config
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  ;; (define-key helm-read-file-map (kbd "C-h") 'delete-backward-char)
+  ;; (define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
+  ;; (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
+  ;; (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
+  ;; (define-key helm-read-file-map (kbd "C-z") 'helm-select-action)
+  ;; (define-key helm-find-files-map (kbd "C-z") 'helm-select-action)
+  (global-set-key (kbd "C-c h") 'helm-command-prefix)
+  (helm-mode 1)
+  (helm-descbinds-install)
+  (helm-descbinds-mode +1)
+  ;; Emulate `kill-line' in helm minibuffer
+  (setq helm-delete-minibuffer-contents-from-point t)
+  ;; (defadvice helm-delete-minibuffer-contents (before helm-emulate-kill-line activate)
+  ;; (kill-new (buffer-substring (point) (field-end))))
+  )
 (use-package helm-config)
-
-(helm-mode +1)
-(helm-descbinds-install)
-(helm-descbinds-mode +1)
-
-;; helm keybinds
-(bind-key "M-x" 'helm-M-x)
-(bind-key "C-c h" 'helm-mini)
-(bind-key "C-c r" 'helm-recentf)
-(bind-key  "C-c C-h i" 'helm-imenu)
-(bind-key  "C-c C-h k" 'helm-show-kill-ring)
-(define-key helm-map (kbd "C-h") 'delete-backward-char)
-(define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
-;; Emulate `kill-line' in helm minibuffer
-(setq helm-delete-minibuffer-contents-from-point t)
-(defadvice helm-delete-minibuffer-contents (before helm-emulate-kill-line activate)
-  "Emulate `kill-line' in helm minibuffer"
-  (kill-new (buffer-substring (point) (field-end))))
-;; For find-file etc.
-(define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
-;; For helm-find-files etc.
-(define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
 
 (custom-set-variables
  '(helm-input-idle-delay 0)
@@ -32,7 +38,9 @@
  '(helm-candidate-number-limit 500)
  '(helm-ag-insert-at-point 'symbol)
  '(helm-find-files-doc-header "")
- '(helm-command-prefix-key nil))
+ '(helm-command-prefix-key nil)
+ '(helm-gtags-pulse-at-cursor nil) ;gtags
+ )
 
 (with-eval-after-load 'helm
   (helm-descbinds-mode)
@@ -46,9 +54,6 @@
   (define-key helm-find-files-map (kbd "C-M-u") #'helm-find-files-down-one-level)
   (define-key helm-find-files-map (kbd "C-c C-o") #'helm-ff-run-switch-other-window))
 
-;; gtags
-(custom-set-variables
- '(helm-gtags-pulse-at-cursor nil))
 
 (with-eval-after-load 'helm-gtags
   (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
@@ -88,4 +93,6 @@
 ;; (load-library "migemo")
 ;; (migemo-init)
 
+
+(provide 'init-helm)
 ;;; init-helm.el ends here

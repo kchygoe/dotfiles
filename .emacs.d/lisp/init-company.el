@@ -1,41 +1,59 @@
 ;;; init-company.el -- company
 ;;; Commentary:
 ;;; Code:
-(use-package company)
-(global-company-mode +1)
-(company-quickhelp-mode +1)
-(custom-set-variables
- '(company-idle-delay nil))
-(define-key company-active-map (kbd "M-n") nil)
-(define-key company-active-map (kbd "M-p") nil)
-(define-key company-active-map (kbd "C-n") 'company-select-next)
-(define-key company-active-map (kbd "C-p") 'company-select-previous)
-(define-key company-search-map (kbd "C-n") 'company-select-next)
-(define-key company-search-map (kbd "C-p") 'company-select-previous)
-(define-key company-active-map (kbd "C-h") nil)
-(define-key company-active-map (kbd "C-s") 'company-filter-candidates)
-(define-key company-active-map (kbd "C-i") 'company-complete-selection)
-(define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
-(define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
-(define-key company-active-map (kbd "M-d") 'company-show-doc-buffer)
+(use-package company
+  :bind (
+         :map company-active-map
+         ( "M-n" . nil)
+         ( "M-p" . nil)
+         ( "C-n" . company-select-next)
+         ( "C-p" . company-select-previous)
+         ( "C-h" . nil)
+         ( "C-s" . company-filter-candidates)
+         ( "C-i" . company-complete-selection)
+         ( "<tab>" . company-complete-common-or-cycle)
+         ( "M-d" . company-show-doc-buffer)
+         :map company-search-map
+         ("C-n" . company-select-next)
+         ("C-p" . company-select-previous)
+         :map emacs-lisp-mode-map
+         ("C-M-i" . company-complete))
+  :config
+  (global-company-mode +1)
+  (company-quickhelp-mode +1)
+  (custom-set-variables '(company-idle-delay nil))
+  (setq company-transformers '(company-sort-by-backend-importance))
+  (setq company-idle-delay 0.2)
+  (setq company-minimum-prefix-length 3)
+  (setq company-selection-wrap-around t)
+  (setq completion-ignore-case t)
+  ;; (setq company-dabbrev-downcase nil)
+  ;; like auto-complete
+  (set-face-attribute 'company-tooltip nil
+                      :foreground "black" :background "lightgrey")
+  (set-face-attribute 'company-tooltip-common nil
+                      :foreground "black" :background "lightgrey")
+  (set-face-attribute 'company-tooltip-common-selection nil
+                      :foreground "white" :background "steelblue")
+  (set-face-attribute 'company-tooltip-selection nil
+                      :foreground "black" :background "steelblue")
+  (set-face-attribute 'company-preview-common nil
+                      :background nil :foreground "lightgrey" :underline t)
+  (set-face-attribute 'company-scrollbar-fg nil
+                      :background "orange")
+  (set-face-attribute 'company-scrollbar-bg nil
+                      :background "gray40"))
 
-(setq company-minimum-prefix-length 1)
-(setq company-selection-wrap-around t)
+;; company with yasnippet
+(defvar company-backends)
+(defvar company-mode/enable-yas t
+  "Enable yasnippet for all backends.")
+(defun company-mode/backend-with-yas (backend)
+  (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+      backend
+    (append (if (consp backend) backend (list backend))
+            '(:with company-yasnippet))))
+(setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
 
-;; like auto-complete
-(set-face-attribute 'company-tooltip nil
-                    :foreground "black" :background "lightgrey")
-(set-face-attribute 'company-tooltip-common nil
-                    :foreground "black" :background "lightgrey")
-(set-face-attribute 'company-tooltip-common-selection nil
-                    :foreground "white" :background "steelblue")
-(set-face-attribute 'company-tooltip-selection nil
-                    :foreground "black" :background "steelblue")
-(set-face-attribute 'company-preview-common nil
-                    :background nil :foreground "lightgrey" :underline t)
-(set-face-attribute 'company-scrollbar-fg nil
-                    :background "orange")
-(set-face-attribute 'company-scrollbar-bg nil
-                    :background "gray40")
-
+(provide 'init-company)
 ;;; init-company.el ends here

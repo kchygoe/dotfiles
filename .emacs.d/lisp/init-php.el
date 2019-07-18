@@ -1,4 +1,6 @@
-;; PHP
+;;; PHP -- php config
+;;; Commentary:
+;;; Code:
 
 (use-package php-mode)
 (use-package smarty-mode)
@@ -42,3 +44,7 @@
 ;;       (while (re-search-forward "<a[^>]*class=\"index\"[^>]*>\\([^<]+\\)</a>" nil t)
 ;;         (push (match-string-no-properties 1) my-php-symbol-list))
 ;;       my-php-symbol-list)))
+
+(provide 'init-php)
+
+;;; init-php.el ends here
