@@ -4,3 +4,5 @@ snippets/*
 smex-items
 tramp
 *.elc
+./desktop/*
+.emacs.desktop

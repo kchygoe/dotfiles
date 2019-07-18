@@ -362,11 +362,13 @@
 
 ;; neotree
 (use-package neotree
+  :bind
+  ("C-o" . neotree-toggle)
   :config
   (setq neo-theme 'icon)
   (setq neo-persist-show t)
   (setq neo-smart-open t)
-  (global-set-key "\C-o" 'neotree-toggle))
+  (setq-default neo-show-hidden-files t))
 
 ;; ido-mode
 ;; (use-package ido)
