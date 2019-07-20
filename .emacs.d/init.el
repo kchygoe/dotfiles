@@ -2,6 +2,8 @@
 ;; Author: Koichi Yoshigoe <koichi.yoshigoe@gmail.com>
 ;; Ver. 0.1.1
 ;;; Commentary:
+;; emacs is fun
+
 ;;; Code:
 
 ;;; profile-start
@@ -60,7 +62,7 @@
 (desktop-save-mode 1)
 (setq desktop-save t)
 (setq desktop-restore-eager 10)
-(setq desktop-path '("~/.emacs.d/desktop"))
+(setq desktop-path '("~/.emacs.d/desktop/"))
 (global-auto-revert-mode 1)
 
 ;; Debug
@@ -84,21 +86,18 @@
 
 ;; pallet for cask
 (use-package pallet
-  :defer t
-  :config
-  (pallet-mode t))
+  :no-require t
+  :config (pallet-mode t))
 
 ;; packages elpa & melpa
-;(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
-(add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/") t)
-
-;(package-initialize)
-; (elpy-enable)
-
+(setq package-archives '(
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("gnu" . "https://elpa.gnu.org/packages/")
+                         ("elpy" . "https://jorgenschaefer.github.io/packages/")
+                         ("org" . "http://orgmode.org/elpa/")
+                         ))
 ;; bind-key
-;; (bind-key "<C-return>" 'other-window)
+(bind-key "<C-return>" 'other-window)
 (bind-key "C-c i" 'indent-region)
 (bind-key "C-c C-i" 'dabbrev-expand)
 (bind-key "C-c ;" 'comment-region)
@@ -116,10 +115,7 @@
 ;; (defvaralias 'c-basic-offsett 'tab-width)
 ;; (defvaralias 'cperl-indent-level 'tab-width)
 
-;;(setq kill-whole-line t)
 (put 'upcase-region 'disabled nil)
-;;(mouse-wheel-mode t)
-;;(auto-compression-mode t)
 (show-paren-mode 1)
 
 ;; linum
@@ -130,55 +126,71 @@
 
 (use-package helm
   :bind (("M-x" . helm-M-x)
-         ("C-c h" . helm-mini)
+         ("C-x b" . helm-mini)
          ("C-c r" . helm-recentf)
          ("C-c C-h i" . helm-imenu)
          ("C-c C-h k" . helm-show-kill-ring)
+         ("C-x C-f" . helm-find-files)
+         ("C-c h" . helm-command-prefix)
          :map helm-map
          ("C-h" . delete-backward-char)
          ("TAB" . helm-execute-persistent-action)
          ("C-z" . helm-select-action))
   :config
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
   ;; (define-key helm-read-file-map (kbd "C-h") 'delete-backward-char)
   ;; (define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
   ;; (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
   ;; (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
   ;; (define-key helm-read-file-map (kbd "C-z") 'helm-select-action)
   ;; (define-key helm-find-files-map (kbd "C-z") 'helm-select-action)
-  (global-set-key (kbd "C-c h") 'helm-command-prefix)
   (helm-mode 1)
   (helm-descbinds-install)
   (helm-descbinds-mode +1)
-  ;; Emulate `kill-line' in helm minibuffer
-  (setq helm-delete-minibuffer-contents-from-point t)
   ;; (defadvice helm-delete-minibuffer-contents (before helm-emulate-kill-line activate)
   ;; (kill-new (buffer-substring (point) (field-end))))
+   :custom
+   (helm-delete-minibuffer-contents-from-point t)
   )
 (use-package helm-config)
 (use-package helm-swoop
-  :config
-  (global-set-key (kbd "M-i") 'helm-swoop)
-  (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
-  (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
-  (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
-  (setq helm-multi-swoop-edit-save t)
-  (setq helm-swoop-split-with-multiple-windows nil)
-  (setq helm-swoop-split-direction 'split-window-vertically)
-  (setq helm-swoop-speed-or-color nil)
-  (setq helm-swoop-move-to-line-cycle t)
-  (setq helm-swoop-use-line-number-face t)
-  (setq helm-swoop-use-fuzzy-match t))
+  :after (helm helm-config)
+  :custom
+  (helm-multi-swoop-edit-save t)
+  (helm-swoop-split-with-multiple-windows nil)
+  (helm-swoop-split-direction 'split-window-vertically)
+  (helm-swoop-speed-or-color nil)
+  (helm-swoop-move-to-line-cycle t)
+  (helm-swoop-use-line-number-face t)
+  (helm-swoop-use-fuzzy-match t)
+  :bind
+  (("M-i" . helm-swoop)
+   ("M-I" . helm-swoop-back-to-last-point)
+   ("C-c M-i" . helm-multi-swoop)
+   ("C-x M-i" . helm-multi-swoop-all)))
 
+;; custom
 (custom-set-variables
- '(helm-input-idle-delay 0)
- '(helm-exit-idle-delay 0)
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-idle-delay nil)
+ '(helm-ag-insert-at-point (quote symbol))
  '(helm-candidate-number-limit 500)
- '(helm-ag-insert-at-point 'symbol)
- '(helm-find-files-doc-header "")
  '(helm-command-prefix-key nil)
- '(helm-gtags-pulse-at-cursor nil) ;gtags
- )
+ '(helm-delete-minibuffer-contents-from-point t)
+ '(helm-exit-idle-delay 0)
+ '(helm-find-files-doc-header "" t)
+ '(helm-gtags-pulse-at-cursor nil)
+ '(helm-input-idle-delay 0)
+ '(helm-mode-fuzzy-match t)
+ '(helm-multi-swoop-edit-save t t)
+ '(helm-swoop-move-to-line-cycle t t)
+ '(helm-swoop-speed-or-color nil t)
+ '(helm-swoop-split-direction (quote split-window-vertically) t)
+ '(helm-swoop-split-with-multiple-windows nil t)
+ '(helm-swoop-use-fuzzy-match t t)
+ '(helm-swoop-use-line-number-face t t))
 
 (with-eval-after-load 'helm
   (helm-descbinds-mode)
@@ -237,6 +249,7 @@
 
 ;; yasnippet
 (use-package yasnippet
+  :no-require t
   :config
   (setq yas-snippet-dirs
         '("~/.emacs.d/snippets"))
@@ -284,53 +297,66 @@
   (set-face-attribute 'company-scrollbar-fg nil
                       :background "orange")
   (set-face-attribute 'company-scrollbar-bg nil
-                      :background "gray40"))
-
-;; company with yasnippet
-(defvar company-mode/enable-yas t
-  "Enable yasnippet for all backends.")
-(defun company-mode/backend-with-yas (backend)
-  (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-      backend
-    (append (if (consp backend) backend (list backend))
-            '(:with company-yasnippet))))
-(setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+                      :background "gray40")
+  ;; Add yasnippet support for all company backends.
+  (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+  (defun company-mode/backend-with-yas (backend)
+    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+        backend (append (if (consp backend) backend (list backend))
+                        '(:with company-yasnippet))))
+  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
 
 ;; lsp-mode
 (use-package lsp-mode
-  :commands lsp)
+  :no-require t
+  :commands lsp
+  :custom
+  (lsp-inhibit-message t)
+  (lsp-message-project-root-warning t)
+  (create-lockfiles nil)
+  :hook
+  (prog-major-mode . lsp-prog-major-mode-enable))
+
 (use-package lsp-ui
-  :commands lsp-ui-mode)
-(use-package company-lsp
-  :commands company-lsp)
+  :after lsp-mode
+  :custom (scroll-margin 0)
+  :hook (lsp-mode . lsp-ui-mode))
+
+(use-package lsp-company
+  :after (:all lsp-mode company yasnippet)
+  )
+  ;; :defines company-backends
+  ;; :functions company-backend-with-yas
+  ;; :init (cl-pushnew (company-backend-with-yas 'company-lsp) company-backends))
 
 ;; flycheck
 (use-package flycheck
+  :no-require t
+  :custom
+  (flycheck-check-syntax-automatically '(mode-enabled save))
+  (flycheck-display-errors-delay 0.5)
+  (flycheck-display-errors-function nil)
+  (flycheck-idle-change-delay 2.0)
   :config
-  (global-flycheck-mode t)
-  (setq flycheck-check-syntax-automatically '(mode-enabled save))
-  (custom-set-variables
-   '(flycheck-display-errors-delay 0.5)
-   '(flycheck-idle-change-delay 2.0)
-   '(flycheck-display-errors-function nil)))
+  (global-flycheck-mode t))
 
 ;; git
-(use-package git-blamed)
-(use-package gitignore-mode)
-(use-package gitconfig-mode)
-(use-package git-timemachine)
-(use-package git-commit)
-(use-package magit)
+(use-package magit
+  :no-require t
+  :bind ("C-x g" . magit-status)
+  :config
+  (add-hook 'git-commit-mode-hook 'goto-address-mode)
+  )
 
 ;;(use-package fullframe)
-(add-hook 'git-commit-mode-hook 'goto-address-mode)
 
 ;; git-gutter+
 (use-package git-gutter+
+  :no-require t
   :bind
   ("C-x C-v" . git-gutter+-show-hunk-inline-at-point)
   :config
-  (global-git-gutter+-mode 1))
+  (global-git-gutter+-mode))
 
 ;; hi-line
 (use-package hl-line
@@ -351,8 +377,10 @@
 
 ;; which-key
 (use-package which-key
+  :no-require t
   :diminish which-key-mode
-  :hook (after-init . which-key-mode))
+  :hook (after-init . which-key-mode)
+  :config (which-key-mode t))
 
 ;; hide-mode-line
 (use-package hide-mode-line
@@ -362,19 +390,14 @@
 
 ;; neotree
 (use-package neotree
+  :no-require t
   :bind
   ("C-o" . neotree-toggle)
   :config
-  (setq neo-theme 'icon)
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
   (setq neo-persist-show t)
   (setq neo-smart-open t)
   (setq-default neo-show-hidden-files t))
-
-;; ido-mode
-;; (use-package ido)
-;; (ido-mode 1)
-;; (ido-everywhere 1)
-;; (setq ido-enable-flex-matching t)
 
 ;; tabbar
 ;; (tabbar-mode 1)
@@ -384,10 +407,10 @@
 ;; (setq display-buffer-alist 'popwin:display-buffer)
 
 ;; dashboard
-(use-package dashboard
-  :ensure t
-  :config
-  (dashboard-setup-startup-hook))
+;; (use-package dashboard
+;;   :ensure t
+;;   :config
+;;   (dashboard-setup-startup-hook))
 
 ;; tree-undo
 (use-package undo-tree
@@ -407,6 +430,7 @@
 
 ;; golden ratio
 (use-package golden-ratio
+  :no-require t
   :config
   (golden-ratio-mode 1))
 
@@ -437,17 +461,6 @@
   :config
   (global-unset-key (kbd "M-<down-mouse-1>")))
 
-;; mutiple-cursors
-(use-package multiple-cursors
-  :bind (
-  ("C-S-c C-S-c" . mc/edit-lines)
-  ("C->" . mc/mark-next-like-this)
-  ("C-<" . mc/mark-previous-like-this)
-  ("C-c C-<" . mc/mark-all-like-this)
-  ("M-<mouse-1>" . mc/add-cursor-on-click))
-  :config
-  (global-unset-key (kbd "M-<down-mouse-1>")))
-
 ;; col-highlight
 ;; (use-package col-highlight)
 ;; (column-highlight-mode 1)
@@ -458,47 +471,43 @@
   (smartparens-global-mode))
 
 ;; mmm-mode
-(use-package mmm-auto
-  :config
-  (setq mmm-global-mode 'maybe))
+;; (use-package mmm-mode
+;;   :config
+;;   (setq mmm-global-mode 'maybe))
 
 ;; smart-newline
 (use-package smart-newline
   :bind
   ("C-m" . smart-newline))
 
-;;----------------------------------------------------------------------------
-;; Allow access from emacsclient
-;;----------------------------------------------------------------------------
-;;(use-package server)
-;; (unless (server-running-p)
-;;   (server-start))
+;; server-mode
+(use-package server)
+(unless (server-running-p)
+  (server-start))
 
 ;; async
 (autoload 'dired-async-mode "dired-async.el" nil t)
 (dired-async-mode 1)
 
 ;; shell-mode
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-
+(add-hook 'shell-mode-hook 'ansi-color-for-cominmt-mode-on)
 
 ;; org-mode
 (use-package org
-  :mode (("\\.org$" . org-mode))
-  :init
-  (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+  :mode ("\\.org$" . org-mode)
+  :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c c" . org-capture))
   :config
   (setq org-directory (expand-file-name "~/GatsbyDrive/org"))
   (setq org-default-notes-file (concat org-directory "/note.org"))
-  (setq org-agenda-files '("~/GatsbyDrive/org", "~/GatsbyDrive/org/agenda"))
+  (setq org-agenda-files '("~/GatsbyDrive/org/agenda.org" "~/GatsbyDrive/org/note.org"))
+  (setq org-log-done 'time)
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "SOMEDAY(s)" "WAITING(w)" "|" "DONE(d)" "CANCELED(c@)")))
   )
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cc" 'org-capture)
-(setq org-log-done 'time)
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "SOMEDAY(s)" "WAITING(w)" "|" "DONE(d)" "CANCELED(c@)")))
 
+;; guess-style
 (use-package guess-style
   :load-path "~/.emacs.d/site-lisp/guess-style/"
   :config
@@ -527,59 +536,38 @@
           ;; If this is a problem for you, please, comment the line below.
           (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])))
   ;;(setq whitespace-space-regexp "\\(\u3000+\\)")
+  (global-whitespace-mode 1)
   (setq whitespace-action '(auto-cleanup))
-  (global-whitespace-mode 1))
-
-;; Color for White spaces
-(setq whitespace-action '(auto-cleanup))
-
-(defvar my/bg-color "#262626")
-(set-face-attribute 'whitespace-trailing nil
-		    :background my/bg-color
-		    :foreground "DarkBlue"
-		    :underline t)
-(set-face-attribute 'whitespace-tab nil
-		    :background my/bg-color
-		    :foreground "LightSkyBlue"
-		    :underline t)
-(set-face-attribute 'whitespace-space nil
-		    :background my/bg-color
-		    :foreground "DarkGreen"
-		    :weight 'bold)
-(set-face-attribute 'whitespace-empty nil
-		    :background my/bg-color)
-
-;;
-;; load all own lisps
-;;
-(require 'init-golang)
-;; (require 'init-json)
-;; (require 'init-md)
-(require 'init-python)
-(require 'init-tide)
-(require 'init-web)
+  (defvar my/bg-color "#262626")
+  (set-face-attribute 'whitespace-trailing nil
+                      :background my/bg-color
+                      :foreground "DarkBlue"
+                      :underline t)
+  (set-face-attribute 'whitespace-tab nil
+                      :background my/bg-color
+                      :foreground "LightSkyBlue"
+                      :underline t)
+  (set-face-attribute 'whitespace-space nil
+                      :background my/bg-color
+                      :foreground "DarkGreen"
+                      :weight 'bold)
+  (set-face-attribute 'whitespace-empty nil
+                      :background my/bg-color)
+  )
 
 
 (provide 'init)
-;;;
-;;; init.el ends here
-;;;
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(helm-ag-insert-at-point (quote symbol))
- '(helm-candidate-number-limit 500)
- '(helm-command-prefix-key nil)
- '(helm-exit-idle-delay 0)
- '(helm-find-files-doc-header "" t)
- '(helm-gtags-pulse-at-cursor nil)
- '(helm-input-idle-delay 0)
- '(helm-mode-fuzzy-match t)
- '(which-key-mode t))
 
 ;;; profiler
 ;; (profiler-stop)
 ;; (profiler-report)
+
+;;;
+;;; init.el ends here
+;;;
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

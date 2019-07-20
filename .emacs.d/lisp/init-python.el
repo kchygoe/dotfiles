@@ -49,7 +49,7 @@
 (setq py-smart-indentation t)
 (setq py-force-py-shell-name-p t)
 
-(use-package pip-requirements)
+;; (use-package pip-requirements)
 (provide 'init-python)
 
 ;;; init-python.el ends here
