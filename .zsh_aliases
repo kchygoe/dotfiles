@@ -1,0 +1,44 @@
+alias sed='gsed'
+alias e='emacsclient -nw -a ""'
+alias ec='emacsclient -nw'
+alias er='emacs -nw -f read-only-mode'
+alias en='emacs -nw'
+alias e-kill='emacsclient -e "(kill-emacs)"'
+alias h='history'
+alias c.='cd ..'
+alias su='sudo su -m'
+alias rlogin='rpaas login --email koichi.yoshigoe@mail.rakuten.com'
+alias g='git'
+alias k='kubectl'
+#alias ks='kubectl --namespace=kube-system'
+alias kbash='kubectl run my-shell --rm -i --tty --image ubuntu -- bash'
+alias kd='kubectl describe'
+alias ke='kubectl exec -ti'
+alias kg='kubectl get'
+alias gke='gcloud container clusters get-credentials --project=dred-exp'
+alias gkp='gcloud container clusters get-credentials --project=dred-prd'
+alias gcop='gcloud config set project'
+alias gcopx='gcloud config set project dred-exp'
+alias gcopp='gcloud config set project dred-prd'
+alias gssh='gcloud compute ssh'
+alias gci='gcloud compute instances'
+alias gcil='gcloud compute instances list'
+alias ops='gssh --project=dred-prd ops-instance-001 --zone=asia-east1-c'
+alias exp='gcloud config set project dred-exp'
+alias prd='gcloud config set project dred-prd'
+alias kns="kubectl config set-context (kubectl config view | awk '/current-context/ {print $2}') --namespace="
+alias kcuc="kubectl config use-context"
+alias kl="kubectl logs -f --tail 10"
+alias kx="kubectx"
+alias kn="kubens"
+alias ls='ls -GFh'
+alias bs='brew services'
+alias gh='cd $(ghq list -p | peco)'
+alias gho='gh-open $(ghq list -p | peco)'
+
+# colordiff
+if [[ -x `which colordiff` ]]; then
+    alias diff='colordiff -u'
+else
+    alias diff='diff -u'
+fi
