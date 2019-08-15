@@ -28396,13 +28396,13 @@
 	<key>NSWindow Frame SUStatusFrame</key>
 	<string>-1158 928 400 129 -1920 200 1920 1057 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>714 648 620 392 0 0 2048 1257 </string>
+	<string>970 768 620 392 0 0 2560 1417 </string>
 	<key>NSWindow Frame SessionsPreferences</key>
-	<string>185 758 606 469 0 0 2048 1257 </string>
+	<string>169 566 606 469 0 0 1920 1057 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>712 581 918 452 0 0 2048 1257 </string>
+	<string>900 492 1016 512 0 0 1920 1057 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 1283 2048 1051 0 1280 1920 1057 </string>
+	<string>0 1013 2560 404 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>417 124 1242 890 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -30561,7 +30561,7 @@
 			<key>Prompt Before Closing 2</key>
 			<integer>0</integer>
 			<key>Right Option Key Sends</key>
-			<integer>2</integer>
+			<integer>1</integer>
 			<key>Rows</key>
 			<integer>70</integer>
 			<key>Screen</key>
@@ -32408,7 +32408,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-06-29T10:03:39Z</date>
+	<date>2019-08-05T02:40:26Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>ShowBookmarkName</key>

@@ -18,5 +18,4 @@ link:
 cask:
 	cask install
 
-
 all: python golang link
