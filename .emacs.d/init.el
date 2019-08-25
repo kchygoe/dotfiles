@@ -5,36 +5,72 @@
 ;; emacs is fun
 
 ;;; Code:
-
 ;;; profile-start
 ;; (profiler-start 'cpu)
+
+;; Debug
+(setq debug-on-error t)
+
+;; bug in 26.2
+;; To make gnu elpa available
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
+;; Package.el
+(setq package-archives '(
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("gnu" . "https://elpa.gnu.org/packages/")
+                         ("elpy" . "https://jorgenschaefer.github.io/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ))
+(package-initialize)
 
 ;;; mylisps/site-lisp
 (add-to-list 'load-path
              "~/.emacs.d/lisp/"
              "~/.emacs.d/site-lisp/")
-(let ((default-directory  "~/.emacs.d/site-lisp/"))
-  (normal-top-level-add-subdirs-to-load-path))
 ;(setq init-loader-byte-compile t)
 
-;;; Visualize boot
-(require 'initchart)
-(initchart-record-execution-time-of load file)
-(initchart-record-execution-time-of require feature)
-
 ;; Basics
-(setq backup-inhibited t)
 (setq inhibit-startup-message t)
 (setq delete-auto-save-files t)
-; (setq auto-save-default nil)
-; (setq make-backup-files nil)
 (setq frame-title-format "%f")
+(setq c-auto-newline t)
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
 (fset 'yes-or-no-p 'y-or-n-p)
 
+(setq mouse-wheel-follow-mouse t)
+(setq tab-width 2)
+(setq indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil)
+;; (defvaralias 'c-basic-offsett 'tab-width)
+;; (defvaralias 'cperl-indent-level 'tab-width)
+
+(put 'upcase-region 'disabled nil)
+(show-paren-mode 1)
 (line-number-mode t)
 (column-number-mode t)
 (add-to-list 'global-mode-string '(" %i"))
 
+;; menu-bar
+(menu-bar-mode -1)
+
+;; desktop file
+(desktop-save-mode 1)
+(setq desktop-save t)
+(setq desktop-restore-eager 10)
+(setq desktop-path '("~/.emacs.d/desktop/"))
+(global-auto-revert-mode 1)
+
+;; Custom variables
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+
+
+;; OS: macos
 (when (eq system-type 'darwin)
   ;; Mac-only
   ;; Command key as Meta key, Option key untouched
@@ -48,33 +84,30 @@
   ;; right command
   ;; (setq mac-right-command-modifier 'super)
   ;; right option
-  (setq mac-right-option-modifier 'super))
+  ;; Cask on mac brew
+  (require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
+  ;; (setq mac-right-option-modifier 'meta)
+  (setq mac-option-modifier 'super)
+  (setq mac-command-modifier 'meta)
+  (setq ns-auto-hide-menu-bar t)
+  (setq ns-use-proxy-icon nil)
+  )
 
-;;;全自動インデント
-(setq c-auto-newline t)
-;;;[TAB］キーでインデント実施
-;; (setq c-tab-always-indent t)
+;; OS: Linux
+(when (eq system-type 'gnu/linux)
+  ;; Cask on linux
+  (require 'cask)
+  )
 
-;; menu-bar
-(menu-bar-mode -1)
-
-;; desktop file
-(desktop-save-mode 1)
-(setq desktop-save t)
-(setq desktop-restore-eager 10)
-(setq desktop-path '("~/.emacs.d/desktop/"))
-(global-auto-revert-mode 1)
-
-;; Debug
-(setq debug-on-error t)
-
-;; cask & pallet
-;;; Cask on mac brew
-(require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
-;;; Cask on ubuntu
-;(require 'cask "")
-
+;; Cask
 (cask-initialize)
+
+;;; Visualize boot from here
+(require 'initchart)
+(initchart-record-execution-time-of load file)
+(initchart-record-execution-time-of require feature)
+
+
 ;; use-package, bind-key
 (eval-when-compile
   (require 'use-package))
@@ -89,13 +122,6 @@
   :no-require t
   :config (pallet-mode t))
 
-;; packages elpa & melpa
-(setq package-archives '(
-                         ("melpa" . "https://melpa.org/packages/")
-                         ("gnu" . "https://elpa.gnu.org/packages/")
-                         ("elpy" . "https://jorgenschaefer.github.io/packages/")
-                         ("org" . "http://orgmode.org/elpa/")
-                         ))
 ;; bind-key
 (bind-key "<C-return>" 'other-window)
 (bind-key "C-c i" 'indent-region)
@@ -107,16 +133,6 @@
 (bind-key "C-h" 'delete-backward-char)
 (bind-key "M-?" 'help-for-help)
 (bind-key "M-n" 'goto-line)
-
-(setq mouse-wheel-follow-mouse t)
-(setq tab-width 2)
-(setq indent-tabs-mode nil)
-(setq-default indent-tabs-mode nil)
-;; (defvaralias 'c-basic-offsett 'tab-width)
-;; (defvaralias 'cperl-indent-level 'tab-width)
-
-(put 'upcase-region 'disabled nil)
-(show-paren-mode 1)
 
 ;; linum
 ;; (global-linum-mode t)
@@ -135,22 +151,20 @@
          :map helm-map
          ("C-h" . delete-backward-char)
          ("TAB" . helm-execute-persistent-action)
-         ("C-z" . helm-select-action))
+         ("C-z" . helm-select-action)
+         ("C-p" . helm-previous-line)
+         ("C-n" .  helm-next-line)
+         ("C-M-n" . helm-next-source)
+         ("C-M-p" . helm-previous-source))
   :config
-  ;; (define-key helm-read-file-map (kbd "C-h") 'delete-backward-char)
-  ;; (define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
-  ;; (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
-  ;; (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
-  ;; (define-key helm-read-file-map (kbd "C-z") 'helm-select-action)
-  ;; (define-key helm-find-files-map (kbd "C-z") 'helm-select-action)
-  (helm-mode 1)
-  (helm-descbinds-install)
+  (helm-mode +1)
   (helm-descbinds-mode +1)
   ;; (defadvice helm-delete-minibuffer-contents (before helm-emulate-kill-line activate)
   ;; (kill-new (buffer-substring (point) (field-end))))
    :custom
    (helm-delete-minibuffer-contents-from-point t)
-  )
+   )
+
 (use-package helm-config)
 (use-package helm-swoop
   :after (helm helm-config)
@@ -168,50 +182,37 @@
    ("C-c M-i" . helm-multi-swoop)
    ("C-x M-i" . helm-multi-swoop-all)))
 
-;; custom
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-idle-delay nil)
- '(helm-ag-insert-at-point (quote symbol))
- '(helm-candidate-number-limit 500)
- '(helm-command-prefix-key nil)
- '(helm-delete-minibuffer-contents-from-point t)
- '(helm-exit-idle-delay 0)
- '(helm-find-files-doc-header "" t)
- '(helm-gtags-pulse-at-cursor nil)
- '(helm-input-idle-delay 0)
- '(helm-mode-fuzzy-match t)
- '(helm-multi-swoop-edit-save t t)
- '(helm-swoop-move-to-line-cycle t t)
- '(helm-swoop-speed-or-color nil t)
- '(helm-swoop-split-direction (quote split-window-vertically) t)
- '(helm-swoop-split-with-multiple-windows nil t)
- '(helm-swoop-use-fuzzy-match t t)
- '(helm-swoop-use-line-number-face t t))
 
-(with-eval-after-load 'helm
-  (helm-descbinds-mode)
-  (define-key helm-map (kbd "C-p")   #'helm-previous-line)
-  (define-key helm-map (kbd "C-n")   #'helm-next-line)
-  (define-key helm-map (kbd "C-M-n") #'helm-next-source)
-  (define-key helm-map (kbd "C-M-p") #'helm-previous-source))
+;; projectile
+(use-package projectile
+  :after helm
+  :config
+  (projectile-mode +1)
+  (setq projectile-completion-system 'helm)
+  (helm-projectile-on))
 
-(with-eval-after-load 'helm-files
+
+(use-package helm-files
+  :no-require t
+  :after helm
+  :config
   (remove-hook 'post-self-insert-hook 'helm-find-files--reset-level-tree)
-  (define-key helm-find-files-map (kbd "C-M-u") #'helm-find-files-down-one-level)
-  (define-key helm-find-files-map (kbd "C-c C-o") #'helm-ff-run-switch-other-window))
+  :bind (
+         :map helm-find-files-map
+              ("C-M-u" . helm-find-files-down-one-level)
+              ("C-c C-o" . helm-ff-run-switch-other-window)))
 
-
-(with-eval-after-load 'helm-gtags
-  (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
-  (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
-  (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
-  (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
-  (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-  (define-key helm-gtags-mode-map (kbd "C-t") 'helm-gtags-pop-stack))
+(use-package helm-gtags
+  :after helm
+  :no-require t
+  :bind (
+         :map helm-gtags-mode-map
+              ("M-t" . helm-gtags-find-tag)
+              ("M-r" . helm-gtags-find-rtag)
+              ("M-s" . helm-gtags-find-symbol)
+              ("C-c >" . helm-gtags-next-history)
+              ("C-c <" . helm-gtags-previous-history)
+              ("C-t" . helm-gtags-pop-stack)))
 
 ;;; Enable helm-gtags-mode
 ;; (dolist (hook '(c-mode-common-hook
@@ -244,8 +245,19 @@
 ;; (migemo-init)
 
 ;; color theme
-(load-theme 'ample-zen t)
+(use-package doom-themes
+  :custom
+  (doom-themes-enable-italic t)
+  (doom-themes-enable-bold t)
+  :custom-face
+  (doom-modeline-bar ((t (:background "#6272a4"))))
+  :config
+  (load-theme 'doom-tomorrow-night t)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config))
+;;(load-theme 'ample-zen t)
 ;;(load-theme 'zenburn t)
+(use-package all-the-icons)
 
 ;; yasnippet
 (use-package yasnippet
@@ -259,20 +271,20 @@
 (use-package company
   :bind (
          :map company-active-map
-         ( "M-n" . nil)
-         ( "M-p" . nil)
-         ( "C-n" . company-select-next)
-         ( "C-p" . company-select-previous)
-         ( "C-h" . nil)
-         ( "C-s" . company-filter-candidates)
-         ( "C-i" . company-complete-selection)
-         ( "<tab>" . company-complete-common-or-cycle)
-         ( "M-d" . company-show-doc-buffer)
-         :map company-search-map
-         ("C-n" . company-select-next)
-         ("C-p" . company-select-previous)
-         :map emacs-lisp-mode-map
-         ("C-M-i" . company-complete))
+              ("M-n" . nil)
+              ("M-p" . nil)
+              ("C-n" . company-select-next)
+              ("C-p" . company-select-previous)
+              ("C-h" . nil)
+              ("C-s" . company-filter-candidates)
+              ("C-i" . company-complete-selection)
+              ("<tab>" . company-complete-common-or-cycle)
+              ("M-d" . company-show-doc-buffer)
+          :map company-search-map
+              ("C-n" . company-select-next)
+              ("C-p" . company-select-previous)
+          :map emacs-lisp-mode-map
+              ("C-M-i" . company-complete))
   :config
   (global-company-mode +1)
   (company-quickhelp-mode +1)
@@ -322,7 +334,7 @@
   :custom (scroll-margin 0)
   :hook (lsp-mode . lsp-ui-mode))
 
-(use-package lsp-company
+(use-package company-lsp
   :after (:all lsp-mode company yasnippet)
   )
   ;; :defines company-backends
@@ -388,13 +400,46 @@
   ((neotree-mode imenu-list-minor-mode minimap-mode)
    . hide-mode-line-mode))
 
+;; doom-modeline
+(use-package doom-modeline
+  :ensure t
+  :hook (after-init . doom-modeline-mode)
+  :custom
+  (doom-modeline-icon t)
+  (doom-modeline-major-mode-icon t)
+  (doom-modeline-major-mode-color-icon t)
+  (doom-modeline-buffer-state-icon t)
+  (doom-modeline-buffer-modification-icon t)
+  (doom-modeline-checker-simple-format t)
+  (doom-modeline-github nil)
+  (doom-modeline-minor-modes (featurep 'minions))
+  (doom-modeline-vcs-max-length 12)
+  (doom-modeline-height 1)
+  (doom-modeline-lsp t)  )
+
+;; PowerLine
+;; (use-package powerline
+;;   :config
+;;   (powerline-center-theme)
+;;   (setq powerline-arrow-shape 'arrow))
+
+;; dumb-jump
+(use-package dumb-jump
+  :bind (("M-g o" . dumb-jump-go-other-window)
+         ("M-g j" . dumb-jump-go)
+         ("M-g i" . dumb-jump-go-prompt)
+         ("M-g x" . dumb-jump-go-prefer-external)
+         ("M-g z" . dumb-jump-go-prefer-external-other-window))
+  :config
+  (setq dumb-jump-selector 'helm))
+
 ;; neotree
 (use-package neotree
   :no-require t
   :bind
   ("C-o" . neotree-toggle)
   :config
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  (setq neo-theme 'icons)
   (setq neo-persist-show t)
   (setq neo-smart-open t)
   (setq-default neo-show-hidden-files t))
@@ -413,20 +458,15 @@
 ;;   (dashboard-setup-startup-hook))
 
 ;; tree-undo
-(use-package undo-tree
-  :bind ("C-M-z" . undo-tree-redo)
-  :config
-  (global-undo-tree-mode))
+;; (use-package undo-tree
+;;   :bind ("C-M-z" . undo-tree-redo)
+;;   :config
+;;   (global-undo-tree-mode))
 
 ;; expand-region
 (use-package expand-region
+  :no-require t
   :bind ("C-=" . er/expand-region))
-
-;; PowerLine
-(use-package powerline
-  :config
-  (powerline-center-theme)
-  (setq powerline-arrow-shape 'arrow))
 
 ;; golden ratio
 (use-package golden-ratio
@@ -434,10 +474,16 @@
   :config
   (golden-ratio-mode 1))
 
-;; rainbow-delimiters
+;; rainbow
+(use-package rainbow-identifiers
+  :no-require t
+  :hook
+  (prog-mode-hook . rainbow-identifiers-mode))
+
 (use-package rainbow-delimiters
-  :config
-  (rainbow-delimiters-mode 1))
+  :no-require t
+  :hook
+  (prog-mode-hook . rainbow-delimiters-mode))
 
 ;; smooth-scroll
 ;; (use-package 'smooth-scroll)
@@ -490,9 +536,19 @@
 (dired-async-mode 1)
 
 ;; shell-mode
-(add-hook 'shell-mode-hook 'ansi-color-for-cominmt-mode-on)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
-;; org-mode
+;; guess-style
+(use-package guess-style
+  :config
+  (autoload 'guess-style-set-variable "guess-style" nil t)
+  (autoload 'guess-style-guess-variable "guess-style")
+  (autoload 'guess-style-guess-all "guess-style" nil t)
+  (global-guess-style-info-mode 1))
+
+;;
+;; Org-mode
+;;
 (use-package org
   :mode ("\\.org$" . org-mode)
   :bind (("C-c l" . org-store-link)
@@ -501,20 +557,92 @@
   :config
   (setq org-directory (expand-file-name "~/GatsbyDrive/org"))
   (setq org-default-notes-file (concat org-directory "/note.org"))
-  (setq org-agenda-files '("~/GatsbyDrive/org/agenda.org" "~/GatsbyDrive/org/note.org"))
+  (setq org-agenda-files '("~/GatsbyDrive/org/agenda.org"
+                           "~/GatsbyDrive/org/note.org"
+                           "~/GatsbyDrive/org/journal.org"
+                           "~/GatsbyDrive/org/private.org"
+                           "~/GatsbyDrive/org/idea.org"
+                           "~/GatsbyDrive/org/gcal.org"
+                           "~/GatsbyDrive/org/gcal-work.org"))
   (setq org-log-done 'time)
+  (setq org-startup-truncated nil)
+  ;;(setq org-export-coding-system 'utf-8)
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
   (setq org-todo-keywords
         '((sequence "TODO(t)" "SOMEDAY(s)" "WAITING(w)" "|" "DONE(d)" "CANCELED(c@)")))
+  (setq org-capture-templates
+        '(("a" "Appointment" entry (file  "~/GatsbyDrive/org/gcal.org" )
+            "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+          ("l" "Link" entry (file+headline "~/GatsbyDrive/org/links.org" "Links")
+           "* %? %^L %^g \n%T" :prepend t)
+          ("i" "Idea" entry (file+headline "~/GatsbyDrive/org/idea.org" "Idea Topics:")
+           "* %?\n%T" :prepend t)
+          ("t" "To Do Item" entry (file+headline "~/GatsbyDrive/org/note.org" "TODO")
+           "* TODO %?\n%u" :prepend t)
+          ("n" "Note" entry (file+headline "~/GatsbyDrive/org/note.org" "Note space")
+           "* %?\n%u" :prepend t)
+          ("j" "Journal" entry (file+datetree "~/Dropbox/journal.org")
+           "* %?\nEntered on %U\n  %i\n  %a")))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((awk . t)
+                                 (emacs-lisp . t)
+                                 (js . t)
+                                 (makefile . t)
+                                 (org . t)
+                                 (python . t)
+                                 (shell . t)
+                                 (go . t)
+                                 ))
+  (add-hook 'org-agenda-mode-hook
+          (lambda ()
+            (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
+            (auto-save-mode))) )
+
+(use-package org-bullets
+  :hook (org-mode . org-bullets-mode))
+
+;; org-gcal
+(use-package org-gcal
+  :ensure t
+  :hook
+  (org-agenda-mode-hook . org-gcal-sync)
+  :config
+  (setq org-gcal-client-id (getenv "GCAL_CLIENT_ID")
+        org-gcal-client-secret (getenv "GCAL_CLIENT_SECRET")
+        org-gcal-file-alist '(((getenv "GCAL_EMAIL_PRIVATE") . "~/GatsbyDrive/org/gcal.org")
+                              ((getenv "GCAL_EMAIL_WORK") . "~/GatsbyDrive/org/gcal-work.org"))))
+
+;; asana
+(use-package asana
+  :hook
+  (org-mode-hook . asana-mode) ;; USE ASANA_TOKEN in env
   )
 
-;; guess-style
-(use-package guess-style
-  :load-path "~/.emacs.d/site-lisp/guess-style/"
+;; bazel
+(use-package bazel
+  :mode '("\\.bzl\\'",  "BUILD\\'", "WORKSPACE\\'")
   :config
-  (autoload 'guess-style-set-variable "guess-style" nil t)
-  (autoload 'guess-style-guess-variable "guess-style")
-  (autoload 'guess-style-guess-all "guess-style" nil t)
-  (global-guess-style-info-mode 1))
+  (defun find-parent-directory-with-file(name)
+    (projectile-locate-dominating-file (file-truename (buffer-file-name)) name))
+
+  (defun bazel-build-current ()
+    "Build & test in the first parent directory containing BUILD."
+    (interactive)
+    (let ((default-directory (find-parent-directory-with-file  "BUILD")))
+      (if default-directory
+          (compile "bazel test ...  --test_output=all --test_arg=--log_level=message")
+        (error "BUILD file not found in the parent directories"))))
+
+  (defun bazel-build-workspace ()
+    "Build & test in the first parent directory containing WORKSPACE."
+    (interactive)
+    (let ((default-directory (find-parent-directory-with-file  "WORKSPACE")))
+      (if default-directory
+          (compile "bazel test ...")
+        (error "WORKSPACE file not found in the parent directories"))))
+  ;; (define-key c++-mode-map (kbd "C-c n") 'bazel-build-current)
+  ;; (define-key c++-mode-map (kbd "C-c b") 'bazel-build-workspace)
+  )
 
 ;; whitespace
 (use-package whitespace
@@ -555,7 +683,6 @@
                       :background my/bg-color)
   )
 
-
 (provide 'init)
 
 ;;; profiler
@@ -565,9 +692,7 @@
 ;;;
 ;;; init.el ends here
 ;;;
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars)
+;; End:

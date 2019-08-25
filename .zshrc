@@ -196,6 +196,11 @@ export KUBE_EDITOR="emacsclient -nw"
 # source /usr/local/etc/zsh-kubectl-prompt/kubectl.zsh
 # export RPROMPT="%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}"
 
+# argo
+# source <(argo completion zsh)
+export FPATH="$FPATH:/usr/local/Cellar/argo/2.3.0/share/zsh/site-functions"
+autoload -U _argo
+
 # For emacs shell
 # if [[ -n ${INSIDE_EMACS} ]]; then
 #     # This shell runs inside an Emacs *shell*/*term* buffer.
