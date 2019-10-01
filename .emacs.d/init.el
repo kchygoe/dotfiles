@@ -2,7 +2,7 @@
 ;; Author: Koichi Yoshigoe <koichi.yoshigoe@gmail.com>
 ;; Ver. 0.1.1
 ;;; Commentary:
-;; emacs is fun
+;; Emacs is fun
 
 ;;; Code:
 ;;; profile-start
@@ -11,8 +11,8 @@
 ;; Debug
 (setq debug-on-error t)
 
-;; bug in 26.2
-;; To make gnu elpa available
+;; for 26.2 tls issue
+;;To make gnu elpa available
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 ;; Package.el
@@ -40,11 +40,14 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 (fset 'yes-or-no-p 'y-or-n-p)
+(setq vc-follow-symlinks t)
 
 (setq mouse-wheel-follow-mouse t)
 (setq tab-width 2)
 (setq indent-tabs-mode nil)
 (setq-default indent-tabs-mode nil)
+;;(setq-default 'truncate-lines nil)
+(global-auto-revert-mode 1)
 ;; (defvaralias 'c-basic-offsett 'tab-width)
 ;; (defvaralias 'cperl-indent-level 'tab-width)
 
@@ -56,19 +59,22 @@
 
 ;; menu-bar
 (menu-bar-mode -1)
+(tool-bar-mode -1)
 
 ;; desktop file
 (desktop-save-mode 1)
 (setq desktop-save t)
 (setq desktop-restore-eager 10)
 (setq desktop-path '("~/.emacs.d/desktop/"))
-(global-auto-revert-mode 1)
 
 ;; Custom variables
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
 
+;; Tramp
+(setq tramp-terminal-type "tramp") ;; default: dumb
+(setq tramp-default-method "ssh")
 
 ;; OS: macos
 (when (eq system-type 'darwin)
@@ -87,8 +93,8 @@
   ;; Cask on mac brew
   (require 'cask "/usr/local/share/emacs/site-lisp/cask/cask.el")
   ;; (setq mac-right-option-modifier 'meta)
-  (setq mac-option-modifier 'super)
-  (setq mac-command-modifier 'meta)
+  (setq mac-right-option-modifier 'super)
+  (setq mac-right-command-modifier 'meta)
   (setq ns-auto-hide-menu-bar t)
   (setq ns-use-proxy-icon nil)
   )
@@ -106,7 +112,6 @@
 (require 'initchart)
 (initchart-record-execution-time-of load file)
 (initchart-record-execution-time-of require feature)
-
 
 ;; use-package, bind-key
 (eval-when-compile
@@ -140,6 +145,18 @@
 ;; (defadvice linum-schedule (around my-linum-schedule () activate)
 ;;   (run-with-idle-timer 0.2 nil #'linum-update-current))
 
+;; for gui app
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "GCAL_CLIENT_ID")
+  (exec-path-from-shell-copy-env "GCAL_CLIENT_SECRET")
+  (exec-path-from-shell-copy-env "GCAL_EMAIL_PRIVATE")
+  (exec-path-from-shell-copy-env "GCAL_EMAIL_WORK")
+  (exec-path-from-shell-copy-env "ASANA_TOKEN")
+  (exec-path-from-shell-copy-env "GITHUB_TOKEN") )
+
+;; helm
 (use-package helm
   :bind (("M-x" . helm-M-x)
          ("C-x b" . helm-mini)
@@ -182,7 +199,6 @@
    ("C-c M-i" . helm-multi-swoop)
    ("C-x M-i" . helm-multi-swoop-all)))
 
-
 ;; projectile
 (use-package projectile
   :after helm
@@ -190,7 +206,6 @@
   (projectile-mode +1)
   (setq projectile-completion-system 'helm)
   (helm-projectile-on))
-
 
 (use-package helm-files
   :no-require t
@@ -257,7 +272,9 @@
   (doom-themes-org-config))
 ;;(load-theme 'ample-zen t)
 ;;(load-theme 'zenburn t)
-(use-package all-the-icons)
+(use-package all-the-icons
+  :no-require)
+
 
 ;; yasnippet
 (use-package yasnippet
@@ -352,7 +369,12 @@
   :config
   (global-flycheck-mode t))
 
-;; git
+(use-package flycheck-popup-tip
+  :after flycheck
+  :hook (flycheck-mode-hook . flycheck-popup-tip-mode)
+  )
+
+;; magit
 (use-package magit
   :no-require t
   :bind ("C-x g" . magit-status)
@@ -425,6 +447,7 @@
 
 ;; dumb-jump
 (use-package dumb-jump
+  :ensure t
   :bind (("M-g o" . dumb-jump-go-other-window)
          ("M-g j" . dumb-jump-go)
          ("M-g i" . dumb-jump-go-prompt)
@@ -607,10 +630,12 @@
   :hook
   (org-agenda-mode-hook . org-gcal-sync)
   :config
+  (defvar gcal-email-private (getenv "GCAL_EMAIL_PRIVATE"))
+  (defvar gcal-email-work (getenv "GCAL_EMAIL_WORK"))
   (setq org-gcal-client-id (getenv "GCAL_CLIENT_ID")
         org-gcal-client-secret (getenv "GCAL_CLIENT_SECRET")
-        org-gcal-file-alist '(((getenv "GCAL_EMAIL_PRIVATE") . "~/GatsbyDrive/org/gcal.org")
-                              ((getenv "GCAL_EMAIL_WORK") . "~/GatsbyDrive/org/gcal-work.org"))))
+        org-gcal-file-alist '(("gatsby.gatsby.gatsby@gmail.com" . "~/GatsbyDrive/org/gcal.org")
+                              ("yoshigoe@leapmind.io" . "~/GatsbyDrive/org/gcal-work.org"))))
 
 ;; asana
 (use-package asana
@@ -619,8 +644,9 @@
   )
 
 ;; bazel
-(use-package bazel
-  :mode '("\\.bzl\\'",  "BUILD\\'", "WORKSPACE\\'")
+(use-package bazel-mode
+  :ensure t
+  :mode ("\\.bzl\\'" "BUILD\\'" "WORKSPACE\\'")
   :config
   (defun find-parent-directory-with-file(name)
     (projectile-locate-dominating-file (file-truename (buffer-file-name)) name))
