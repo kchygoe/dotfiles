@@ -1,6 +1,7 @@
 # ======================================================
+#zmodload zsh/zprof
 # Zsh configuration
-unsetopt IGNORE_EOF
+#unsetopt IGNORE_EOF
 setopt PUSHD_IGNORE_DUPS
 setopt AUTO_MENU
 setopt AUTO_CD
@@ -48,14 +49,14 @@ export ZPLUG_LOADFILE=""
 source ~/.zplug/init.zsh
 # zplug clear
 zplug 'zplug/zplug' #, hook-build:'zplug --self-manage'
-zplug 'peco/peco', as:command, from:gh-r
+zplug 'peco/peco', as:command, from:gh-r, defer:2
 zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
-# zplug "sindresorhus/pure", use:"pure.zsh", from:github, as:theme
-zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
+zplug "sindresorhus/pure", use:"pure.zsh", from:github, as:theme
+#zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 zplug "Jxck/dotfiles", use:"zsh/{http_status_codes,peco}.zsh"
 zplug 'b4b4r07/zsh-history', as:command, use:misc/fzf-wrapper.zsh, rename-to:ff
 # zplug "b4b4r07/enhancd", use:init.sh
-zplug "djui/alias-tips"
+zplug "djui/alias-tips", defer:3
 # zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
 zplug "junegunn/fzf-bin", as:command, from:gh-r, rename-to:fzf
 # zplug "modules/prompt", from:prezto
@@ -67,7 +68,7 @@ zplug "plugins/git", from:oh-my-zsh
 # zplug "plugins/compleat", from:oh-my-zsh
 zplug "plugins/docker", from:oh-my-zsh, defer:3
 zplug "plugins/docker-compose", from:oh-my-zsh, defer:3
-zplug "plugins/aws", from:oh-my-zsh
+# zplug "plugins/aws", from:oh-my-zsh
 # zplug "plugins/gem", from:oh-my-zsh
 # zplug "plugins/gulp", from:oh-my-zsh
 zplug "plugins/kubectl", from:oh-my-zsh, defer:3
@@ -76,20 +77,19 @@ zplug "plugins/terraform", from:oh-my-zsh, defer:3
 # zplug "plugins/npm", from:oh-my-zsh
 # zplug "plugins/pip", from:oh-my-zsh
 # zplug "plugins/rails", from:oh-my-zsh
-zplug "plugins/common-aliases", from:oh-my-zsh, defer:3
+zplug "plugins/common-aliases", from:oh-my-zsh, defer:2
 # zplug "tcnksm/docker-alias", use:zshrc
 # zplug "themes/cloud", from:oh-my-zsh
 # zplug "yous/lime", as:theme
 # zplug "yous/vanilli.sh"zp
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zsh-autosuggestions", defer:1
+zplug "zsh-users/zsh-completions", defer:1
 # zplug "zsh-users/zsh-history-substring-search"
-zplug "zsh-users/zsh-syntax-highlighting", defer:3
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
 zplug "direnv/direnv", from:gh-r, as:command, lazy:true
 zplug "lib/completion", from:oh-my-zsh, defer:3
 # zplug "knu/z", use:z.sh, defer:3
-zplug "superbrothers/zsh-kubectl-prompt", from:github, use:"kubectl.zsh"
-
+# zplug "superbrothers/zsh-kubectl-prompt", from:github, use:"kubectl.zsh"
 # zplug "dbz/zsh-kubernetes", from:github
 
 # zplug check || zplug install
@@ -121,11 +121,9 @@ bindkey '^xe' anyframe-widget-insert-git-branch
 bindkey '^x^e' anyframe-widget-insert-git-branch
 
 ## fzf (not used)
-export FZF_TMUX=1
-export FZF_TMUX_HEIGHT=10
-export FZF_DEFAULT_OPTS="--cycle --select-1 --ansi --multi"
-
-# source $ZSH/oh-my-zsh.sh
+# export FZF_TMUX=1
+# export FZF_TMUX_HEIGHT=10
+# export FZF_DEFAULT_OPTS="--cycle --select-1 --ansi --multi"
 
 # User configuration
 # export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
@@ -185,10 +183,12 @@ if which nodenv > /dev/null; then
 fi
 #
 # direnv
-export EDITOR="emacsclient -nw"
 if type direnv >/dev/null 2>&1; then
     eval "$(direnv hook zsh)"
 fi
+
+# editor
+export EDITOR="emacsclient -nw"
 
 # kubernetes
 export KUBE_EDITOR="emacsclient -nw"
@@ -209,9 +209,9 @@ autoload -U _argo
 # fi
 
 # zsh performance profile
-if (which zprof > /dev/null) ;then
-  zprof | less
-fi
+# if (which zprof > /dev/null) ;then
+#   zprof | less
+# fi
 
 # zcompile
 if [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
@@ -224,7 +224,6 @@ export PATH="$PATH:/usr/local/opt/mysql-client/bin"
 
 # iTerm2
 # test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
 
 ########################################
 ## private envs
