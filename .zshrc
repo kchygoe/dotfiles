@@ -23,7 +23,7 @@ bindkey -e
 
 ## Prompt
 ### Require npm install --global pure-prompt
-autoload -Uz promptinit; promptinit
+#autoload -Uz promptinit; promptinit
 #prompt spaceship
 
 ## install font
@@ -52,6 +52,9 @@ zplug 'peco/peco', as:command, from:gh-r
 zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
 # zplug "sindresorhus/pure", use:"pure.zsh", from:github, as:theme
 zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
+#zplug "sindresorhus/pure", use:"pure.zsh", from:github, as:theme
+#zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
+>>>>>>> Stashed changes
 zplug "Jxck/dotfiles", use:"zsh/{http_status_codes,peco}.zsh"
 zplug 'b4b4r07/zsh-history', as:command, use:misc/fzf-wrapper.zsh, rename-to:ff
 # zplug "b4b4r07/enhancd", use:init.sh
@@ -162,7 +165,7 @@ export GOPATH=$HOME/.go
 export PATH=$PATH:$GOPATH/bin:/usr/local/opt/go/libexec/bin
 
 ### golang / brew
-completion="$(brew --prefix)/share/zsh/site-functions/go"
+if which brew > /dev/null; then completion="$(brew --prefix)/share/zsh/site-functions/go" ;fi
 if test -f $completion; then
     source <(cat $completion)
 fi
@@ -170,7 +173,7 @@ fi
 # rbenv init
 export RBENV_ROOT="$HOME/.rbenv/"
 export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init - --no-rehash)"
+if which rbenv > /dev/null; then eval "$(rbenv init - --no-rehash)"; fi
 
 # pyenv
 export PYENV_ROOT=/usr/local/var/pyenv
@@ -195,6 +198,8 @@ export KUBE_EDITOR="emacsclient -nw"
 #source <(kubectl completion zsh)
 # source /usr/local/etc/zsh-kubectl-prompt/kubectl.zsh
 # export RPROMPT="%{$fg[blue]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}"
+# krew plugin
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # argo
 # source <(argo completion zsh)
@@ -221,6 +226,8 @@ fi
 # mysql-client
 export PATH="$PATH:/usr/local/opt/mysql-client/bin"
 
+# starship theme
+eval "$(starship init zsh)"
 
 # iTerm2
 # test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"

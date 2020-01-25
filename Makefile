@@ -16,3 +16,13 @@ tmux:
 
 zsh:
 	ln -s $(PWD)/.zshrc ~/
+
+configdir:
+	mkdir -p $(HOME)/.config/yabai
+	mkdir -p $(HOME)/.config/skhd
+	mkdir -p $(HOME)/.config/alacritty
+
+config:
+	ln -s $(PWD)/yabairc $(HOME)/.config/yabai/yabairc
+	ln -s $(PWD)/yabairc $(HOME)/.config/skhd/skhdrc
+	ln -s $(PWD)/yabairc $(HOME)/.config/alacritty/alacritty.yml

@@ -8,7 +8,9 @@
 (use-package pyenv-mode)
 (use-package python-mode
   :mode ("\\.py\\'" . python-mode)
-  :interpreter ("ipython" . python-mode))
+  :interpreter ("ipython" . python-mode)
+  :hook (python-mode-hook . lsp)
+  )
 
 (use-package jedi
   :hook
@@ -45,6 +47,14 @@
 ;;        python-shell-interpreter-args "-i")
 
 ;; (use-package pip-requirements)
+(use-package elpy
+  :config
+  (setq elpy-rpc-backend "jedi")
+  :hook
+  (elpy-mode-hook . flycheck-mode)
+  )
+
+
 (provide 'init-python)
 
 ;;; init-python.el ends here

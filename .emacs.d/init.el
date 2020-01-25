@@ -119,6 +119,7 @@
 
 ;; pallet for cask
 (use-package pallet
+  :ensure t
   :no-require t
   :config (pallet-mode t))
 
@@ -320,26 +321,44 @@
 
 ;; lsp-mode
 (use-package lsp-mode
-  :no-require t
-  :commands lsp
   :custom
-  (lsp-inhibit-message t)
+  (lsp-enable-snippet t)
+  (lsp-auto-guess-root t)
+  (lsp-enable-semantic-highlighting t)
+  ;; (lsp-inhibit-message t)
   (lsp-message-project-root-warning t)
   (create-lockfiles nil)
-  :hook
-  (prog-major-mode . lsp-prog-major-mode-enable))
+  ;; :hook
+  ;; (prog-major-mode . lsp-prog-major-mode-enable)
+  )
 
 (use-package lsp-ui
   :after lsp-mode
-  :custom (scroll-margin 0)
+  :custom
+  (scroll-margin 0)
+  (lsp-ui-doc-enable t)
+  (lsp-ui-doc-header t)
+  (lsp-ui-peek-enable t)
   :hook (lsp-mode . lsp-ui-mode))
 
 (use-package company-lsp
   :after (:all lsp-mode company yasnippet)
-  )
+  :custom
+  (push 'company-lsp company-backends)
   ;; :defines company-backends
   ;; :functions company-backend-with-yas
   ;; :init (cl-pushnew (company-backend-with-yas 'company-lsp) company-backends))
+  )
+
+(use-package lsp-python-ms
+  :ensure t
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-python-ms)
+                         (lsp))))
+
+(use-package lsp-yaml
+  :after lsp
+  :hook (yaml-mode-hook . lsp-yaml))
 
 ;; flycheck
 (use-package flycheck
@@ -350,7 +369,11 @@
   (flycheck-display-errors-function nil)
   (flycheck-idle-change-delay 2.0)
   :config
-  (global-flycheck-mode t))
+  (global-flycheck-mode t) )
+(use-package flycheck-popup-tip
+  :no-require t
+  :after (flycheck)
+  :hook (flycheck-mode . flycheck-popup-tip-mode) )
 
 ;; git
 (use-package magit
@@ -373,12 +396,13 @@
 ;; hi-line
 (use-package hl-line
   :config
-  (defun global-hl-line-timer-function ()
-    (global-hl-line-unhighlight-all)
-    (let ((global-hl-line-mode t))
-      (global-hl-line-highlight)))
-  (setq global-hl-line-timer
-        (run-with-idle-timer 0.3 t 'global-hl-line-timer-function)))
+  (setq global-hl-line-mode t))
+  ;; (defun global-hl-line-timer-function ()
+  ;;   (global-hl-line-unhighlight-all)
+  ;;   (let ((global-hl-line-mode t))
+  ;;     (global-hl-line-highlight)))
+  ;; (setq global-hl-line-timer
+  ;;       (run-with-idle-timer 0.3 t 'global-hl-line-timer-function)))
 ;; (cancel-timer global-hl-line-timer)
 
 ;; indent-guide
@@ -557,17 +581,11 @@
   :config
   (setq org-directory (expand-file-name "~/GatsbyDrive/org"))
   (setq org-default-notes-file (concat org-directory "/note.org"))
-  (setq org-agenda-files '("~/GatsbyDrive/org/agenda.org"
-                           "~/GatsbyDrive/org/note.org"
-                           "~/GatsbyDrive/org/journal.org"
-                           "~/GatsbyDrive/org/private.org"
-                           "~/GatsbyDrive/org/idea.org"
-                           "~/GatsbyDrive/org/gcal.org"
-                           "~/GatsbyDrive/org/gcal-work.org"))
+  (setq org-agenda-files '("~/GatsbyDrive/org/"))
   (setq org-log-done 'time)
   (setq org-startup-truncated nil)
   ;;(setq org-export-coding-system 'utf-8)
-  (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
   (setq org-todo-keywords
         '((sequence "TODO(t)" "SOMEDAY(s)" "WAITING(w)" "|" "DONE(d)" "CANCELED(c@)")))
   (setq org-capture-templates
@@ -581,7 +599,7 @@
            "* TODO %?\n%u" :prepend t)
           ("n" "Note" entry (file+headline "~/GatsbyDrive/org/note.org" "Note space")
            "* %?\n%u" :prepend t)
-          ("j" "Journal" entry (file+datetree "~/Dropbox/journal.org")
+          ("j" "Journal" entry (file+datetree "~/GatsbyDrive/journal.org")
            "* %?\nEntered on %U\n  %i\n  %a")))
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((awk . t)
@@ -609,8 +627,8 @@
   :config
   (setq org-gcal-client-id (getenv "GCAL_CLIENT_ID")
         org-gcal-client-secret (getenv "GCAL_CLIENT_SECRET")
-        org-gcal-file-alist '(((getenv "GCAL_EMAIL_PRIVATE") . "~/GatsbyDrive/org/gcal.org")
-                              ((getenv "GCAL_EMAIL_WORK") . "~/GatsbyDrive/org/gcal-work.org"))))
+        org-gcal-file-alist '(("gatsby.gatsby.gatsby@gmail.com" . "~/GatsbyDrive/org/gcal.org")
+                              ("yoshigoe@leapmind.io" . "~/GatsbyDrive/org/gcal-work.org") )))
 
 ;; asana
 (use-package asana
@@ -620,7 +638,9 @@
 
 ;; bazel
 (use-package bazel
-  :mode '("\\.bzl\\'",  "BUILD\\'", "WORKSPACE\\'")
+  :mode (("\\.bzl\\'" . bazel-mode)
+  ("BUILD\\'" . bazel-mode)
+  ("WORKSPACE\\'" . bazel-mode))
   :config
   (defun find-parent-directory-with-file(name)
     (projectile-locate-dominating-file (file-truename (buffer-file-name)) name))
