@@ -22,12 +22,14 @@
                          ("elpy" . "https://jorgenschaefer.github.io/packages/")
                          ("org" . "https://orgmode.org/elpa/")
                          ))
-(package-initialize)
 
 ;;; mylisps/site-lisp
 (add-to-list 'load-path
              "~/.emacs.d/lisp/"
              "~/.emacs.d/site-lisp/")
+
+(package-initialize)
+
 ;(setq init-loader-byte-compile t)
 
 ;; Basics
@@ -251,7 +253,7 @@
   (doom-themes-enable-italic t)
   (doom-themes-enable-bold t)
   :custom-face
-  (doom-modeline-bar ((t (:background "#6272a4"))))
+  (doom-modeline-bar ((t (:background "#7587bf"))))
   :config
   (load-theme 'doom-tomorrow-night t)
   (doom-themes-neotree-config)
@@ -599,8 +601,9 @@
            "* TODO %?\n%u" :prepend t)
           ("n" "Note" entry (file+headline "~/GatsbyDrive/org/note.org" "Note space")
            "* %?\n%u" :prepend t)
-          ("j" "Journal" entry (file+datetree "~/GatsbyDrive/journal.org")
+          ("j" "Journal" entry (file+datetree "~/GatsbyDrive/org/journal.org")
            "* %?\nEntered on %U\n  %i\n  %a")))
+  ;; (org-babel-tangle)
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((awk . t)
                                  (emacs-lisp . t)
@@ -636,33 +639,6 @@
   (org-mode-hook . asana-mode) ;; USE ASANA_TOKEN in env
   )
 
-;; bazel
-(use-package bazel
-  :mode (("\\.bzl\\'" . bazel-mode)
-  ("BUILD\\'" . bazel-mode)
-  ("WORKSPACE\\'" . bazel-mode))
-  :config
-  (defun find-parent-directory-with-file(name)
-    (projectile-locate-dominating-file (file-truename (buffer-file-name)) name))
-
-  (defun bazel-build-current ()
-    "Build & test in the first parent directory containing BUILD."
-    (interactive)
-    (let ((default-directory (find-parent-directory-with-file  "BUILD")))
-      (if default-directory
-          (compile "bazel test ...  --test_output=all --test_arg=--log_level=message")
-        (error "BUILD file not found in the parent directories"))))
-
-  (defun bazel-build-workspace ()
-    "Build & test in the first parent directory containing WORKSPACE."
-    (interactive)
-    (let ((default-directory (find-parent-directory-with-file  "WORKSPACE")))
-      (if default-directory
-          (compile "bazel test ...")
-        (error "WORKSPACE file not found in the parent directories"))))
-  ;; (define-key c++-mode-map (kbd "C-c n") 'bazel-build-current)
-  ;; (define-key c++-mode-map (kbd "C-c b") 'bazel-build-workspace)
-  )
 
 ;; whitespace
 (use-package whitespace
@@ -703,11 +679,24 @@
                       :background my/bg-color)
   )
 
-(provide 'init)
+;; guess style
+(global-guess-style-info-mode 1)
+
+;;
+;; Programming (in ./lisp)
+;;
+;;(use-package init-golang)
+;;(use-package init-python)
+;;(use-package init-web)
+
 
 ;;; profiler
 ;; (profiler-stop)
 ;; (profiler-report)
+
+;; end
+
+(provide 'init)
 
 ;;;
 ;;; init.el ends here

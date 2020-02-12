@@ -54,7 +54,6 @@ zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
 zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 #zplug "sindresorhus/pure", use:"pure.zsh", from:github, as:theme
 #zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
->>>>>>> Stashed changes
 zplug "Jxck/dotfiles", use:"zsh/{http_status_codes,peco}.zsh"
 zplug 'b4b4r07/zsh-history', as:command, use:misc/fzf-wrapper.zsh, rename-to:ff
 # zplug "b4b4r07/enhancd", use:init.sh
