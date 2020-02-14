@@ -13,9 +13,17 @@
   :hook
   (before-save-hook . gofmt-before-save)
   )
-(use-package company-go)
-(use-package go-autocomplete)
-;(use-package go-flymake)
+(use-package company-go
+  :custom
+  (add-to-list 'company-backends 'company-go)
+  )
+;; (use-package go-autocomplete
+;;   :after (go-mode)
+  ;; )
+(use-package go-eldoc
+  :hook
+  (go-mode-hook . go-eldoc-setup)
+  )
 ;; (use-package lsp-go
 ;;   :after (lsp-mode)
 ;;   ;; :custom (lsp-go-language-server-flags '(
@@ -35,21 +43,6 @@
 ;;                           (define-key company-active-map (kbd "C-s") 'company-filter-candidates)
 ;;                           (setq company-idle-delay 0)
 ;;                           (set (make-local-variable 'company-backends) '(company-go)))
-
-(defvar my/helm-go-source
-  '((name . "Helm Go")
-    (candidates . (lambda ()
-                    (cons "builtin" (go-packages))))
-    (action . (("Show document" . godoc)
-               ("Import package" . my/helm-go-import-add)))))
-
-(defun my/helm-go-import-add (candidate)
-  (dolist (package (helm-marked-candidates))
-    (go-import-add current-prefix-arg package)))
-
-(defun my/helm-go ()
-  (interactive)
-  (helm :sources '(my/helm-go-source) :buffer "*helm go*"))
 
 (provide 'init-golang)
 
