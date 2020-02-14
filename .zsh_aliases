@@ -33,7 +33,7 @@ alias kx="kubectx"
 alias kn="kubens"
 alias ls='ls -GFh'
 alias bs='brew services'
-alias gh='cd $(ghq list -p | peco)'
+alias ghl='cd $(ghq list -p | peco)'
 alias gho='gh-open $(ghq list -p | peco)'
 alias bazel='bazelisk'
 
