@@ -1,16 +1,8 @@
 #+TITLE: emacs init config
-* emacs config
 ** Beginning
-#+BEGIN_SRC emacs-lisp
-;;; init.el --- Global Initialization for local emacs
-;; Author: Koichi Yoshigoe <koichi.yoshigoe@gmail.com>
-;; Ver. 0.1.1
-;;; Commentary:
-;; emacs is fun
-#+END_SRC
 
 ** Misc initial settings
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp
 ;;; Code:
 ;;; profile-start
 ;; (profiler-start 'cpu)
@@ -40,8 +32,10 @@
 ;(setq init-loader-byte-compile t)
 #+END_SRC
 
+#+RESULTS:
+
 ** Basics
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-message t)
 (setq delete-auto-save-files t)
 (setq frame-title-format "%f")
@@ -82,9 +76,12 @@
 
 #+END_SRC
 
+#+RESULTS:
+: t
+
 ** OS Specific settings
 (currently terminal doesn't set this keyboard settings)
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp
 ;; OS: macos
 (when (eq system-type 'darwin)
   ;; Mac-only
@@ -111,35 +108,46 @@
 ;; OS: Linux
 (when (eq system-type 'gnu/linux)
   ;; Cask on linux
-  (require 'cask)
+  (require 'cask "~/.cask/cask.el")
   )
 #+END_SRC
 
+#+RESULTS:
+: cask
+
 ** Cask settings
 
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp
 ;; Cask
 (cask-initialize)
 
 #+END_SRC
 
+#+RESULTS:
+: #s(cask-bundle nil nil nil (#s(cask-dependency zenburn-theme nil nil nil nil nil nil) #s(cask-dependency yaxception nil nil nil nil nil nil) #s(cask-dependency yasnippet nil nil nil nil nil nil) #s(cask-dependency yaml-mode nil nil nil nil nil nil) #s(cask-dependency with-editor nil nil nil nil nil nil) #s(cask-dependency which-key nil nil nil nil nil nil) #s(cask-dependency wgrep-helm nil nil nil nil nil nil) #s(cask-dependency wgrep nil nil nil nil nil nil) #s(cask-dependency web-mode nil nil nil nil nil nil) #s(cask-dependency vue-mode nil nil nil nil nil nil) #s(cask-dependency vagrant-tramp nil nil nil nil nil nil) #s(cask-dependency use-package nil nil nil nil nil nil) #s(cask-dependency typescript-mode nil nil nil nil nil nil) #s(cask-dependency twittering-mode nil nil nil nil nil nil) #s(cask-dependency tree-mode nil nil nil nil nil nil) #s(cask-dependency transient nil nil nil nil nil nil) #s(cask-dependency tramp-term nil nil nil nil nil nil) #s(cask-dependency tide nil nil nil nil nil nil) #s(cask-dependency terraform-mode nil nil nil nil nil nil) #s(cask-dependency ssh-config-mode nil nil nil nil nil nil) #s(cask-dependency sr-speedbar nil nil nil nil nil nil) #s(cask-dependency smex nil nil nil nil nil nil) #s(cask-dependency smartrep nil nil nil nil nil nil) #s(cask-dependency smartparens nil nil nil nil nil nil) #s(cask-dependency smart-newline nil nil nil nil nil nil) #s(cask-dependency shut-up nil nil nil nil nil nil) #s(cask-dependency sequential-command nil nil nil nil nil nil) #s(cask-dependency sbt-mode nil nil nil nil nil nil) #s(cask-dependency s nil nil nil nil nil nil) #s(cask-dependency recentf-ext nil nil nil nil nil nil) #s(cask-dependency rainbow-delimiters nil nil nil nil nil nil) #s(cask-dependency python-mode nil nil nil nil nil nil) #s(cask-dependency python-environment nil nil nil nil nil nil) #s(cask-dependency python-black nil nil nil nil nil nil) #s(cask-dependency pyenv-mode-auto nil nil nil nil nil nil) #s(cask-dependency py-yapf nil nil nil nil nil nil) #s(cask-dependency projectile nil nil nil nil nil nil) #s(cask-dependency project-persist-drawer nil nil nil nil nil nil) #s(cask-dependency project-persist nil nil nil nil nil nil) #s(cask-dependency prodigy nil nil nil nil nil nil) #s(cask-dependency ppd-sr-speedbar nil nil nil nil nil nil) #s(cask-dependency powerline nil nil nil nil nil nil) #s(cask-dependency pos-tip nil nil nil nil nil nil) #s(cask-dependency popwin nil nil nil nil nil nil) #s(cask-dependency popup nil nil nil nil nil nil) #s(cask-dependency pocket-reader nil nil nil nil nil nil) #s(cask-dependency pocket-mode nil nil nil nil nil nil) #s(cask-dependency pkg-info nil nil nil nil nil nil) #s(cask-dependency php-mode nil nil nil nil nil nil) #s(cask-dependency pcache nil nil nil nil nil nil) #s(cask-dependency pbcopy nil nil nil nil nil nil) #s(cask-dependency pallet nil nil nil nil nil nil) #s(cask-dependency package-build nil nil nil nil nil nil) #s(cask-dependency org2jekyll nil nil nil nil nil nil) #s(cask-dependency org2issue nil nil nil nil nil nil) #s(cask-dependency org-web-tools nil nil nil nil nil nil) #s(cask-dependency org-sync nil nil nil nil nil nil) #s(cask-dependency org-roam nil :git "https://github.com/jethrokuan/org-roam.git" nil nil nil) #s(cask-dependency org-projectile-helm nil nil nil nil nil nil) #s(cask-dependency org-projectile nil nil nil nil nil nil) #s(cask-dependency org-panes nil :git "https://github.com/knupfer/org-panes.git" nil nil nil) #s(cask-dependency org-notebook nil nil nil nil nil nil) #s(cask-dependency org-jira nil nil nil nil nil nil) #s(cask-dependency org-gcal nil nil nil nil nil nil) #s(cask-dependency org-doing nil nil nil nil nil nil) #s(cask-dependency org-dashboard nil nil nil nil nil nil) #s(cask-dependency org-bullets nil nil nil nil nil nil) #s(cask-dependency org-beautify-theme nil nil nil nil nil nil) #s(cask-dependency org-autolist nil nil nil nil nil nil) #s(cask-dependency org nil nil nil nil nil nil) #s(cask-dependency orca nil nil nil nil nil nil) #s(cask-dependency ob-go nil nil nil nil nil nil) #s(cask-dependency nginx-mode nil nil nil nil nil nil) #s(cask-dependency neotree nil nil nil nil nil nil) #s(cask-dependency multiple-cursors nil nil nil nil nil nil) #s(cask-dependency mmm-mode nil nil nil nil nil nil) #s(cask-dependency migemo nil nil nil nil nil nil) #s(cask-dependency marshal nil nil nil nil nil nil) #s(cask-dependency markdown-preview-mode nil nil nil nil nil nil) #s(cask-dependency markdown-preview-eww nil nil nil nil nil nil) #s(cask-dependency markdown-mode+ nil nil nil nil nil nil) #s(cask-dependency markdown-mode nil nil nil nil nil nil) #s(cask-dependency magithub nil nil nil nil nil nil) #s(cask-dependency magit-popup nil nil nil nil nil nil) #s(cask-dependency magit-gh-pulls nil nil nil nil nil nil) #s(cask-dependency magit nil nil nil nil nil nil) #s(cask-dependency lsp-yaml nil :git "https://github.com/iquiw/lsp-yaml.git" nil nil nil) #s(cask-dependency lsp-ui nil nil nil nil nil nil) #s(cask-dependency lsp-typescript nil nil nil nil nil nil) #s(cask-dependency lsp-sh nil nil nil nil nil nil) #s(cask-dependency lsp-python-ms nil nil nil nil nil nil) #s(cask-dependency lsp-python nil nil nil nil nil nil) #s(cask-dependency lsp-mode nil nil nil nil nil nil) #s(cask-dependency kubernetes-tramp nil nil nil nil nil nil) #s(cask-dependency kubernetes-helm nil nil nil nil nil nil) #s(cask-dependency kubernetes nil nil nil nil nil nil) #s(cask-dependency kubel nil nil nil nil nil nil) #s(cask-dependency k8s-mode nil nil nil nil nil nil) #s(cask-dependency json-snatcher nil nil nil nil nil nil) #s(cask-dependency json-reformat nil nil nil nil nil nil) #s(cask-dependency json-mode nil nil nil nil nil nil) #s(cask-dependency jinja2-mode nil nil nil nil nil nil) #s(cask-dependency jedi-core nil nil nil nil nil nil) #s(cask-dependency jedi nil nil nil nil nil nil) #s(cask-dependency jade-mode nil nil nil nil nil nil) #s(cask-dependency jabber nil nil nil nil nil nil) #s(cask-dependency initchart nil :git "https://github.com/yuttie/initchart.git" nil nil nil) #s(cask-dependency indent-guide nil nil nil nil nil nil) #s(cask-dependency idle-highlight-mode nil nil nil nil nil nil) #s(cask-dependency htmlize nil nil nil nil nil nil) #s(cask-dependency html-to-markdown nil nil nil nil nil nil) #s(cask-dependency ht nil nil nil nil nil nil) #s(cask-dependency highlight-symbol nil nil nil nil nil nil) #s(cask-dependency hide-mode-line nil nil nil nil nil nil) #s(cask-dependency helm-tramp nil nil nil nil nil nil) #s(cask-dependency helm-themes nil nil nil nil nil nil) #s(cask-dependency helm-swoop nil nil nil nil nil nil) #s(cask-dependency helm-projectile nil nil nil nil nil nil) #s(cask-dependency helm-osx-app nil nil nil nil nil nil) #s(cask-dependency helm-org-rifle nil nil nil nil nil nil) #s(cask-dependency helm-org nil nil nil nil nil nil) #s(cask-dependency helm-open-github nil nil nil nil nil nil) #s(cask-dependency helm-migemo nil nil nil nil nil nil) #s(cask-dependency helm-lsp nil nil nil nil nil nil) #s(cask-dependency helm-ls-git nil nil nil nil nil nil) #s(cask-dependency helm-jira nil nil nil nil nil nil) #s(cask-dependency helm-gtags nil nil nil nil nil nil) #s(cask-dependency helm-grepint nil nil nil nil nil nil) #s(cask-dependency helm-google nil nil nil nil nil nil) #s(cask-dependency helm-go-package nil nil nil nil nil nil) #s(cask-dependency helm-git-grep nil nil nil nil nil nil) #s(cask-dependency helm-git nil nil nil nil nil nil) #s(cask-dependency helm-ghq nil nil nil nil nil nil) #s(cask-dependency helm-flymake nil nil nil nil nil nil) #s(cask-dependency helm-flycheck nil nil nil nil nil nil) #s(cask-dependency helm-describe-modes nil nil nil nil nil nil) #s(cask-dependency helm-descbinds nil nil nil nil nil nil) #s(cask-dependency helm-core nil nil nil nil nil nil) #s(cask-dependency helm-company nil nil nil nil nil nil) #s(cask-dependency helm-chrome nil nil nil nil nil nil) #s(cask-dependency helm-ag nil nil nil nil nil nil) #s(cask-dependency helm nil nil nil nil nil nil) #s(cask-dependency hcl-mode nil nil nil nil nil nil) #s(cask-dependency guess-style nil :git "https://github.com/nschum/guess-style.git" nil nil nil) #s(cask-dependency graphql nil nil nil nil nil nil) #s(cask-dependency graphene-meta-theme nil nil nil nil nil nil) #s(cask-dependency graphene nil nil nil nil nil nil) #s(cask-dependency golden-ratio nil nil nil nil nil nil) #s(cask-dependency go-snippets nil nil nil nil nil nil) #s(cask-dependency go-projectile nil nil nil nil nil nil) #s(cask-dependency go-mode nil nil nil nil nil nil) #s(cask-dependency go-gopath nil nil nil nil nil nil) #s(cask-dependency go-eldoc nil nil nil nil nil nil) #s(cask-dependency gitignore-mode nil nil nil nil nil nil) #s(cask-dependency github-stars nil nil nil nil nil nil) #s(cask-dependency github-search nil nil nil nil nil nil) #s(cask-dependency github-review nil nil nil nil nil nil) #s(cask-dependency github-pullrequest nil nil nil nil nil nil) #s(cask-dependency github-issues nil nil nil nil nil nil) #s(cask-dependency github-browse-file nil nil nil nil nil nil) #s(cask-dependency git-gutter+ nil nil nil nil nil nil) #s(cask-dependency git-gutter nil nil nil nil nil nil) #s(cask-dependency git-commit nil nil nil nil nil nil) #s(cask-dependency git nil nil nil nil nil nil) #s(cask-dependency gist nil nil nil nil nil nil) #s(cask-dependency ghub+ nil nil nil nil nil nil) #s(cask-dependency ghub nil nil nil nil nil nil) #s(cask-dependency ghq nil nil nil nil nil nil) #s(cask-dependency gh nil nil nil nil nil nil) #s(cask-dependency ggtags nil nil nil nil nil nil) #s(cask-dependency fzf nil nil nil nil nil nil) #s(cask-dependency flymake-yaml nil nil nil nil nil nil) #s(cask-dependency flymake-python-pyflakes nil nil nil nil nil nil) #s(cask-dependency flymake-json nil nil nil nil nil nil) #s(cask-dependency flymake-go nil nil nil nil nil nil) #s(cask-dependency flymake-easy nil nil nil nil nil nil) #s(cask-dependency flycheck-popup-tip nil nil nil nil nil nil) #s(cask-dependency flycheck-golangci-lint nil nil nil nil nil nil) #s(cask-dependency flycheck-cask nil nil nil nil nil nil) #s(cask-dependency flycheck-bazel nil :git "https://github.com/michaelschiff/flycheck-bazel.git" nil nil nil) #s(cask-dependency flycheck nil nil nil nil nil nil) #s(cask-dependency f nil nil nil nil nil nil) #s(cask-dependency expand-region nil nil nil nil nil nil) #s(cask-dependency exec-path-from-shell nil nil nil nil nil nil) #s(cask-dependency epl nil nil nil nil nil nil) #s(cask-dependency epc nil nil nil nil nil nil) #s(cask-dependency elpy nil nil nil nil nil nil) #s(cask-dependency eldoc-overlay nil nil nil nil nil nil) #s(cask-dependency el-pocket nil nil nil nil nil nil) #s(cask-dependency dumb-jump nil nil nil nil nil nil) #s(cask-dependency drag-stuff nil nil nil nil nil nil) #s(cask-dependency doom-themes nil nil nil nil nil nil) #s(cask-dependency doom-modeline nil nil nil nil nil nil) #s(cask-dependency doom nil nil nil nil nil nil) #s(cask-dependency dockerfile-mode nil nil nil nil nil nil) #s(cask-dependency docker-tramp nil nil nil nil nil nil) #s(cask-dependency docker-compose-mode nil nil nil nil nil nil) #s(cask-dependency docker nil nil nil nil nil nil) #s(cask-dependency diminish nil nil nil nil nil nil) #s(cask-dependency deft nil nil nil nil nil nil) #s(cask-dependency deferred nil nil nil nil nil nil) #s(cask-dependency dashboard-project-status nil nil nil nil nil nil) #s(cask-dependency dashboard nil nil nil nil nil nil) #s(cask-dependency dash-functional nil nil nil nil nil nil) #s(cask-dependency dash nil nil nil nil nil nil) #s(cask-dependency ctable nil nil nil nil nil nil) #s(cask-dependency csv-mode nil nil nil nil nil nil) #s(cask-dependency concurrent nil nil nil nil nil nil) #s(cask-dependency company-terraform nil nil nil nil nil nil) #s(cask-dependency company-quickhelp nil nil nil nil nil nil) #s(cask-dependency company-lsp nil nil nil nil nil nil) #s(cask-dependency company-jedi nil nil nil nil nil nil) #s(cask-dependency company-go nil nil nil nil nil nil) #s(cask-dependency company-c-headers nil nil nil nil nil nil) #s(cask-dependency company-ansible nil nil nil nil nil nil) #s(cask-dependency company nil nil nil nil nil nil) #s(cask-dependency cask-mode nil nil nil nil nil nil) #s(cask-dependency cask nil nil nil nil nil nil) #s(cask-dependency bts-github nil nil nil nil nil nil) #s(cask-dependency bts nil nil nil nil nil nil) #s(cask-dependency bind-key nil nil nil nil nil nil) #s(cask-dependency better-shell nil nil nil nil nil nil) #s(cask-dependency bazel-build nil :git "https://github.com/bazelbuild/emacs-bazel-mode.git" ("lisp/*.el") nil nil) #s(cask-dependency babel nil nil nil nil nil nil) #s(cask-dependency auto-yasnippet nil nil nil nil nil nil) #s(cask-dependency auto-package-update nil nil nil nil nil nil) #s(cask-dependency auto-complete nil nil nil nil nil nil) #s(cask-dependency async nil nil nil nil nil nil) #s(cask-dependency asana nil :git "https://github.com/lmartel/emacs-asana.git" nil nil nil) #s(cask-dependency ansible nil nil nil nil nil nil) #s(cask-dependency amx nil nil nil nil nil nil) #s(cask-dependency ample-zen-theme nil nil nil nil nil nil) #s(cask-dependency ample-theme nil nil nil nil nil nil) #s(cask-dependency all-the-icons-dired nil nil nil nil nil nil)) nil "/home/yoshigoe/dotfiles/.emacs.d/" nil (#s(cask-source "org" "http://orgmode.org/elpa/") #s(cask-source "melpa" "https://melpa.org/packages/") #s(cask-source "gnu" "https://elpa.gnu.org/packages/") #s(cask-source "elpy" "https://jorgenschaefer.github.io/packages/")))
+
 ** measurement
 Visualize boot loading time
 This init file is saved in lisp dir.
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp
 ;;; Visualize boot from here
-(require 'initchart)
-(initchart-record-execution-time-of load file)
-(initchart-record-execution-time-of require feature)
+;;(require 'initchart)
+;;(initchart-record-execution-time-of load file)
+;;(initchart-record-execution-time-of require feature)
 #+END_SRC
 
+#+RESULTS:
+
 ** Basic packages
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp
 ;; use-package, bind-key
 (eval-when-compile
-  (require 'use-package))
+  (require 'use-package)
+  (require 'use-package-ensure))
+;; ensure all use-package installed
+; (setq use-package-always-ensure t)
 (require 'diminish)
-(require 'bind-key)
+
 (unless (require 'use-package nil t)
   (defmacro use-package (&rest args))
   (defmacro bind-key (&rest args)) )
@@ -150,11 +158,22 @@ This init file is saved in lisp dir.
   :no-require t
   :config (pallet-mode t))
 
+;;(use-package auto-package-update
+;;  :config
+;;  (setq auto-package-update-delete-old-versions t)
+;;  (setq auto-package-update-hide-results t)
+;;  (auto-package-update-maybe))
 #+END_SRC
 
-** Other packages
-#+BEGIN_SRC elisp
+#+RESULTS:
+: t
+
+** Basic shortcut by Bind-key
+#+BEGIN_SRC emacs-lisp
 ;; bind-key
+(use-package bind-key
+  :ensure t
+)
 (bind-key "<C-return>" 'other-window)
 (bind-key "C-c i" 'indent-region)
 (bind-key "C-c C-i" 'dabbrev-expand)
@@ -165,6 +184,15 @@ This init file is saved in lisp dir.
 (bind-key "C-h" 'delete-backward-char)
 (bind-key "M-?" 'help-for-help)
 (bind-key "M-n" 'goto-line)
+
+
+#+END_SRC
+
+#+RESULTS:
+: goto-line
+
+** Other packages
+#+BEGIN_SRC emacs-lisp
 
 ;; linum
 ;; (global-linum-mode t)
@@ -246,50 +274,6 @@ This init file is saved in lisp dir.
               ("C-c <" . helm-gtags-previous-history)
               ("C-t" . helm-gtags-pop-stack)))
 
-;;; Enable helm-gtags-mode
-;; (dolist (hook '(c-mode-common-hook
-;;                 java-mode-hook
-;;                 asm-mode-hook))
-;;   (add-hook hook 'helm-gtags-mode))
-
-;; migemo
-;; (require 'helm-migemo)
-;; (with-eval-after-load "helm-migemo"
-;;   (defun helm-compile-source--candidates-in-buffer (source)
-;;     (helm-aif (assoc 'candidates-in-buffer source)
-;;         (append source
-;;                 `((candidates
-;;                    . ,(or (cdr it)
-;;                           (lambda ()
-;;                             ;; Do not use `source' because other plugins
-;;                             ;; (such as helm-migemo) may change it
-;;                             (helm-candidates-in-buffer (helm-get-current-source)))))
-;;                   (volatile) (match identity)))
-;;       source))
-;;   [2015-09-06 Sun]helm-match-plugin -> helm-multi-match変更の煽りを受けて
-;;   (defalias 'helm-mp-3-get-patterns 'helm-mm-3-get-patterns)
-;;   (defalias 'helm-mp-3-search-base 'helm-mm-3-search-base))
-;; (setq helm-use-migemo t)
-;; (setq migemo-command "cmigemo")
-;; (setq migemo-options '("-q" "--emacs"))
-;; (setq migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict")
-;; (load-library "migemo")
-;; (migemo-init)
-
-;; color theme
-(use-package doom-themes
-  :custom
-  (doom-themes-enable-italic t)
-  (doom-themes-enable-bold t)
-  :custom-face
-  (doom-modeline-bar ((t (:background "#7587bf"))))
-  :config
-  (load-theme 'doom-dark+ t)
-  (doom-themes-neotree-config)
-  (doom-themes-org-config))
-;;(load-theme 'ample-zen t)
-;;(load-theme 'zenburn t)
-(use-package all-the-icons)
 
 ;; yasnippet
 (use-package yasnippet
@@ -381,15 +365,15 @@ This init file is saved in lisp dir.
   ;; :init (cl-pushnew (company-backend-with-yas 'company-lsp) company-backends))
   )
 
-(use-package lsp-python-ms
-  :ensure t
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-python-ms)
-                         (lsp))))
+;;(use-package lsp-python-ms
+;;  :ensure t
+;;  :hook (python-mode . (lambda ()
+;;                         (require 'lsp-python-ms)
+;;                         (lsp))))
 
-(use-package lsp-yaml
-  :after lsp
-  :hook (yaml-mode-hook . lsp-yaml))
+;;(use-package lsp-yaml
+;;  :after lsp
+;;  :hook (yaml-mode-hook . lsp-yaml))
 
 ;; flycheck
 (use-package flycheck
@@ -428,13 +412,6 @@ This init file is saved in lisp dir.
 (use-package hl-line
   :config
   (setq global-hl-line-mode t))
-  ;; (defun global-hl-line-timer-function ()
-  ;;   (global-hl-line-unhighlight-all)
-  ;;   (let ((global-hl-line-mode t))
-  ;;     (global-hl-line-highlight)))
-  ;; (setq global-hl-line-timer
-  ;;       (run-with-idle-timer 0.3 t 'global-hl-line-timer-function)))
-;; (cancel-timer global-hl-line-timer)
 
 ;; indent-guide
 (use-package indent-guide
@@ -454,29 +431,6 @@ This init file is saved in lisp dir.
   :hook
   ((neotree-mode imenu-list-minor-mode minimap-mode)
    . hide-mode-line-mode))
-
-;; doom-modeline
-(use-package doom-modeline
-  :ensure t
-  :hook (after-init . doom-modeline-mode)
-  :custom
-  (doom-modeline-icon t)
-  (doom-modeline-major-mode-icon t)
-  (doom-modeline-major-mode-color-icon t)
-  (doom-modeline-buffer-state-icon t)
-  (doom-modeline-buffer-modification-icon t)
-  (doom-modeline-checker-simple-format t)
-  (doom-modeline-github nil)
-  (doom-modeline-minor-modes (featurep 'minions))
-  (doom-modeline-vcs-max-length 12)
-  (doom-modeline-height 1)
-  (doom-modeline-lsp t)  )
-
-;; PowerLine
-;; (use-package powerline
-;;   :config
-;;   (powerline-center-theme)
-;;   (setq powerline-arrow-shape 'arrow))
 
 ;; dumb-jump
 (use-package dumb-jump
@@ -603,11 +557,14 @@ This init file is saved in lisp dir.
 
 #+END_SRC
 
+#+RESULTS:
+: t
+
 ** Org-mode settings
 - google drive at ~/GatsbyDrive
 - main: =note.org=
 
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp
 ;;
 ;; Org-mode
 ;;
@@ -694,10 +651,9 @@ This init file is saved in lisp dir.
   (global-set-key (kbd "C-^") '(lambda () (interactive)
     (show-org-buffer "note.org")))
 
-(use-package org-jira
-  :custom
-  (setq jiralib-url "https://leapmind.atlassian.net")
-  )
+;;(use-package org-jira
+;;  :custom
+;;  (setq jiralib-url "https://leapmind.atlassian.net"))
 
 ;; asana
 (use-package asana
@@ -707,8 +663,57 @@ This init file is saved in lisp dir.
 
 #+END_SRC
 
+#+RESULTS:
+| asana-mode |
+
+** Set Theme
+#+BEGIN_SRC emacs-lisp
+;; color theme
+(use-package doom-themes
+  :custom
+  (doom-themes-enable-italic t)
+  (doom-themes-enable-bold t)
+  :custom-face
+  (doom-modeline-bar ((t (:background "#7587bf"))))
+  :config
+  (load-theme 'doom-dark+ t)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config))
+;;(load-theme 'ample-zen t)
+;;(load-theme 'zenburn t)
+(use-package all-the-icons)
+
+;; doom-modeline
+(use-package doom-modeline
+  :ensure t
+  :hook (after-init . doom-modeline-mode)
+  :custom
+  (doom-modeline-icon t)
+  (doom-modeline-major-mode-icon t)
+  (doom-modeline-major-mode-color-icon t)
+  (doom-modeline-buffer-state-icon t)
+  (doom-modeline-buffer-modification-icon t)
+  (doom-modeline-checker-simple-format t)
+  (doom-modeline-github nil)
+  ;;(doom-modeline-minor-modes (featurep 'minions))
+  (doom-modeline-vcs-max-length 12)
+  (doom-modeline-height 1)
+  (doom-modeline-lsp t)  )
+
+;; PowerLine
+;; (use-package powerline
+;;   :config
+;;   (powerline-center-theme)
+;;   (setq powerline-arrow-shape 'arrow))
+
+
+#+END_SRC
+
+#+RESULTS:
+| doom-modeline-mode | which-key-mode | package--save-selected-packages | #[0 \303\211\235\203 \304"\301\305!\210\210	\205 \306 \210\307\211\207 [command-line-args desktop-save-mode inhibit-startup-screen --no-desktop delete 0 desktop-read t] 4] | table--make-cell-map |
+
 ** White space settings
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp
 ;; whitespace
 (use-package whitespace
   :config
@@ -747,17 +752,27 @@ This init file is saved in lisp dir.
 
 #+END_SRC
 
+#+RESULTS:
+: t
+
 ** Programming
 
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp
 ;;
 ;; Programming (in ./lisp)
 ;;
+(use-package dash)
 ;;(use-package init-golang)
 ;;(use-package init-python)
 ;;(use-package init-web)
 
+#+END_SRC
 
+#+RESULTS:
+
+
+** If Profiler is on
+#+BEGIN_SRC
 ;;; profiler
 ;; (profiler-stop)
 ;; (profiler-report)

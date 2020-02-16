@@ -11,6 +11,7 @@
 (depends-on "asana" :git "https://github.com/lmartel/emacs-asana.git")
 (depends-on "async")
 (depends-on "auto-complete")
+(depends-on "auto-package-update")
 (depends-on "auto-yasnippet")
 (depends-on "babel")
 (depends-on "bazel-build" :git "https://github.com/bazelbuild/emacs-bazel-mode.git" :files ("lisp/*.el"))
