@@ -1,4 +1,5 @@
 .cask
+bookmarks
 elpa
 snippets/*
 smex-items
