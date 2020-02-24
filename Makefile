@@ -6,7 +6,8 @@ help:
 all: emacs brew tmux zsh
 
 emacs:
-	ln -s $(PWD)/.emacs.d ~/
+	ln -s $(PWD)/emacs.d ~/.emacs.d
+	ln -s ~/src/github.com/kchygoe/dotfiles/doom.d ~/.doom.d
 
 brew:
 	ln -s $(PWD)/.brewfile ~/
