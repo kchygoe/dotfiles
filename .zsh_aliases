@@ -36,6 +36,8 @@ alias bs='brew services'
 alias ghl='cd $(ghq list -p | peco)'
 alias gho='gh-open $(ghq list -p | peco)'
 alias bazel='bazelisk'
+alias devstart='gcloud compute instances start develop --zone=asia-northeast1-a --project=goe-exp'
+alias devstop='gcloud compute instances  stop develop --zone=asia-northeast1-a --project=goe-exp'
 
 # colordiff
 if [[ -x `which colordiff` ]]; then

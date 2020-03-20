@@ -202,7 +202,7 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # argo
 # source <(argo completion zsh)
-export FPATH="$FPATH:/usr/local/Cellar/argo/2.3.0/share/zsh/site-functions"
+export FPATH="$FPATH:/usr/local/Cellar/argo/2.6.3/share/zsh/site-functions"
 autoload -U _argo
 
 # For emacs shell
@@ -231,6 +231,8 @@ eval "$(starship init zsh)"
 # iTerm2
 # test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+# doom/emacs
+export PATH=$PATH:$HOME/.emacs.d/bin
 
 ########################################
 ## private envs
