@@ -140,6 +140,16 @@
 (global-set-key (kbd "C-^") '(lambda () (interactive)
                                (show-org-buffer "note.org")))
 
+;; kubernetes
+(use-package! k8s-mode
+  :hook (k8s-mode . yas-minor-mode)
+  :config
+  (setq k8s-indent-offset nil)
+  (setq k8s-site-docs-version "v1.15"))
+
+(use-package! kubernetes
+  :commands (kubernetes-overview))
+
 ;;(use-package org-jira
 ;;  :custom
 ;;  (setq jiralib-url "https://leapmind.atlassian.net"))
@@ -181,7 +191,41 @@
   ;; (define-key c++-mode-map (kbd "C-c b") 'bazel-build-workspace)
   )
 
-
+;;
+;; Whitespace
+;;
+(use-package! whitespace
+  :config
+  (setq whitespace-style '(face
+                           trailing
+                           tabs
+                           spaces
+                           empty
+                           space-mark
+                           tab-mark
+                           ))
+  (setq whitespace-display-mappings
+        '((space-mark ?\u3000 [?\u25a1])
+          (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])))
+  ;;(setq whitespace-space-regexp "\\(\u3000+\\)")
+  (global-whitespace-mode 1)
+  (setq whitespace-action '(auto-cleanup))
+  (defvar my/bg-color "#262626")
+  (set-face-attribute 'whitespace-trailing nil
+                      :background my/bg-color
+                      :foreground "DarkBlue"
+                      :underline t)
+  (set-face-attribute 'whitespace-tab nil
+                      :background my/bg-color
+                      :foreground "LightSkyBlue"
+                      :underline t)
+  (set-face-attribute 'whitespace-space nil
+                      :background my/bg-color
+                      :foreground "DarkGreen"
+                      :weight 'bold)
+  (set-face-attribute 'whitespace-empty nil
+                      :background my/bg-color)
+  )
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
