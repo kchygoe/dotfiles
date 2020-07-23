@@ -38,10 +38,12 @@ alias gho='gh-open $(ghq list -p | peco)'
 alias bazel='bazelisk'
 alias devstart='gcloud compute instances start develop --zone=asia-northeast1-a --project=goe-exp'
 alias devstop='gcloud compute instances  stop develop --zone=asia-northeast1-a --project=goe-exp'
-
+alias pull='git pull origin master'
 # colordiff
 if [[ -x `which colordiff` ]]; then
     alias diff='colordiff -u'
 else
     alias diff='diff -u'
 fi
+
+alias less='less -R'

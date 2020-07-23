@@ -90,7 +90,7 @@ zplug "zsh-users/zsh-syntax-highlighting", defer:3
 zplug "direnv/direnv", from:gh-r, as:command, lazy:true
 zplug "lib/completion", from:oh-my-zsh, defer:3
 # zplug "knu/z", use:z.sh, defer:3
-zplug "superbrothers/zsh-kubectl-prompt", from:github, use:"kubectl.zsh"
+# zplug "superbrothers/zsh-kubectl-prompt", from:github, use:"kubectl.zsh"
 
 # zplug "dbz/zsh-kubernetes", from:github
 

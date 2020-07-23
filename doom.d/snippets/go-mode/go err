@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: go err
+# key: err
+# --
+if err != nil {
+   panic(err)
+}

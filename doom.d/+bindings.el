@@ -3,7 +3,7 @@
 (map!
 
  ;; general
- ;;"<C-return>" #'other-window
+ "<C-return>" #'other-window
  "C-c i" #'indent-region
  "C-c C-i" #'dabbrev-expand
  "C-c ;" #'comment-region
@@ -17,7 +17,7 @@
  ;; org-mode
  "C-c l"  #'org-store-link
  "C-c a"  #'org-agenda
- "C-c c"  #'org-capture
+ ;;"C-c c"  #'org-capture
 
  ;; org-roam
  "C-c n l" #'org-roam
@@ -36,5 +36,23 @@
   "C-d"         #'company-show-doc-buffer
   )
 )
+
+(provide '+bindings)
+
+;;;
+;;; bind
+;;;
+;; (bind-key "<C-return>" 'other-window)
+;; (bind-key "C-c i" 'indent-region)
+;; (bind-key "C-c C-i" 'dabbrev-expand)
+;; (bind-key "C-c ;" 'comment-region)
+;; (bind-key "C-c :" 'uncomment-region)
+;; (bind-key "C-c s" 'query-replace)
+;; (bind-key "C-u" 'scroll-down)
+;; (bind-key "C-h" 'delete-backward-char)
+;; (bind-key "M-?" 'help-for-help)
+;; (bind-key "M-n" 'goto-line)
+;; (bind-key "C-c c" 'org-capture)
+
 
 ;;; bindings.el ends here
