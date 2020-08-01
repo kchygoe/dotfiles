@@ -2,30 +2,44 @@
 ;;; Code:
 
 (setq user-full-name "Koichi Yoshigoe"
-      user-mail-address "yoshigoe@leapmind.io")
+      user-mail-address "yoshigoe@leapmind.io"
 
-(setq doom-font (font-spec :family "monospace" :size 14))
-(setq doom-theme 'doom-dark+)
+      doom-font (font-spec :family "Roboto Mono" :size 14)
+      doom-theme 'doom-dark+
+
+      delete-auto-save-files t
+      display-line-numbers-type nil
+      inhibit-startup-message t
+      mouse-wheel-follow-mouse t
+      show-paren-mode 1
+      line-number-mode t
+      column-number-mode t
+
+      ;; menu-bar
+      menu-bar-mode 1
+
+      ;; desktop file
+      ;; (desktop-save-mode 1)
+      ;; (setq desktop-save t)
+      ;; (setq desktop-restore-eager 10)
+      ;; (setq desktop-path '("~/.emacs.d/desktop/"))
+      global-auto-revert-mode 1
+
+      ;; disable auto line-breaking
+      auto-fill-mode -1
+
+      backup-directory-alist
+      `((".*" . ,temporary-file-directory))
+      auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/GatsbyDrive/org/")
 
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type nil)
-
-(setq inhibit-startup-message t)
-(setq delete-auto-save-files t)
-(setq frame-title-format "%f")
 (setq c-auto-newline t)
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;;(setq mouse-wheel-follow-mouse t)
 (setq tab-width 2)
 (setq indent-tabs-mode nil)
 (setq-default indent-tabs-mode nil)
@@ -33,23 +47,7 @@
 ;; (defvaralias 'cperl-indent-level 'tab-width)
 
 (put 'upcase-region 'disabled nil)
-(show-paren-mode 1)
-(line-number-mode t)
-(column-number-mode t)
 (add-to-list 'global-mode-string '(" %i"))
-
-;; disable auto line-breaking
-(auto-fill-mode -1)
-
-;; menu-bar
-(menu-bar-mode 1)
-
-;; desktop file
-;; (desktop-save-mode 1)
-;; (setq desktop-save t)
-;; (setq desktop-restore-eager 10)
-;; (setq desktop-path '("~/.emacs.d/desktop/"))
-(global-auto-revert-mode 1)
 
 ;; Custom variables
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -57,85 +55,80 @@
   (load custom-file))
 
 ;;;
+;;; ivy/counsel
+;;;
+(after! ivy
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-re-builders-alist
+        '((t . ivy--regex-ignore-order)))
+  (setq ivy-truncate-lines nil)
+  (setq ivy-wrap t)
+  (setq ivy-initial-inputs-alist
+        '((counsel-minor . "")
+          (counsel-package . "")
+          (counsel-org-capture . "")
+          (counsel-M-x . "")
+          (counsel-describe-function . "")
+          (counsel-describe-variable . "")))
+  (ivy-mode 1))
+
+(after! counsel
+  (counsel-mode 1))
+;;("C-M-z" . counsel-fzf)
+
+;;;
+;;; projectile
+;;;
+(after! projectile
+  (projectile-mode 1))
+
+;;;
+;;; company
+;;;
+;; company
+(after! company
+  ;; :bind (
+  ;;        :map company-active-map
+  ;;             ("M-n" . nil)
+  ;;             ("M-p" . nil)
+  ;;             ("C-n" . company-select-next)
+  ;;             ("C-p" . company-select-previous)
+  ;;             ("C-h" . nil)
+  ;;             ("C-s" . company-filter-candidates)
+  ;;             ("C-i" . company-complete-selection)
+  ;;             ("<tab>" . company-complete-common-or-cycle)
+  ;;             ("M-d" . company-show-doc-buffer)
+  ;;         :map company-search-map
+  ;;             ("C-n" . company-select-next)
+  ;;             ("C-p" . company-select-previous)
+  ;;         :map emacs-lisp-mode-map
+  ;;             ("C-M-i" . company-complete))
+  :config
+  (global-company-mode +1)
+  (setq company-quickhelp-mode +1)
+  (custom-set-variables '(company-idle-delay nil))
+  (setq company-transformers '(company-sort-by-backend-importance))
+  (setq company-idle-delay 0.2)
+  (setq company-minimum-prefix-length 3)
+  (setq company-selection-wrap-around t)
+  (setq completion-ignore-case t)
+  ;; (setq company-dabbrev-downcase nil)
+  ;; Add yasnippet support for all company backends.
+  (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
+  )
+
+;;;
 ;;; tramp
 ;;;
 (eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
 
 ;;;
-;;; Org
+;;; which-key
 ;;;
-(use-package! org
-  :mode ("\\.org$" . org-mode)
-  :bind (("C-c l" . org-store-link)
-         ("C-c a" . org-agenda)
-         ("C-c c" . org-capture))
+(use-package! which-key
   :config
-  (setq org-default-notes-file (concat org-directory "/note.org"))
-  (setq org-agenda-files '("~/GatsbyDrive/org/" "~/.org-jira/" ))
-  (setq org-log-done 'time)
-  (setq org-startup-truncated nil)
-  (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "SOMEDAY(s)" "WAITING(w)" "|" "DONE(d)" "CANCELED(c@)")))
-  (setq org-capture-templates
-        '(("a" "Appointment" entry (file  "~/GatsbyDrive/org/gcal.org" )
-           "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
-          ("l" "Link" entry (file+headline "~/GatsbyDrive/org/links.org" "Links")
-           "* %? %^L %^g \n%T" :prepend t)
-          ("i" "Idea" entry (file+headline "~/GatsbyDrive/org/idea.org" "Idea Topics:")
-           "* %?\n%T" :prepend t)
-          ("t" "To Do Item" entry (file+headline "~/GatsbyDrive/org/note.org" "INBOX")
-           "* TODO %?\n%u\n" :prepend t)
-          ("n" "Note" entry (file+headline "~/GatsbyDrive/org/note.org" "NOTE SPACE")
-           "* %?\n%u\n" :prepend t)
-          ("j" "Journal" entry (file+datetree "~/GatsbyDrive/org/journal.org")
-           "* %?\nEntered on %U\n  %i\n  %a")))
-  (add-hook 'org-agenda-mode-hook
-            (lambda ()
-              (add-hook 'auto-save-hook 'org-save-all-org-buffers nil t)
-              (auto-save-mode)))
-  (add-hook 'org-mode 'org-bullets-mode))
-
-;;(after! org (add-hook! org-mode org-bullets-mode))
-
-;; org-gcal
-(after! org (use-package! org-gcal
-  ;; :hook
-  ;; (org-agenda-mode-hook . org-gcal-sync)
-  :config
-  (setq org-gcal-client-id (getenv "GCAL_CLIENT_ID")
-        org-gcal-client-secret (getenv "GCAL_CLIENT_SECRET")
-        org-gcal-file-alist '(("gatsby.gatsby.gatsby@gmail.com" . "~/GatsbyDrive/org/gcal.org")
-                              ("yoshigoe@leapmind.io" . "~/GatsbyDrive/org/gcal-work.org") ))))
-
-;; org-roam
-(after! org (use-package! org-roam
-  :after (org)
-  :hook (org-mode . org-roam-mode)
-  :custom
-  (org-roam-directory org-directory)
-  :bind
-  ("C-c n l" . org-roam)
-  ("C-c n t" . org-roam-today)
-  ("C-c n f" . org-roam-find-file)
-  ("C-c n i" . org-roam-insert)
-  ("C-c n g" . org-roam-show-graph)))
-
-(after! org-roam (use-package! company-org-roam
-  :config
-  (push 'company-org-roam company-backends)))
-
-;; shortcut for checking note.org
-(defun show-org-buffer (file)
-  "Show an org-file FILE on the current buffer."
-  (interactive)
-  (if (get-buffer file)
-      (let ((buffer (get-buffer file)))
-        (switch-to-buffer buffer)
-        (message "%s" file))
-    (find-file (concat "~/GatsbyDrive/org/" file))))
-        (global-set-key (kbd "C-^") '(lambda () (interactive)
-                                       (show-org-buffer "note.org")))
+  (setq which-key-idle-secondary-delay 0.05))
+(which-key-mode)
 
 ;; kubernetes
 (use-package! k8s-mode
@@ -146,20 +139,6 @@
 
 (use-package! kubernetes
   :commands (kubernetes-overview))
-
-;; JIRA
-;; Refs. https://github.com/ahungry/org-jira
-(after! org (use-package! org-jira
-  :config
-  (setq jiralib-url "https://leapmind.atlassian.net")
-  (defconst org-jira-progress-issue-flow
-  '(("To Do" . "In Progress")
-    ("In Progress" . "Review")
-    ("Review" . "DONE")))))
-
-;; asana
-;; USE ASANA_TOKEN in env
-(use-package! asana)
 
 ;;;
 ;;; prog-mode
@@ -248,6 +227,7 @@
 ;; they are implemented.
 
 (load! "+bindings")
+(load! "+org")
 
 (provide 'config)
 ;;; config.el ends here

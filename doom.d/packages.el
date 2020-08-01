@@ -6,7 +6,7 @@
 (disable-packages! solaire-mode
                   anaconda-mode
                   company-anaconda
-                  lsp-python-ms
+                  ;; lsp-python-ms
                   pyimport)
 
 ;; (package! all-the-icons-dired)
@@ -224,7 +224,7 @@
 ;; (package! web-mode)
 ;; (package! wgrep)
 ;; (package! wgrep-helm)
-;; (package! which-key)
+(package! which-key)
 ;; (package! with-editor)
 (package! whitespace)
 ;; (package! yaml-mode)
