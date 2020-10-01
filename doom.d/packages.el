@@ -3,11 +3,13 @@
 
 ;;; Code:
 
-(disable-packages! solaire-mode
-                  anaconda-mode
-                  company-anaconda
-                  ;; lsp-python-ms
-                  pyimport)
+(disable-packages! helm
+                   helm-core
+                   solaire-mode
+                   anaconda-mode
+                   company-anaconda
+                   ;; lsp-python-ms
+                   pyimport)
 
 ;; (package! all-the-icons-dired)
 ;; (package! ample-theme)
@@ -35,7 +37,7 @@
 (package! company-go)
 ;; (package! company-jedi)
 (package! company-lsp)
-;; (package! company-quickhelp)
+(package! company-quickhelp)
 (package! company-terraform)
 ;; (package! concurrent)
 (package! counsel-etags)
@@ -56,7 +58,7 @@
 ;; (package! docker-tramp)
 (package! dockerfile-mode)
 ;; (package! drag-stuff)
-;; (package! dumb-jump)
+(package! dumb-jump)
 (package! el-pocket)
 ;; (package! eldoc-overlay)
 ;; (package! elpy)
@@ -78,7 +80,7 @@
 (package! fzf)
 ;; (package! ggtags)
 ;; (package! gh)
-(package! ghq)
+;; (package! ghq)
 ;; (package! ghub)
 ;; (package! ghub+)
 ;; (package! gist)
@@ -87,7 +89,7 @@
 ;; (package! git-gutter)
 ;; (package! git-gutter+)
 (package! git-link)
-;; (package! github-browse-file)
+(package! github-browse-file)
 (package! github-issues)
 (package! github-pullrequest)
 ;; (package! github-review)
@@ -117,6 +119,7 @@
   (:host github
          :repo "analyticd/ivy-ghq"
          :files ("*.el")))
+(package! ivy-rich)
 ;; (package! jabber)
 ;; (package! jade-mode)
 ;; (package! jedi)
@@ -203,6 +206,7 @@
 ;; (package! recentf-ext)
 ;; (package! s)
 (package! sbt-mode)
+(package! selectrum)
 ;; (package! sequential-command)
 ;; (package! shut-up)
 ;; (package! smart-newline)
@@ -211,9 +215,10 @@
 ;; (package! smex)
 ;; (package! sr-speedbar)
 ;; (package! ssh-config-mode)
+(package! swiper)
 (package! terraform-mode)
 ;; (package! tide)
-;; (package! tramp-term)
+(package! tramp-term)
 ;; (package! transient)
 ;; (package! tree-mode)
 ;; (package! twittering-mode)

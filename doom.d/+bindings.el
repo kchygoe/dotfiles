@@ -8,6 +8,7 @@
  "C-c C-i" #'dabbrev-expand
  "C-c ;" #'comment-region
  "C-c :" #'uncomment-region
+ "C-s" #'swiper
  "C-c s" #'query-replace
  "C-u" #'scroll-down
  "C-h" #'delete-backward-char

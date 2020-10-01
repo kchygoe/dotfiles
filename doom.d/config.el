@@ -16,7 +16,10 @@
       column-number-mode t
 
       ;; menu-bar
-      menu-bar-mode 1
+      menu-bar-mode -1
+      scroll-bar-mode -1
+      tool-bar-mode -1
+      visible-bell t
 
       ;; desktop file
       ;; (desktop-save-mode 1)
@@ -38,7 +41,7 @@
 (setq org-directory "~/GatsbyDrive/org/")
 
 (setq c-auto-newline t)
-(fset 'yes-or-no-p 'y-or-n-p)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 (setq tab-width 2)
 (setq indent-tabs-mode nil)
@@ -62,6 +65,8 @@
   (setq ivy-re-builders-alist
         '((t . ivy--regex-ignore-order)))
   (setq ivy-truncate-lines nil)
+  (setq ivy-display-style 'fancy)
+  (setq ivy-initial-inputs-alist nil)
   (setq ivy-wrap t)
   (setq ivy-initial-inputs-alist
         '((counsel-minor . "")
@@ -71,16 +76,27 @@
           (counsel-describe-function . "")
           (counsel-describe-variable . "")))
   (ivy-mode 1))
+(ivy-rich-mode 1)
 
 (after! counsel
   (counsel-mode 1))
-;;("C-M-z" . counsel-fzf)
+;;bind:
+;;"C-M-z" . counsel-fzf))
 
 ;;;
 ;;; projectile
 ;;;
 (after! projectile
   (projectile-mode 1))
+
+;;
+;; hl-todo
+;;
+(use-package! hl-todo
+  ;; it, e.g. python-mode)
+  :hook (prog-mode . hl-todo-mode)
+  :config
+  (setq hl-todo-highlight-punctuation ":"))
 
 ;;;
 ;;; company
@@ -116,11 +132,14 @@
   ;; Add yasnippet support for all company backends.
   (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
   )
+(company-quickhelp-mode)
 
 ;;;
 ;;; tramp
 ;;;
-(eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
+(use-package! counsel-tramp)
+(setq tramp-auto-save-directory "~/tmp/tramp/")
+(setq tramp-chunksize 2000)
 
 ;;;
 ;;; which-key
@@ -134,16 +153,68 @@
 (use-package! k8s-mode
   :hook (k8s-mode . yas-minor-mode)
   :config
-  (setq k8s-indent-offset nil)
-  (setq k8s-site-docs-version "v1.15"))
+  (setq k8s-indent-offset nil
+        k8s-site-docs-version "v1.16"))
 
 (use-package! kubernetes
   :commands (kubernetes-overview))
 
 ;;;
+;;; selectrum
+;;;
+(use-package! selectrum
+  :config
+  (selectrum-mode +1)
+  )
+
+;;;
 ;;; prog-mode
 ;;;
 (format-all-mode -1)
+
+(after! lsp-mode
+  :config
+  (setq lsp-enable-snippet t
+        lsp-auto-guess-root t
+        lsp-enable-semantic-highlighting t
+        ;; (lsp-inhibit-message t)
+        lsp-message-project-root-warning t
+        create-lockfiles nil)
+  ;; :hook
+  ;; (prog-major-mode . lsp-prog-major-mode-enable)
+  )
+
+(use-package! lsp-ui
+  :after lsp-mode
+  :custom
+  (scroll-margin 0)
+  (lsp-ui-doc-enable t)
+  (lsp-ui-doc-header t)
+  (lsp-ui-peek-enable t)
+  :hook (lsp-mode . lsp-ui-mode))
+
+(use-package! company-lsp
+  :after lsp-mode
+  :custom
+  (push 'company-lsp company-backends)
+  ;; :defines company-backends
+  ;; :functions company-backend-with-yas
+  ;; :init (cl-pushnew (company-backend-with-yas 'company-lsp) company-backends))
+  )
+
+(after! flycheck
+  :custom
+  (setq flycheck-check-syntax-automatically '(mode-enabled save)
+        flycheck-display-errors-delay 0.5
+        flycheck-display-errors-function nil
+        flycheck-idle-change-delay 2.0)
+  :config
+  (global-flycheck-mode t) )
+
+(use-package! flycheck-popup-tip
+  :after (flycheck)
+  :hook (flycheck-mode . flycheck-popup-tip-mode) )
+
 (use-package! bazel-build)
 (use-package! bazel
   :mode (("\\.bzl\\'" . bazel-mode)

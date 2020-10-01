@@ -6,8 +6,8 @@
 (use-package! org
   :mode ("\\.org$" . org-mode)
   :bind (("C-c l" . org-store-link)
-         ("C-c a" . org-agenda)
-         ("C-c c" . org-capture))
+         ("C-c a" . org-agenda))
+
   :config
   (setq org-default-notes-file (concat org-directory "/note.org"))
   (setq org-agenda-files '("~/GatsbyDrive/org/" "~/.org-jira/" ))
@@ -42,25 +42,25 @@
   :config
   (setq org-gcal-client-id (getenv "GCAL_CLIENT_ID")
         org-gcal-client-secret (getenv "GCAL_CLIENT_SECRET")
-        org-gcal-file-alist '(("gatsby.gatsby.gatsby@gmail.com" . "~/GatsbyDrive/org/gcal.org")
-                              ("yoshigoe@leapmind.io" . "~/GatsbyDrive/org/gcal-work.org") ))))
+        org-gcal-file-alist '(("gatsby.gatsby.gatsby@gmail.com" . "~/GatsbyDrive/org/gcal/gcal.org")
+                              ("yoshigoe@leapmind.io" . "~/GatsbyDrive/org/gcal/gcal-work.org") ))))
 
 ;; org-roam
-(after! org (use-package! org-roam
-  :after (org)
-  :hook (org-mode . org-roam-mode)
-  :custom
-  (org-roam-directory org-directory)
-  :bind
-  ("C-c n l" . org-roam)
-  ("C-c n t" . org-roam-today)
-  ("C-c n f" . org-roam-find-file)
-  ("C-c n i" . org-roam-insert)
-  ("C-c n g" . org-roam-show-graph)))
+;; (after! org (use-package! org-roam
+;;   :after (org)
+;;   :hook (org-mode . org-roam-mode)
+;;   :custom
+;;   (org-roam-directory org-directory)
+;;   :bind
+;;   ("C-c n l" . org-roam)
+;;   ("C-c n t" . org-roam-today)
+;;   ("C-c n f" . org-roam-find-file)
+;;   ("C-c n i" . org-roam-insert)
+;;   ("C-c n g" . org-roam-show-graph)))
 
-(after! org-roam (use-package! company-org-roam
-  :config
-  (push 'company-org-roam company-backends)))
+;; (after! org-roam (use-package! company-org-roam
+;;   :config
+;;   (push 'company-org-roam company-backends)))
 
 ;; shortcut for checking note.org
 (defun show-org-buffer (file)
@@ -73,6 +73,15 @@
     (find-file (concat "~/GatsbyDrive/org/" file))))
         (global-set-key (kbd "C-^") '(lambda () (interactive)
                                        (show-org-buffer "note.org")))
+
+;; Github
+(use-package! org-sync
+  :config
+  (defvar org-sync-backend-alist
+    '(("github.com/\\(?:repos/\\)?[^/]+/[^/]+"  . org-sync-github-backend)))
+
+  )
+
 
 ;; JIRA
 ;; Refs. https://github.com/ahungry/org-jira
