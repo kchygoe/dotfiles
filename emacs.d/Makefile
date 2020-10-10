@@ -15,7 +15,4 @@ golang:
 link:
 	ln -s $(PWD) ~/
 
-cask:
-	cask install
-
 all: python golang link
