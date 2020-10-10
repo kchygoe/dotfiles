@@ -1,29 +1,31 @@
 default: help
 
+.PHONY: help
 help:
 	@echo "make all"
 
+.PHONY: all
 all: emacs brew tmux zsh
 
+.PHONY: emacs
 emacs:
-	ln -s $(PWD)/emacs.d ~/.emacs.d
-	ln -s ~/src/github.com/kchygoe/dotfiles/doom.d ~/.doom.d
+	ln -s $(PWD)/emacs.d ~/.config/emacs
+	ln -s $(PWD)/doom.d ~/.config/doom
 
+.PHONY: brew
 brew:
 	ln -s $(PWD)/.brewfile ~/
 
+.PHONY: tmux
 tmux:
-	ln -s $(PWD)/.tmux.conf ~/
+	ln -sf $(PWD)/tmux ~/.config/tmux
 
+.PHONY: zsh
 zsh:
 	ln -s $(PWD)/.zshrc ~/
 
-configdir:
-	mkdir -p $(HOME)/.config/yabai
-	mkdir -p $(HOME)/.config/skhd
-	mkdir -p $(HOME)/.config/alacritty
-
+.PHONY: config
 config:
-	ln -s $(PWD)/yabairc $(HOME)/.config/yabai/yabairc
-	ln -s $(PWD)/yabairc $(HOME)/.config/skhd/skhdrc
-	ln -s $(PWD)/yabairc $(HOME)/.config/alacritty/alacritty.yml
+	ln -sf $(PWD)/yabai $(HOME)/.config/yabai
+	ln -sf $(PWD)/skhd $(HOME)/.config/skhd
+	ln -sf $(PWD)/alacritty $(HOME)/.config/alacritty
