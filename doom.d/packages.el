@@ -8,25 +8,27 @@
                    solaire-mode
                    anaconda-mode
                    company-anaconda
-                   ;; lsp-python-ms
+                   lsp-python-ms
                    pyimport)
 
 ;; (package! all-the-icons-dired)
 ;; (package! ample-theme)
 ;; (package! ample-zen-theme)
-;; (package! amx)
 (package! ansible)
 (package! asana
   :recipe (:host github :repo "lmartel/emacs-asana"))
-;; (package! async)
+(package! async)
 ;; (package! auto-complete)
-;; (package! auto-package-update)
 (package! auto-yasnippet)
-;; (package! babel)
-(package! bazel-build :recipe
+(package! babel)
+(package! bazel-mode :recipe
   (:host github
-         :repo "bazelbuild/emacs-bazel-mode"
-         :files ("lisp/*.el")))
+   :repo "codesuki/bazel-mode"
+   :files ("bazel-mode.el")))
+(package! bazel :recipe
+  (:host github
+   :repo "bazelbuild/emacs-bazel-mode"
+   :files ("lisp/*.el")))
 (package! better-shell)
 ;; (package! bind-key)
 ;; (package! bts)
@@ -38,11 +40,15 @@
 ;; (package! company-jedi)
 (package! company-lsp)
 (package! company-quickhelp)
+(package! company-shell)
 (package! company-terraform)
+(package! copy-as-format)
 ;; (package! concurrent)
 (package! counsel-etags)
 (package! counsel-ghq
   :recipe (:host github :repo "windymelt/counsel-ghq"))
+(package! counsel-osx-app)
+(package! counsel-projectile)
 (package! counsel-tramp)
 (package! csv-mode)
 ;; (package! ctable)
@@ -183,7 +189,6 @@
 ;; (package! package-build)
 (package! pbcopy)
 ;; (package! pcache)
-;; (package! php-mode)
 ;; (package! pkg-info)
 (package! pocket-mode)
 ;; (package! pocket-reader)
@@ -197,8 +202,7 @@
 ;; (package! project-persist-drawer)
 ;; (package! projectile)
 (package! py-isort)
-;;(package! py-yapf)
-;; (package! pyenv-mode-auto)
+(package! pyenv-mode-auto)
 (package! python-black)
 ;; (package! python-environment)
 ;; (package! python-mode)
@@ -223,19 +227,16 @@
 ;; (package! tree-mode)
 ;; (package! twittering-mode)
 (package! typescript-mode)
-;; (package! use-package)
 (package! vagrant-tramp)
 ;; (package! vue-mode)
 ;; (package! web-mode)
 ;; (package! wgrep)
-;; (package! wgrep-helm)
 (package! which-key)
 ;; (package! with-editor)
 (package! whitespace)
 ;; (package! yaml-mode)
 ;; (package! yasnippet)
 ;; (package! yaxception)
-
 
 ;; To install a package with Doom you must declare them here, run 'doom sync' on
 ;; the command line, then restart Emacs for the changes to take effect.

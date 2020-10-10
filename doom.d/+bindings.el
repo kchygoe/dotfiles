@@ -15,6 +15,9 @@
  "M-?" #'help-for-help
  "M-n" #'goto-line
 
+;; ivy
+ "C-x b" #'ivy-switch-buffer
+
  ;; org-mode
  "C-c l"  #'org-store-link
  "C-c a"  #'org-agenda

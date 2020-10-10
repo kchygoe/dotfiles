@@ -10,7 +10,7 @@
 
   :config
   (setq org-default-notes-file (concat org-directory "/note.org"))
-  (setq org-agenda-files '("~/GatsbyDrive/org/" "~/.org-jira/" ))
+  (setq org-agenda-files '("~/GatsbyDrive/org/" "~/.org-jira/" "~/GatsbyDrive/org/gcal/" ))
   (setq org-log-done 'time)
   (setq org-startup-truncated nil)
   (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
@@ -48,7 +48,7 @@
 ;; org-roam
 ;; (after! org (use-package! org-roam
 ;;   :after (org)
-;;   :hook (org-mode . org-roam-mode)
+;;   ;;:hook (org-mode . org-roam-mode)
 ;;   :custom
 ;;   (org-roam-directory org-directory)
 ;;   :bind
@@ -58,9 +58,9 @@
 ;;   ("C-c n i" . org-roam-insert)
 ;;   ("C-c n g" . org-roam-show-graph)))
 
-;; (after! org-roam (use-package! company-org-roam
-;;   :config
-;;   (push 'company-org-roam company-backends)))
+;(after! org-roam (use-package! company-org-roam
+;  :config
+;  (push 'company-org-roam company-backends)))
 
 ;; shortcut for checking note.org
 (defun show-org-buffer (file)

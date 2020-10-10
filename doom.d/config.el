@@ -1,6 +1,8 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 ;;; Code:
-
+;;
+;; Basic configs
+;;
 (setq user-full-name "Koichi Yoshigoe"
       user-mail-address "yoshigoe@leapmind.io"
 
@@ -68,6 +70,8 @@
   (setq ivy-display-style 'fancy)
   (setq ivy-initial-inputs-alist nil)
   (setq ivy-wrap t)
+  ;(when (setq enable-recursive-minibuffers t)
+  ;  (minibuffer-depth-indcate-mode 1))
   (setq ivy-initial-inputs-alist
         '((counsel-minor . "")
           (counsel-package . "")
@@ -75,13 +79,16 @@
           (counsel-M-x . "")
           (counsel-describe-function . "")
           (counsel-describe-variable . "")))
-  (ivy-mode 1))
-(ivy-rich-mode 1)
+  (setq ivy-read-action-function #'ivy-hydra-read-action)
+  (ivy-mode 1)
+  (ivy-rich-mode 1))
 
 (after! counsel
   (counsel-mode 1))
-;;bind:
-;;"C-M-z" . counsel-fzf))
+  ;; :bind
+  ;; ("M-x" . 'counsel-M-x)
+  ;; ("M-y" . 'counsel-yank-pop)
+  ;; ("M-s" . 'counsel-ibuffer))
 
 ;;;
 ;;; projectile
@@ -105,34 +112,31 @@
 (after! company
   ;; :bind (
   ;;        :map company-active-map
-  ;;             ("M-n" . nil)
-  ;;             ("M-p" . nil)
-  ;;             ("C-n" . company-select-next)
-  ;;             ("C-p" . company-select-previous)
-  ;;             ("C-h" . nil)
-  ;;             ("C-s" . company-filter-candidates)
-  ;;             ("C-i" . company-complete-selection)
-  ;;             ("<tab>" . company-complete-common-or-cycle)
-  ;;             ("M-d" . company-show-doc-buffer)
-  ;;         :map company-search-map
-  ;;             ("C-n" . company-select-next)
-  ;;             ("C-p" . company-select-previous)
-  ;;         :map emacs-lisp-mode-map
-  ;;             ("C-M-i" . company-complete))
+  ;;        ("M-n" . nil)
+  ;;        ("M-p" . nil)
+  ;;        ("C-n" . company-select-next)
+  ;;        ("C-p" . company-select-previous)
+  ;;        ("C-h" . nil)
+  ;;        ("C-s" . company-filter-candidates)
+  ;;        ("C-i" . company-complete-selection)
+  ;;        ("<tab>" . company-complete-common-or-cycle)
+  ;;        ("M-d" . company-show-doc-buffer)
+  ;;        :map company-search-map
+  ;;        ("C-n" . company-select-next)
+  ;;        ("C-p" . company-select-previous))
   :config
   (global-company-mode +1)
   (setq company-quickhelp-mode +1)
-  (custom-set-variables '(company-idle-delay nil))
+  ;; (custom-set-variables '(company-idle-delay nil))
   (setq company-transformers '(company-sort-by-backend-importance))
-  (setq company-idle-delay 0.2)
+  (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 3)
   (setq company-selection-wrap-around t)
-  (setq completion-ignore-case t)
+  (setq completion-ignore-case t))
   ;; (setq company-dabbrev-downcase nil)
   ;; Add yasnippet support for all company backends.
-  (defvar company-mode/enable-yas t "Enable yasnippet for all backends.")
-  )
-(company-quickhelp-mode)
+  ;; (defvar company-mode/enable-yas t "Enable yasnippet for all backends."))
+;;  (company-quickhelp-mode))
 
 ;;;
 ;;; tramp
@@ -168,6 +172,31 @@
   )
 
 ;;;
+;;; doom-modeline
+;;;
+;; (use-package! doom-modeline
+;;   :hook (after-init . doom-modeline-mode)
+;;   :custom
+;;   (doom-modeline-height 25)
+;;   (doom-modeline-bar-width 1)
+;;   (doom-modeline-icon t)
+;;   (doom-modeline-major-mode-icon t)
+;;   (doom-modeline-major-mode-color-icon t)
+;;   (doom-modeline-buffer-file-name-style 'truncate-upto-project)
+;;   (doom-modeline-buffer-state-icon t)
+;;   (doom-modeline-buffer-modification-icon t)
+;;   (doom-modeline-minor-modes nil)
+;;   (doom-modeline-enable-word-count nil)
+;;   (doom-modeline-buffer-encoding t)
+;;   (doom-modeline-indent-info nil)
+;;   (doom-modeline-checker-simple-format t)
+;;   (doom-modeline-vcs-max-length 12)
+;;   (doom-modeline-env-version t)
+;;   (doom-modeline-irc-stylize 'identity)
+;;   (doom-modeline-github-timer nil)
+;;   (doom-modeline-gnus-timer nil) )
+
+;;;
 ;;; prog-mode
 ;;;
 (format-all-mode -1)
@@ -184,6 +213,12 @@
   ;; (prog-major-mode . lsp-prog-major-mode-enable)
   )
 
+(use-package! company-lsp
+  :after lsp-mode
+  :commands company-lsp
+  :custom
+  (push 'company-lsp company-backends))
+
 (use-package! lsp-ui
   :after lsp-mode
   :custom
@@ -193,21 +228,12 @@
   (lsp-ui-peek-enable t)
   :hook (lsp-mode . lsp-ui-mode))
 
-(use-package! company-lsp
-  :after lsp-mode
-  :custom
-  (push 'company-lsp company-backends)
-  ;; :defines company-backends
-  ;; :functions company-backend-with-yas
-  ;; :init (cl-pushnew (company-backend-with-yas 'company-lsp) company-backends))
-  )
-
 (after! flycheck
   :custom
   (setq flycheck-check-syntax-automatically '(mode-enabled save)
-        flycheck-display-errors-delay 0.5
+        flycheck-display-errors-delay 0.2
         flycheck-display-errors-function nil
-        flycheck-idle-change-delay 2.0)
+        flycheck-idle-change-delay 1.0)
   :config
   (global-flycheck-mode t) )
 
@@ -217,9 +243,9 @@
 
 (use-package! bazel-build)
 (use-package! bazel
-  :mode (("\\.bzl\\'" . bazel-mode)
-         ("BUILD\\'" . bazel-mode)
-         ("WORKSPACE\\'" . bazel-mode))
+  :mode (("\\.bzl\\'" . bazel-build-mode)
+         ("BUILD\\'" . bazel-build-mode)
+         ("WORKSPACE\\'" . bazel-build-mode))
   :hook (before-save-hook . bazel-mode-buildifier)
   :config
   (defun find-parent-directory-with-file(name)

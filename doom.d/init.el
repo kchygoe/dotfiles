@@ -44,9 +44,9 @@
        ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
-       window-select     ; visually switch windows
-       workspaces        ; tab emulation, persistence & separate workspaces
-       zen               ; distraction-free coding or writing
+       ;;window-select     ; visually switch windows
+       ;;workspaces        ; tab emulation, persistence & separate workspaces
+       ;;zen               ; distraction-free coding or writing
 
        :editor
        ;;(evil +everywhere); come to the dark side, we have cookies
@@ -86,7 +86,7 @@
       direnv
       docker
       ;;editorconfig      ; let someone else argue about tabs vs spaces
-      ein               ; tame Jupyter notebooks with emacs
+      ;ein               ; tame Jupyter notebooks with emacs
       (eval +overlay)     ; run code, run (also, repls)
       gist              ; interacting with github gists
       (lookup           ; helps you navigate your code and documentation
@@ -126,7 +126,7 @@
       ;;hy                ; readability of scheme w/ speed of python
       ;;idris             ;
       ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
-      ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
+      javascript        ; all(hope(abandon(ye(who(enter(here))))))
       ;;julia             ; a better, faster MATLAB
       ;;kotlin            ; a better, slicker Java(Script)
       ;;latex             ; writing papers in Emacs has never been so fun
@@ -175,6 +175,7 @@
 
       :os
       (:if IS-MAC macos)  ; MacOS-specific commands
+      tty
 
       :app
       ;;calendar
