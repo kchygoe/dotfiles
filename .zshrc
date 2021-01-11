@@ -232,7 +232,12 @@ eval "$(starship init zsh)"
 # test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # doom/emacs
-export PATH=$PATH:$HOME/.emacs.d/bin
+export PATH=$PATH:$HOME/.config/emacs/bin
+export PATH="/usr/local/sbin:$PATH"
+
+# BigSur
+export LDFLAGS="$LDFLAGS -L/usr/local/opt/bzip2/lib -L/usr/local/opt/zlib/bin"
+export CPPFLAGS="$CPPFLAGS -I/usr/local/opt/bzip2/include -I/usr/local/opt/zlib/include"
 
 ########################################
 ## private envs

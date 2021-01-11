@@ -4,12 +4,18 @@
 ;; Basic configs
 ;;
 (setq user-full-name "Koichi Yoshigoe"
-      user-mail-address "yoshigoe@leapmind.io"
+      user-mail-address "koichi.yoshigoe@gmail.com")
 
-      doom-font (font-spec :family "Roboto Mono" :size 14)
-      doom-theme 'doom-dark+
+;; doom basics
+(setq doom-font (font-spec :family "Hack Nerd Font" :size 14)
+      doom-variable-pitch-font (font-spec :family "Hack Nerd Font Mono" :size 14)
+      doom-serif-font (font-spec :family "UbuntuMono Nerd Font" :weight 'Regular)
+      doom-theme 'doom-dark+)
 
-      delete-auto-save-files t
+(setq-default
+ delete-by-moving-to-trash t)
+
+(setq delete-auto-save-files t
       display-line-numbers-type nil
       inhibit-startup-message t
       mouse-wheel-follow-mouse t
@@ -23,12 +29,18 @@
       tool-bar-mode -1
       visible-bell t
 
+      undo-limit 80000000
       ;; desktop file
       ;; (desktop-save-mode 1)
       ;; (setq desktop-save t)
       ;; (setq desktop-restore-eager 10)
       ;; (setq desktop-path '("~/.emacs.d/desktop/"))
+      auto-save-default t
       global-auto-revert-mode 1
+
+      c-auto-newline t
+      tab-width 2
+      indent-tabs-mode nil
 
       ;; disable auto line-breaking
       auto-fill-mode -1
@@ -38,26 +50,39 @@
       auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
+(display-time-mode 1)
+(global-subword-mode 1)
+
 (setq org-directory "~/GatsbyDrive/org/")
 
-(setq c-auto-newline t)
 (defalias 'yes-or-no-p 'y-or-n-p)
-
-(setq tab-width 2)
-(setq indent-tabs-mode nil)
 (setq-default indent-tabs-mode nil)
 ;; (defvaralias 'c-basic-offsett 'tab-width)
 ;; (defvaralias 'cperl-indent-level 'tab-width)
 
-(put 'upcase-region 'disabled nil)
-(add-to-list 'global-mode-string '(" %i"))
+(prefer-coding-system       'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(setq default-buffer-file-coding-system 'utf-8)
+
+;(put 'upcase-region 'disabled nil)
+;(add-to-list 'global-mode-string '(" %i"))
+
+;; disable pretty-code
+(setq global-prettify-symbols-mode -1)
+(setq +pretty-code-enabled-modes nil)
+(remove-hook 'after-change-major-mode-hook #'+pretty-code-init-pretty-symbols-h)
+
+(pyenv-mode -1)
 
 ;; Custom variables
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
+
+;(global-spell-fu-mode -1)
+;(spell-fu-mode-disable)
 
 ;;;
 ;;; ivy/counsel
@@ -80,6 +105,17 @@
           (counsel-describe-function . "")
           (counsel-describe-variable . "")))
   (setq ivy-read-action-function #'ivy-hydra-read-action)
+
+  (defadvice! prompt-for-buffer (&rest _)
+    :after '(evil-window-split evil-window-vsplit)
+    (+ivy/switch-buffer))
+
+  (setq +ivy-buffer-preview t)
+
+  (setq +ivy-project-search-engines '(rg))
+  (ivy-add-actions
+     'counsel-M-x
+     `(("h" +ivy/helpful-function "Helpful")))
   (ivy-mode 1)
   (ivy-rich-mode 1))
 
@@ -94,8 +130,12 @@
 ;;; projectile
 ;;;
 (after! projectile
-  (projectile-mode 1))
+  (projectile-mode 1)
+  (projectile-load-known-projects))
 
+;; dired
+;; (after! dired-k
+;;     (setq dired-k-human-readable t))
 ;;
 ;; hl-todo
 ;;
@@ -138,10 +178,17 @@
   ;; (defvar company-mode/enable-yas t "Enable yasnippet for all backends."))
 ;;  (company-quickhelp-mode))
 
+;;
+;; yasnippet
+;;
+(after! yasnippet
+  (yas-global-mode))
+
 ;;;
 ;;; tramp
 ;;;
-(use-package! counsel-tramp)
+(use-package! counsel-tramp
+  :commands (counsel-tramp))
 (setq tramp-auto-save-directory "~/tmp/tramp/")
 (setq tramp-chunksize 2000)
 
@@ -154,13 +201,13 @@
 (which-key-mode)
 
 ;; kubernetes
-(use-package! k8s-mode
+(after! k8s-mode
   :hook (k8s-mode . yas-minor-mode)
   :config
   (setq k8s-indent-offset nil
-        k8s-site-docs-version "v1.16"))
+        k8s-site-docs-version "v1.17"))
 
-(use-package! kubernetes
+(after! kubernetes
   :commands (kubernetes-overview))
 
 ;;;
@@ -209,9 +256,9 @@
         ;; (lsp-inhibit-message t)
         lsp-message-project-root-warning t
         create-lockfiles nil)
-  ;; :hook
-  ;; (prog-major-mode . lsp-prog-major-mode-enable)
-  )
+  ;;:hook
+  ;;(prog-major-mode . lsp-prog-major-mode-enable)
+  :commands lsp)
 
 (use-package! company-lsp
   :after lsp-mode
@@ -270,6 +317,22 @@
   ;; (define-key c++-mode-map (kbd "C-c b") 'bazel-build-workspace)
   )
 
+(after! go-mode
+  :custom
+  (setq tab-width 2)
+  (setq completion-ignore-case t)
+  ;; :bind
+  ;; ("M-." . godef-jump)
+  ;; ("C-M-i" . company-complete)
+  :hook
+  (before-save-hook . gofmt-before-save))
+(after! company-go
+  :custom
+  (add-to-list 'company-backends 'company-go))
+(after! go-eldoc
+  :hook
+  (go-mode-hook . go-eldoc-setup))
+
 ;;
 ;; Whitespace
 ;;
@@ -306,6 +369,10 @@
                       :background my/bg-color)
   )
 
+(prettify-symbols-mode -1)
+
+;; the use-package!, after!, add-hook! and setq-hook! macros are your bread and butter.
+;;
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one

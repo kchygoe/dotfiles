@@ -16,10 +16,12 @@
 
        :completion
        (company
-        +childframe)     ; the ultimate code completion backend
+        +childframe     ; the ultimate code completion backend
+        +prescient)
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        (ivy +icons
+            +prescient
             +childframe)   ; a search engine for love and life
 
        :ui
@@ -31,6 +33,7 @@
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        indent-guides     ; highlighted indent columns
+       (ligatures +extra) ; ligatures and symbols to make your code pretty again
        modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
        ;;neotree           ; a project drawer, like NERDTree for vim
@@ -46,7 +49,7 @@
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        ;;window-select     ; visually switch windows
        ;;workspaces        ; tab emulation, persistence & separate workspaces
-       ;;zen               ; distraction-free coding or writing
+       zen               ; distraction-free coding or writing
 
        :editor
        ;;(evil +everywhere); come to the dark side, we have cookies
@@ -63,22 +66,23 @@
        ;;word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
-       dired             ; making dired pretty [functional]
+       (dired +icons)    ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
-       ibuffer           ; interactive buffer management
+       (ibuffer +icons)  ; interactive buffer management
+       mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
        ;;eshell          ; a consistent, cross-platform shell (WIP)
        shell             ; a terminal REPL for Emacs
        term              ; terminals in Emacs
-       vterm             ; another terminals in Emacs
+       ;;vterm             ; another terminals in Emacs
 
        :checkers
        (syntax
         +childframe) ; tasing you for every semicolon you forget
-       spell             ; tasing you for misspelling mispelling
-       grammar           ; tasing grammar mistake every you make
+       ;;spell             ; tasing you for misspelling mispelling
+       ;;grammar           ; tasing grammar mistake every you make
 
       :tools
       ansible
@@ -96,7 +100,7 @@
       magit             ; a git porcelain for Emacs
       make              ; run make tasks from Emacs
       ;;pass              ; password manager for nerds
-      pdf               ; pdf enhancements
+      ;;pdf               ; pdf enhancements
       ;;prodigy           ; FIXME managing external services & code builders
       ;;rgb               ; creating color strings
       terraform         ; infrastructure as code
@@ -142,11 +146,12 @@
        +dragndrop       ; drag & drop files/images into org buffers
        +export
        +hugo            ; use Emacs for hugo blogging
-       +jupyter        ; ipython/jupyter support for babel
+       ;;+jupyter        ; ipython/jupyter support for babel
        ;;+pandoc          ; export-with-pandoc support
        ;;+pomodoro        ; be fruitful with the tomato technique
        +publish
-       +present)        ; using org-mode for presentations
+       +present)
+      ;; +roam)            ; using org-mode for presentations
       ;;perl              ; write code no one else can comprehend
       ;;php               ; perl's insecure younger brother
       ;;plantuml          ; diagrams for confusing people more

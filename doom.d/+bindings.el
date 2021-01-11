@@ -13,7 +13,6 @@
  "C-u" #'scroll-down
  "C-h" #'delete-backward-char
  "M-?" #'help-for-help
- "M-n" #'goto-line
 
 ;; ivy
  "C-x b" #'ivy-switch-buffer
@@ -41,6 +40,8 @@
   )
 )
 
+
+
 (provide '+bindings)
 
 ;;;
@@ -57,6 +58,5 @@
 ;; (bind-key "M-?" 'help-for-help)
 ;; (bind-key "M-n" 'goto-line)
 ;; (bind-key "C-c c" 'org-capture)
-
 
 ;;; bindings.el ends here
