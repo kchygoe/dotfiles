@@ -169,6 +169,9 @@ if test -f $completion; then
     source <(cat $completion)
 fi
 
+#Rust
+export PATH=$PATH:$HOME/.cargo/bin
+
 # rbenv init
 export RBENV_ROOT="$HOME/.rbenv/"
 export PATH="$HOME/.rbenv/bin:$PATH"

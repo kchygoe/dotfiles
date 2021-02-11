@@ -1,3 +1,8 @@
+#+TITLE: Emacs Config
+
+* General Settings
+** General
+#+begin_src emacs-lisp
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 ;;; Code:
 ;;
@@ -71,7 +76,9 @@
 ;; (add-to-list 'global-mode-string '(" %i"))
 
 (pyenv-mode -1)
-
+#+end_src
+** ivy/counsel
+#+begin_src emacs-lisp
 (after! ivy
   (setq ivy-use-virtual-buffers t
         ivy-re-builders-alist
@@ -108,26 +115,37 @@
 ;; :bind
 ;; ("M-y" . 'counsel-yank-pop)
 ;; ("M-s" . 'counsel-ibuffer))
-
+#+end_src
+** projectile
+#+begin_src emacs-lisp
 (after! projectile
   (projectile-mode 1)
   (projectile-load-known-projects))
-
+#+end_src
+** hl-todo
+Highlite TODO strings
+#+begin_src emacs-lisp
 (use-package! hl-todo
   ;; it, e.g. python-mode)
   :hook (prog-mode . hl-todo-mode)
   :config
   (setq hl-todo-highlight-punctuation ":")
   (global-hl-todo-mode 1))
-
+#+end_src
+** yasnippet
+#+begin_src emacs-lisp
 (after! yasnippet
   (yas-global-mode))
-
+#+end_src
+** Tramp
+#+begin_src emacs-lisp
 (use-package! counsel-tramp
   :commands (counsel-tramp))
 (setq tramp-auto-save-directory "~/tmp/tramp/")
 (setq tramp-chunksize 2000)
-
+#+end_src
+** Company
+#+begin_src emacs-lisp
 (use-package! company
   :bind
   (:map company-active-map
@@ -165,21 +183,31 @@
 
 (use-package! company-box
   :hook (company-mode . company-box-mode))
+#+end_src
 
+** Selectrum
+#+begin_src emacs-lisp
 (use-package! selectrum
   :config
   (selectrum-mode +1))
-
+#+end_src
+** Which-Key
+#+begin_src emacs-lisp
 (use-package! which-key
   :config
   (setq which-key-idle-secondary-delay 0.05)
   (which-key-mode))
-
+#+end_src
+** visual-fill
+#+begin_src emacs-lisp
 (use-package! visual-fill-column
   :config
   (setq visual-fill-column-width 120
         visual-fill-column-center-text t))
+#+end_src
 
+** Disable symboles-mode
+#+begin_src emacs-lisp
 (prettify-symbols-mode -1)
 (global-prettify-symbols-mode -1)
 (setq +pretty-code-enabled-modes nil)
@@ -188,7 +216,11 @@
 (unless (equal "Battery status not available"
                (battery))
   (display-battery-mode 1))
+#+end_src
 
+* Key Bindings
+doom style keybinding for global scope
+#+begin_src emacs-lisp
 (map!
  ;; general
  "<C-return>" #'other-window
@@ -240,7 +272,13 @@
 ;; (bind-key "M-?" 'help-for-help)
 ;; (bind-key "M-n" 'goto-line)
 ;; (bind-key "C-c c" 'org-capture)
+#+end_src
 
+#+RESULTS:
+
+* Org-mode
+*** Basics
+#+begin_src emacs-lisp
 (defun my/org-setup()
   (org-indent-mode)
   (org-bullets-mode)
@@ -293,7 +331,9 @@
          ((org-agenda-span 1)))))
 (setq org-agenda-skip-scheduled-if-done t)
 (setq org-babel-python-command "python3")
-
+#+end_src
+*** Org-gcal
+#+begin_src emacs-lisp
 (after! org
   (use-package! org-tempo)
   (use-package! org-gcal
@@ -306,7 +346,9 @@
           org-gcal-file-alist '(("gatsby.gatsby.gatsby@gmail.com" . "~/GatsbyDrive/org/gcal/gcal.org")
                                 ("yoshigoe@leapmind.io" . "~/GatsbyDrive/org/gcal/gcal-work.org"))
           org-gcal-up-days 7)))
-
+#+end_src
+*** org other
+#+begin_src emacs-lisp
 ;; github
 (setq org-github-issues-org-file (concat org-directory "/github.org"))
 
@@ -365,12 +407,16 @@
 (defun my-org-archive-done-tasks ()
   (interactive)
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
-
+#+end_src
+** Org-super-agenda
+#+begin_src emacs-lisp
 (use-package! org-super-agenda
   :commands (org-super-agenda-mode))
 (after! org-agenda
   (org-super-agenda-mode))
-
+#+end_src
+** Deft
+#+begin_src emacs-lisp
 (use-package! deft
   :after org
   :bind
@@ -380,9 +426,15 @@
   (deft-use-filter-string-for-filename t)
   (deft-default-extension "org")
   (deft-directory org-directory))
-
+#+end_src
+* Development
+** General
+General settings for prog-mode
+#+begin_src emacs-lisp
 (format-all-mode -1)
-
+#+end_src
+** lsp-mode
+#+begin_src emacs-lisp
 (after! lsp-mode
   :config
   (setq lsp-enable-snippet t
@@ -415,7 +467,10 @@
   (lsp-ui-peek-enable t)
   :hook
   (lsp-mode . lsp-ui-mode))
+#+end_src
 
+** flycheck
+#+begin_src emacs-lisp
 (after! flycheck
   :custom
   (setq flycheck-check-syntax-automatically '(mode-enabled save)
@@ -429,7 +484,10 @@
   :after flycheck
   :hook
   (flycheck-mode . flycheck-popup-tip-mode))
-
+#+end_src
+** Bazel
+Bazel related configs.
+#+begin_src emacs-lisp
 (use-package! bazel-build)
 (use-package! bazelrc-mode
   :mode ((".bazelrc" . bazelrc-mode)))
@@ -463,6 +521,14 @@
   ;; (define-key c++-mode-map (kbd "C-c b") 'bazel-build-workspace)
   )
 
+#+end_src
+** golang
+Install gopls
+#+begin_src shell :tangle no
+GO111MODULE=on go get golang.org/x/tools/gopls@latest
+#+end_src
+go-mode settings
+#+begin_src emacs-lisp
 ;;(after! go-mode
 ;;:config
 ;; (setq tab-width 2)
@@ -478,11 +544,21 @@
 ;; (after! go-eldoc
 ;;   :hook
 ;;   (go-mode-hook . go-eldoc-setup))
+#+end_src
 
+#+RESULTS:
+
+** yaml
+Set lsp tab-width
+#+begin_src emacs-lisp
 ;; (after! yaml-mode
 ;;   :config
 ;;   (setq yaml-indent-offset 2))
+#+end_src
 
+* Operation
+** Kubernetes
+#+begin_src emacs-lisp
 (after! k8s-mode
   :hook
   (k8s-mode . yas-minor-mode)
@@ -492,7 +568,9 @@
 
 (after! kubernetes
   :commands (kubernetes-overview))
-
+#+end_src
+* Whitespace
+#+begin_src emacs-lisp
 (use-package! whitespace
   :config
   (setq whitespace-style '(face
@@ -525,12 +603,17 @@
                       :weight 'bold)
   (set-face-attribute 'whitespace-empty nil
                       :background my/bg-color))
+#+end_src
 
+* Footer
+Load custom/secrets
+#+begin_src emacs-lisp
 ;; Custom variables
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
-
+#+end_src
+#+begin_src emacs-lisp
 ;; the use-package!, after!, add-hook! and setq-hook! macros are your bread and butter.
 ;;
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -552,3 +635,4 @@
 
 (provide 'config)
 ;;; config.el ends here
+#+end_src

@@ -1,9 +1,5 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
-;; NOTE Press 'SPC h d h' (or 'C-h d h' for non-vim users) to access Doom's
-;;      documentation. There you'll find information about all of Doom's modules
-;;      and what flags they support.
-
 ;; NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
 ;;      'C-c g k' for non-vim users) to view its documentation. This works on
 ;;      flags as well (those symbols that start with a plus).
@@ -97,13 +93,13 @@
        +docsets
        +devdocs)        ; ...or in Dash docsets locally
       lsp
-      magit             ; a git porcelain for Emacs
+      (magit +forge)    ; a git porcelain for Emacs
       make              ; run make tasks from Emacs
       ;;pass              ; password manager for nerds
       ;;pdf               ; pdf enhancements
       ;;prodigy           ; FIXME managing external services & code builders
       ;;rgb               ; creating color strings
-      terraform         ; infrastructure as code
+      (terraform +lsp)    ; infrastructure as code
       tmux              ; an API for interacting with tmux
       upload            ; map local to remote projects via ssh/ftp
 
@@ -151,7 +147,7 @@
        ;;+pomodoro        ; be fruitful with the tomato technique
        +publish
        +present)
-      ;; +roam)            ; using org-mode for presentations
+       ;;+roam)            ; using org-mode for presentations
       ;;perl              ; write code no one else can comprehend
       ;;php               ; perl's insecure younger brother
       ;;plantuml          ; diagrams for confusing people more
@@ -189,7 +185,7 @@
       ;;twitter           ; twitter client https://twitter.com/vnought
 
       :config
-      ;;literate
+      literate
       (default
         +bindings
         +snippets

@@ -2,7 +2,6 @@
 ;;; $DOOMDIR/packages.el
 
 ;;; Code:
-
 (disable-packages! helm
                    helm-core
                    solaire-mode
@@ -17,12 +16,13 @@
 ;;   :recipe (:host github :repo "lmartel/emacs-asana"))
 (package! async)
 ;; (package! auto-complete)
+(package! avy)
 (package! auto-yasnippet)
 (package! babel)
-(package! bazel-mode :recipe
-  (:host github
-   :repo "codesuki/bazel-mode"
-   :files ("bazel-mode.el")))
+;; (package! bazel-mode :recipe
+;;   (:host github
+;;    :repo "codesuki/bazel-mode"
+;;    :files ("bazel-mode.el")))
 (package! bazel :recipe
   (:host github
    :repo "bazelbuild/emacs-bazel-mode"
@@ -37,7 +37,6 @@
 (package! company-go)
 ;; (package! company-jedi)
 (package! company-irony)
-(package! company-lsp)
 (package! company-quickhelp)
 (package! company-shell)
 (package! company-terraform)
@@ -65,8 +64,6 @@
 ;; (package! drag-stuff)
 (package! dumb-jump)
 (package! el-pocket)
-;; (package! eldoc-overlay)
-;; (package! elpy)
 ;; (package! epc)
 ;; (package! epl)
 ;; (package! exec-path-from-shell)
@@ -94,7 +91,7 @@
 ;; (package! git-gutter+)
 (package! git-link)
 (package! github-browse-file)
-(package! github-issues)
+;;(package! github-issues)
 (package! github-pullrequest)
 ;; (package! github-review)
 ;; (package! github-search)
@@ -173,6 +170,7 @@
   :recipe (:host github :repo "org-roam/org-roam"))
 (package! company-org-roam
   :recipe (:host github :repo "org-roam/company-org-roam"))
+(package! org-super-agenda)
 (package! org-sync)
 (package! org-web-tools)
 (package! org2issue)
@@ -217,6 +215,7 @@
 ;; (package! tree-mode)
 (package! typescript-mode)
 (package! vagrant-tramp)
+(package! visual-regexp)
 ;; (package! web-mode)
 ;; (package! wgrep)
 (package! which-key)

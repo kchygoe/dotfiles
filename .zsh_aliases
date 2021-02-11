@@ -49,3 +49,4 @@ fi
 
 alias less='less -R'
 alias dnsclear='sudo killall -HUP mDNSResponder'
+alias master='git checkout master'
