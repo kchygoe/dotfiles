@@ -77,7 +77,7 @@
 
 (pyenv-mode -1)
 #+end_src
-** ivy/counsel
+** ivy/counsel/swiper
 #+begin_src emacs-lisp
 (after! ivy
   (setq ivy-use-virtual-buffers t
@@ -86,6 +86,7 @@
         ivy-truncate-lines nil
         ivy-display-style 'fancy
         ivy-initial-inputs-alist nil
+        ivy-height 18
         ivy-wrap t)
   ;; (when (setq enable-recursive-minibuffers t)
   ;; (minibuffer-depth-indcate-mode 1))
@@ -118,8 +119,9 @@
 #+end_src
 ** projectile
 #+begin_src emacs-lisp
-(after! projectile
-  (projectile-mode 1)
+(use-package! projectile
+  :config
+  (projectile-mode t)
   (projectile-load-known-projects))
 #+end_src
 ** hl-todo
@@ -134,7 +136,8 @@ Highlite TODO strings
 #+end_src
 ** yasnippet
 #+begin_src emacs-lisp
-(after! yasnippet
+(use-package! yasnippet
+  :config
   (yas-global-mode))
 #+end_src
 ** Tramp
@@ -166,17 +169,15 @@ Highlite TODO strings
    :map company-search-map
    (("C-n" . company-select-next)
     ("C-p" . company-select-previous)))
-  :custom
-  (company-idle-delay nil)
   :config
   (global-company-mode +1)
   (setq company-quickhelp-mode +1
-        company-idle-delay 0
+        company-idle-delay 0.3
         company-transformers '(company-sort-by-backend-importance)
         company-minimum-prefix-length 3
         company-selection-wrap-around t
         completion-ignore-case t)
-  (set-company-backend! 'org-mode '(company-yasnippet company-capf company-files company-elisp))
+
   (add-to-list 'company-backends '(company-capf company-files company-yasnippet)))
 
 ;; (setq company-dabbrev-downcase nil)
@@ -208,10 +209,10 @@ Highlite TODO strings
 
 ** Disable symboles-mode
 #+begin_src emacs-lisp
-(prettify-symbols-mode -1)
-(global-prettify-symbols-mode -1)
-(setq +pretty-code-enabled-modes nil)
-(remove-hook 'after-change-major-mode-hook #'+pretty-code-init-pretty-symbols-h)
+;; (prettify-symbols-mode -1)
+;; (global-prettify-symbols-mode -1)
+;; (setq +pretty-code-enabled-modes nil)
+;; (remove-hook 'after-change-major-mode-hook #'+pretty-code-init-pretty-symbols-h)
 
 (unless (equal "Battery status not available"
                (battery))
@@ -314,7 +315,9 @@ doom style keybinding for global scope
            "* %?\n%u\n" :prepend t)
           ("j" "Journal" entry (file+datetree "~/GatsbyDrive/org/journal.org")
            "* %?\nEntered on %U\n  %i\n  %a")))
+  (setq org-babel-python-command "python3")
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("go" . "src go"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
   :hook
@@ -323,6 +326,10 @@ doom style keybinding for global scope
                             (auto-save-mode)))
   (org-mode . my/org-setup))
 
+;; company
+(after! org
+  (set-company-backend! 'org-mode 'company-yasnippet 'company-capf 'company-files 'company-elisp))
+
 ;; agenda
 (setq org-agenda-custom-commands
       '(("x" "Unscheduled Tasks" tags-todo
@@ -330,7 +337,6 @@ doom style keybinding for global scope
         ("d" "Daily Tasks" agenda ""
          ((org-agenda-span 1)))))
 (setq org-agenda-skip-scheduled-if-done t)
-(setq org-babel-python-command "python3")
 #+end_src
 *** Org-gcal
 #+begin_src emacs-lisp
@@ -352,24 +358,10 @@ doom style keybinding for global scope
 ;; github
 (setq org-github-issues-org-file (concat org-directory "/github.org"))
 
-;; org-roam
-(use-package! org-roam
-  :after org
-  :hook
-  (org-mode . org-roam-mode)
-  :init
-  (setq org-roam-directory org-directory)
-  :bind
-  ("C-c n l" . org-roam)
-  ("C-c n t" . org-roam-today)
-  ("C-c n f" . org-roam-find-file)
-  ("C-c n i" . org-roam-insert)
-  ("C-c n g" . org-roam-show-graph))
+#+end_src
 
-;; (after! org-roam (use-package! company-org-roam
-;;  :config
-;;  (push 'company-org-roam company-backends)))
 
+#+begin_src emacs-lisp
 ;; shortcut for note.org
 (defun my/show-org-buffer (file)
   "Show an org-file FILE on the current buffer."
@@ -384,20 +376,23 @@ doom style keybinding for global scope
 
 ;; Github
 (use-package! org-sync
+  :after org
   :config
   (defvar org-sync-backend-alist
     '(("github.com/\\(?:repos/\\)?[^/]+/[^/]+"  . org-sync-github-backend))))
 
 ;; JIRA
 ;; Refs. https://github.com/ahungry/org-jira
-(after! org (use-package! org-jira
-              :config
-              (setq jiralib-url "https://leapmind.atlassian.net")
-              (setq org-jira-working-dir (concat org-directory "jira"))
-              (defconst org-jira-progress-issue-flow
-                '(("To Do" . "In Progress")
-                  ("In Progress" . "Review")
-                  ("Review" . "DONE")))))
+
+(use-package! org-jira
+  :after org
+  :config
+  (setq jiralib-url "https://leapmind.atlassian.net")
+  (setq org-jira-working-dir (concat org-directory "jira"))
+  (defconst org-jira-progress-issue-flow
+    '(("To Do" . "In Progress")
+      ("In Progress" . "Review")
+      ("Review" . "DONE"))))
 
 ;; asana
 ;; USE ASANA_TOKEN in env
@@ -408,12 +403,34 @@ doom style keybinding for global scope
   (interactive)
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
 #+end_src
+
+**** Org-roam: this is not used
+not handled by doom
+#+begin_src emacs-lisp :tangle no
+
+(use-package! org-roam
+  :after org
+  :hook
+  (org-mode . org-roam-mode)
+  :init
+  (setq org-roam-directory org-directory)
+  :bind
+  ("C-c n l" . org-roam)
+  ("C-c n t" . org-roam-today)
+  ("C-c n f" . org-roam-find-file)
+  ("C-c n i" . org-roam-insert)
+  ("C-c n g" . org-roam-show-graph))
+
+(after! org-roam (use-package! company-org-roam
+ :config
+ (push 'company-org-roam company-backends)))
+#+end_src
+
 ** Org-super-agenda
 #+begin_src emacs-lisp
 (use-package! org-super-agenda
+  :after org-agenda
   :commands (org-super-agenda-mode))
-(after! org-agenda
-  (org-super-agenda-mode))
 #+end_src
 ** Deft
 #+begin_src emacs-lisp
@@ -430,10 +447,14 @@ doom style keybinding for global scope
 * Development
 ** General
 General settings for prog-mode
+
+Disable format-all-mode(tmp)
 #+begin_src emacs-lisp
 (format-all-mode -1)
 #+end_src
+
 ** lsp-mode
+lsp-mode settings
 #+begin_src emacs-lisp
 (after! lsp-mode
   :config
@@ -443,35 +464,30 @@ General settings for prog-mode
         ;; (lsp-inhibit-message t)
         lsp-message-project-root-warning t
         create-lockfiles nil)
-  (setq lsp-keymap-prefix "C-c l")
-  (setq lsp-prefer-capf t
+  (setq lsp-keymap-prefix "C-c l"
+        lsp-prefer-capf t
         lsp-headerline-breadcrumb-mode t)
-  (setq lsp-terraform-server "/usr/local/bin/terraform-ls")
-  (setq lsp-terraform-enable-logging t)
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("/usr/local/bin/terraform-ls" "serve"))
-                    :major-modes '(terraform-mode)
-                    :server-id 'terraform-ls))
-  :hook
-  (terraform-mode-hook . #'lsp-deferred)
+  ;; :hook
   ;; (prog-major-mode . lsp-prog-major-mode-enable)
   )
+#+end_src
 
-
+lsp-ui settings
+#+begin_src emacs-lisp
 (use-package! lsp-ui
   :after lsp-mode
-  :custom
-  (scroll-margin 0)
-  (lsp-ui-doc-enable t)
-  (lsp-ui-doc-header t)
-  (lsp-ui-peek-enable t)
+  :config
+  (setq scroll-margin 0
+        lsp-ui-doc-enable t
+        lsp-ui-doc-header t
+        lsp-ui-peek-enable t)
   :hook
   (lsp-mode . lsp-ui-mode))
 #+end_src
 
 ** flycheck
 #+begin_src emacs-lisp
-(after! flycheck
+(use-package! flycheck
   :custom
   (setq flycheck-check-syntax-automatically '(mode-enabled save)
         flycheck-display-errors-delay 0.2
@@ -527,11 +543,25 @@ Install gopls
 #+begin_src shell :tangle no
 GO111MODULE=on go get golang.org/x/tools/gopls@latest
 #+end_src
+
+Install required packages
+#+BEGIN_SRC sh :tangle no
+go get -u github.com/motemen/gore/cmd/gore
+go get -u github.com/stamblerre/gocode
+go get -u golang.org/x/tools/cmd/godoc
+go get -u golang.org/x/tools/cmd/goimports
+go get -u golang.org/x/tools/cmd/gorename
+go get -u golang.org/x/tools/cmd/guru
+go get -u github.com/cweill/gotests/...
+go get -u github.com/fatih/gomodifytags
+#+END_SRC
+
 go-mode settings
 #+begin_src emacs-lisp
-;;(after! go-mode
-;;:config
-;; (setq tab-width 2)
+(after! go-mode
+  (set-company-backend! 'go-mode 'company-go 'company-yasnippet)
+  :config
+  (setq tab-width 2))
 ;;(setq completion-ignore-case t)
 ;;:bind
 ;;("M-." . godef-jump)
@@ -547,13 +577,36 @@ go-mode settings
 #+end_src
 
 #+RESULTS:
+** python
+Install pyright
+#+begin_src shell :tangle no
+npm install -g pyright
+#+end_src
+
+required packages
+#+begin_src shell :tangle no :results none
+pip install isort black pyflakes pytest nose
+pip install "python-language-server[all]"
+#+end_src
 
 ** yaml
 Set lsp tab-width
 #+begin_src emacs-lisp
-;; (after! yaml-mode
-;;   :config
+;; (after! yaml-mode;
+;   :config
 ;;   (setq yaml-indent-offset 2))
+#+end_src
+** shel
+#+begin_src emacs-lisp
+(after! sh-script
+  (set-company-backend! 'sh-mode '(company-shell :with company-yasnippet))
+  (add-hook 'sh-mode #'lsp!))
+#+end_src
+** terraform
+#+begin_src emacs-lisp
+(after! terraform-mode
+  (setq lsp-terraform-enable-logging t)
+  (add-hook 'terraform-mode-hook #'lsp!))
 #+end_src
 
 * Operation
@@ -566,10 +619,11 @@ Set lsp tab-width
   (setq k8s-indent-offset nil
         k8s-site-docs-version "v1.18"))
 
-(after! kubernetes
+(use-package! kubernetes
   :commands (kubernetes-overview))
 #+end_src
 * Whitespace
+set up whitespaces to show each symbols
 #+begin_src emacs-lisp
 (use-package! whitespace
   :config
@@ -630,8 +684,7 @@ Load custom/secrets
 ;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
 ;; This will open documentation for it, including demos of how they are used.
 ;;
-;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how;
-                                        ; they are implemented.
+;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how they are implemented.
 
 (provide 'config)
 ;;; config.el ends here

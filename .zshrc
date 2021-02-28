@@ -214,6 +214,12 @@ autoload -U _argo
 #     prompt walters
 #     unsetopt zle
 # fi
+function fd() {
+  local dir
+  dir=$(find ${1:-.} -path '*/\.*' -prune \
+    -o -type d -print 2> /dev/null | fzf +m) && \
+    cd "$dir"
+}
 
 # zsh performance profile
 if (which zprof > /dev/null) ;then
@@ -239,14 +245,13 @@ export PATH=$PATH:$HOME/.config/emacs/bin
 export PATH="/usr/local/sbin:$PATH"
 
 # BigSur
-export LDFLAGS="$LDFLAGS -L/usr/local/opt/bzip2/lib -L/usr/local/opt/zlib/bin"
-export CPPFLAGS="$CPPFLAGS -I/usr/local/opt/bzip2/include -I/usr/local/opt/zlib/include"
+# export LDFLAGS="$LDFLAGS -L/usr/local/opt/bzip2/lib -L/usr/local/opt/zlib/bin"
+# export CPPFLAGS="$CPPFLAGS -I/usr/local/opt/bzip2/include -I/usr/local/opt/zlib/include"
 
 ########################################
 ## private envs
 ########################################
 source ~/.zsh_private
-
 
 # autojump
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh

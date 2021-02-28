@@ -13,10 +13,12 @@
        :completion
        (company
         +childframe     ; the ultimate code completion backend
+        +tng
         +prescient)
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        (ivy +icons
+            +fuzzy
             +prescient
             +childframe)   ; a search engine for love and life
 
@@ -25,11 +27,15 @@
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
-       ;;fill-column       ; a `fill-column' indicator
+       (emoji
+        +ascii
+        +github
+        +unicode)
+       fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        indent-guides     ; highlighted indent columns
-       (ligatures +extra) ; ligatures and symbols to make your code pretty again
+       ;;(ligatures +extra) ; ligatures and symbols to make your code pretty again
        modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
        ;;neotree           ; a project drawer, like NERDTree for vim
@@ -59,10 +65,12 @@
        ;;parinfer          ; turn lisp into python, sort of
        rotate-text       ; cycle region at point between text candidates
        snippets          ; my elves. They type so I don't have to
-       ;;word-wrap         ; soft wrapping with language-aware indent
+       word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
-       (dired +icons)    ; making dired pretty [functional]
+       (dired
+        +ranger
+        +icons)    ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
        (ibuffer +icons)  ; interactive buffer management
        mistakes
@@ -141,6 +149,7 @@
       (org              ; organize your plain life in plain text
        +dragndrop       ; drag & drop files/images into org buffers
        +export
+       +journal
        +hugo            ; use Emacs for hugo blogging
        ;;+jupyter        ; ipython/jupyter support for babel
        ;;+pandoc          ; export-with-pandoc support
@@ -153,20 +162,24 @@
       ;;plantuml          ; diagrams for confusing people more
       ;;purescript        ; javascript, but functional
       (python +pyenv
+              +poetry
+              +pyright
               +lsp)       ; beautiful is better than ugly
       ;;qt                ; the 'cutest' gui framework ever
       ;;racket            ; a DSL for DSLs
       ;;rest              ; Emacs as a REST client
       ;;rst               ; ReST in peace
-      ruby              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-      rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-      scala             ; java, but good
+      (ruby
+       +lsp
+       +rails)            ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+      (rust +lsp)         ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+      scala               ; java, but good
       ;;scheme            ; a fully conniving family of lisps
-      sh                ; she sells {ba,z,fi}sh shells on the C xor
+      (sh +lsp)           ; she sells {ba,z,fi}sh shells on the C xor
       ;;solidity          ; do you need a blockchain? No.
       ;;swift             ; who asked for emoji variables?
       ;;terra             ; Earth and Moon in alignment for performance.
-      web               ; the tubes
+      web                 ; the tubes
       (yaml +lsp)
 
       :email
