@@ -79,15 +79,16 @@
 #+end_src
 ** ivy/counsel/swiper
 #+begin_src emacs-lisp
-(after! ivy
+    (after! ivy
   (setq ivy-use-virtual-buffers t
         ivy-re-builders-alist
         '((t . ivy--regex-ignore-order))
         ivy-truncate-lines nil
         ivy-display-style 'fancy
         ivy-initial-inputs-alist nil
-        ivy-height 18
-        ivy-wrap t)
+        ivy-height 22
+        ivy-wrap t
+        enable-recursive-minibuffers t)
   ;; (when (setq enable-recursive-minibuffers t)
   ;; (minibuffer-depth-indcate-mode 1))
   (setq ivy-initial-inputs-alist
@@ -98,7 +99,8 @@
           (counsel-describe-function . "")
           (counsel-describe-variable . "")))
   (setq ivy-read-action-function #'ivy-hydra-read-action)
-
+  (setq ivy-re-builders-alist
+        '((t . ivy--regex-plus)))
   (defadvice! prompt-for-buffer (&rest _)
     :after '(evil-window-split evil-window-vsplit)
     (+ivy/switch-buffer))
@@ -112,7 +114,8 @@
   (ivy-rich-mode 1))
 
 (after! counsel
-  (counsel-mode 1))
+  (counsel-mode 1)
+  (setq counsel-find-file-ignore-regexp (regexp-opt '("./" "../"))))
 ;; :bind
 ;; ("M-y" . 'counsel-yank-pop)
 ;; ("M-s" . 'counsel-ibuffer))
@@ -136,8 +139,7 @@ Highlite TODO strings
 #+end_src
 ** yasnippet
 #+begin_src emacs-lisp
-(use-package! yasnippet
-  :config
+(after! yasnippet
   (yas-global-mode))
 #+end_src
 ** Tramp
@@ -149,28 +151,27 @@ Highlite TODO strings
 #+end_src
 ** Company
 #+begin_src emacs-lisp
-(use-package! company
-  :bind
-  (:map company-active-map
-   (("C-j" . company-select-next)
-    ("C-n" . company-select-next)
-    ("C-k" . company-select-previous)
-    ("C-p" . company-select-previous)
-    ("C-d" . company-show-doc-buffer)
-    ("M-n" . nil)
-    ("M-p" . nil)
-    ("C-n" . company-select-next)
-    ("C-p" . company-select-previous)
-    ("C-h" . nil)
-    ("C-s" . company-filter-candidates)
-    ("C-i" . company-complete-selection)
-    ("<tab>" . company-complete-common-or-cycle)
-    ("M-d" . company-show-doc-buffer))
-   :map company-search-map
-   (("C-n" . company-select-next)
-    ("C-p" . company-select-previous)))
+(after! company
+  ;; :bind
+  ;; (:map company-active-map
+  ;;  (("C-j" . company-select-next)
+  ;;   ("C-n" . company-select-next)
+  ;;   ("C-k" . company-select-previous)
+  ;;   ("C-p" . company-select-previous)
+  ;;   ("C-d" . company-show-doc-buffer)
+  ;;   ("M-n" . nil)
+  ;;   ("M-p" . nil)
+  ;;   ("C-n" . company-select-next)
+  ;;   ("C-p" . company-select-previous)
+  ;;   ("C-h" . nil)
+  ;;   ("C-s" . company-filter-candidates)
+  ;;   ("C-i" . company-complete-selection)
+  ;;   ("<tab>" . company-complete-common-or-cycle)
+  ;;   ("M-d" . company-show-doc-buffer))
+  ;;  :map company-search-map
+  ;;  (("C-n" . company-select-next)
+  ;;   ("C-p" . company-select-previous)))
   :config
-  (global-company-mode +1)
   (setq company-quickhelp-mode +1
         company-idle-delay 0.3
         company-transformers '(company-sort-by-backend-importance)
@@ -179,11 +180,6 @@ Highlite TODO strings
         completion-ignore-case t)
 
   (add-to-list 'company-backends '(company-capf company-files company-yasnippet)))
-
-;; (setq company-dabbrev-downcase nil)
-
-(use-package! company-box
-  :hook (company-mode . company-box-mode))
 #+end_src
 
 ** Selectrum
@@ -231,12 +227,12 @@ doom style keybinding for global scope
  "C-c :" #'uncomment-region
  "C-s" #'swiper
  "C-c s" #'query-replace
- "C-u" #'scroll-down
  "C-h" #'delete-backward-char
  "M-?" #'help-for-help
 
  ;; ivy
  "C-x b" #'ivy-switch-buffer
+ "C-c g" #'counsel-rg
 
  ;; avy
  "C-:" #'avy-goto-char
