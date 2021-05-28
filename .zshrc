@@ -50,30 +50,25 @@ source ~/.zplug/init.zsh
 zplug 'zplug/zplug' #, hook-build:'zplug --self-manage'
 zplug 'peco/peco', as:command, from:gh-r
 zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
-# zplug "sindresorhus/pure", use:"pure.zsh", from:github, as:theme
-zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 #zplug "sindresorhus/pure", use:"pure.zsh", from:github, as:theme
-#zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 zplug "Jxck/dotfiles", use:"zsh/{http_status_codes,peco}.zsh"
 zplug 'b4b4r07/zsh-history', as:command, use:misc/fzf-wrapper.zsh, rename-to:ff
 # zplug "b4b4r07/enhancd", use:init.sh
-zplug "djui/alias-tips"
+# zplug "djui/alias-tips"
 # zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
 zplug "junegunn/fzf-bin", as:command, from:gh-r, rename-to:fzf
 # zplug "modules/prompt", from:prezto
 zplug "mollifier/anyframe"
 zplug "mollifier/cd-gitroot", lazy:true
-zplug "plugins/colorize", from:oh-my-zsh, defer:3
+#zplug "plugins/colorize", from:oh-my-zsh, defer:3
 zplug "plugins/git", from:oh-my-zsh
 # zplug "plugins/osx", from:oh-my-zsh, if:"[[ $OSTYPE == *darwin* ]]"
-# zplug "plugins/compleat", from:oh-my-zsh
+zplug "plugins/compleat", from:oh-my-zsh
 zplug "plugins/docker", from:oh-my-zsh, defer:3
 zplug "plugins/docker-compose", from:oh-my-zsh, defer:3
-zplug "plugins/aws", from:oh-my-zsh
-# zplug "plugins/gem", from:oh-my-zsh
-# zplug "plugins/gulp", from:oh-my-zsh
+# zplug "plugins/aws", from:oh-my-zsh
 zplug "plugins/kubectl", from:oh-my-zsh, defer:3
-zplug "plugins/github", from:oh-my-zsh
+#zplug "plugins/github", from:oh-my-zsh
 zplug "plugins/terraform", from:oh-my-zsh, defer:3
 # zplug "plugins/npm", from:oh-my-zsh
 # zplug "plugins/pip", from:oh-my-zsh
@@ -83,16 +78,12 @@ zplug "plugins/common-aliases", from:oh-my-zsh, defer:3
 # zplug "themes/cloud", from:oh-my-zsh
 # zplug "yous/lime", as:theme
 # zplug "yous/vanilli.sh"zp
-zplug "zsh-users/zsh-autosuggestions"
 zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zsh-autosuggestions"
 # zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-syntax-highlighting", defer:3
-zplug "direnv/direnv", from:gh-r, as:command, lazy:true
+zplug "direnv/direnv", as:command, rename-to:direnv, use:"direnv", hook-build:"make"
 zplug "lib/completion", from:oh-my-zsh, defer:3
-# zplug "knu/z", use:z.sh, defer:3
-# zplug "superbrothers/zsh-kubectl-prompt", from:github, use:"kubectl.zsh"
-
-# zplug "dbz/zsh-kubernetes", from:github
 
 # zplug check || zplug install
 zplug load
@@ -136,6 +127,11 @@ export PATH="$HOME/bin:$PATH"
 # enhancd
 export ENHANCD_FILTER=peco:fzf
 
+# git_files
+__git_files () {
+  _wanted files expl 'local files' _files
+}
+
 ##########################
 # Aliases of mine
 ##########################
@@ -166,7 +162,7 @@ export PATH=$PATH:$GOPATH/bin:/usr/local/opt/go/libexec/bin
 ### golang / brew
 if which brew > /dev/null; then completion="$(brew --prefix)/share/zsh/site-functions/go" ;fi
 if test -f $completion; then
-    source <(cat $completion)
+    source $completion
 fi
 
 #Rust
@@ -221,6 +217,35 @@ function fd() {
     cd "$dir"
 }
 
+bindkey '^gb' peco-branch
+function peco-branch() {
+    local selected_line="$(git for-each-ref --format='%(refname:short) | %(committerdate:relative) | %(committername) | %(subject)' --sort=-committerdate refs/heads refs/remotes \
+        | column -t -s '|' \
+        | grep -v 'origin' \
+        | peco \
+        | head -n 1 \
+        | awk '{print $1}')"
+    if [ -n "$selected_line" ]; then
+        BUFFER="git checkout ${selected_line}"
+        CURSOR=$#BUFFER
+        zle accept-line
+    fi
+    zle clear-screen
+}
+zle -N peco-branch
+
+bindkey '^s' peco-src
+function peco-src () {
+    local selected_dir=$(ghq list --full-path | peco --query "$LBUFFER")
+    if [ -n "$selected_dir" ]; then
+        BUFFER="cd ${selected_dir}"
+        zle accept-line
+    fi
+    zle clear-screen
+}
+zle -N peco-src
+
+
 # zsh performance profile
 if (which zprof > /dev/null) ;then
   zprof | less
@@ -244,6 +269,15 @@ eval "$(starship init zsh)"
 export PATH=$PATH:$HOME/.config/emacs/bin
 export PATH="/usr/local/sbin:$PATH"
 
+# for emacs compile
+#export PATH="/usr/local/opt/texinfo/bin:$PATH"
+
+# Rust
+source $HOME/.cargo/env
+
+# autojump
+[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
+
 # BigSur
 # export LDFLAGS="$LDFLAGS -L/usr/local/opt/bzip2/lib -L/usr/local/opt/zlib/bin"
 # export CPPFLAGS="$CPPFLAGS -I/usr/local/opt/bzip2/include -I/usr/local/opt/zlib/include"
@@ -252,6 +286,3 @@ export PATH="/usr/local/sbin:$PATH"
 ## private envs
 ########################################
 source ~/.zsh_private
-
-# autojump
-[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh

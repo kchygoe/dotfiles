@@ -3,19 +3,27 @@
 ;;
 ;; Basic configs
 ;;
+
 (setq user-full-name "Koichi Yoshigoe"
       user-mail-address "koichi.yoshigoe@gmail.com")
 
 ;; doom basics
-(setq doom-font (font-spec :family "Hack Nerd Font" :size 14)
-      doom-variable-pitch-font (font-spec :family "Hack Nerd Font Mono" :size 14)
+(setq doom-font (font-spec :family "Hack Nerd Font" :size 18)
+      doom-variable-pitch-font (font-spec :family "Hack Nerd Font Mono" :size 18)
       doom-serif-font (font-spec :family "UbuntuMono Nerd Font" :weight 'Regular)
+      doom-unicode-font (font-spec :family "Hack Nerd Font Mono" :size 18)
+      doom-big-font (font-spec :family "Hack Nerd Font Mono" :size 24)
       doom-theme 'doom-dark+
       +doom-dashboard-name "emacs")
+(doom-themes-org-config)
 
-(set-frame-parameter (selected-frame) 'alpha '(90 . 75))
+(set-frame-parameter (selected-frame) 'alpha '(93 . 75))
 
 (setq-default delete-by-moving-to-trash t)
+
+;; lsp-mode tuning
+(setq gc-cons-threshold 100000000
+      read-process-output-max (* 2048 2048))
 
 (setq delete-auto-save-files t
       display-line-numbers-type nil
@@ -25,13 +33,12 @@
       line-number-mode t
       column-number-mode t
 
-      ;; menu-bar
       menu-bar-mode nil
       scroll-bar-mode nil
       tool-bar-mode nil
-      visible-bell t
+      visible-bell nil
 
-      undo-limit 80000000
+      undo-limit 8000000
       ;; desktop file
       ;; (desktop-save-mode 1)
       ;; (setq desktop-save t)
@@ -53,6 +60,9 @@
       `((".*" ,temporary-file-directory t)))
 
 (display-time-mode 1)
+(setq display-time-24hr-format t
+      display-time-format "%H:%M")
+
 (global-subword-mode 1)
 
 (setq org-directory "~/GatsbyDrive/org/")
@@ -70,101 +80,57 @@
 ;; (put 'upcase-region 'disabled nil)
 ;; (add-to-list 'global-mode-string '(" %i"))
 
-(pyenv-mode -1)
+(set-language-environment "Japanese")
 
-(after! ivy
-  (setq ivy-use-virtual-buffers t
-        ivy-re-builders-alist
-        '((t . ivy--regex-ignore-order))
-        ivy-truncate-lines nil
-        ivy-display-style 'fancy
-        ivy-initial-inputs-alist nil
-        ivy-wrap t)
-  ;; (when (setq enable-recursive-minibuffers t)
-  ;; (minibuffer-depth-indcate-mode 1))
-  (setq ivy-initial-inputs-alist
-        '((counsel-minor . "")
-          (counsel-package . "")
-          (counsel-org-capture . "")
-          (counsel-M-x . "")
-          (counsel-describe-function . "")
-          (counsel-describe-variable . "")))
-  (setq ivy-read-action-function #'ivy-hydra-read-action)
+(unless (equal "Battery status not available"
+               (battery))
+  (display-battery-mode 1))
 
-  (defadvice! prompt-for-buffer (&rest _)
-    :after '(evil-window-split evil-window-vsplit)
-    (+ivy/switch-buffer))
-
-  (setq +ivy-buffer-preview t
-        +ivy-project-search-engines '(rg))
-  (ivy-add-actions
-   'counsel-M-x
-   `(("h" +ivy/helpful-function "Helpful")))
-  (ivy-mode 1)
-  (ivy-rich-mode 1))
-
-(after! counsel
-  (counsel-mode 1))
-;; :bind
-;; ("M-y" . 'counsel-yank-pop)
-;; ("M-s" . 'counsel-ibuffer))
-
-(after! projectile
-  (projectile-mode 1)
+(use-package! projectile
+  :config
+  (projectile-mode +1)
   (projectile-load-known-projects))
 
 (use-package! hl-todo
-  ;; it, e.g. python-mode)
   :hook (prog-mode . hl-todo-mode)
   :config
   (setq hl-todo-highlight-punctuation ":")
   (global-hl-todo-mode 1))
-
-(after! yasnippet
-  (yas-global-mode))
 
 (use-package! counsel-tramp
   :commands (counsel-tramp))
 (setq tramp-auto-save-directory "~/tmp/tramp/")
 (setq tramp-chunksize 2000)
 
-(use-package! company
-  :bind
-  (:map company-active-map
-   (("C-j" . company-select-next)
-    ("C-n" . company-select-next)
-    ("C-k" . company-select-previous)
-    ("C-p" . company-select-previous)
-    ("C-d" . company-show-doc-buffer)
-    ("M-n" . nil)
-    ("M-p" . nil)
-    ("C-n" . company-select-next)
-    ("C-p" . company-select-previous)
-    ("C-h" . nil)
-    ("C-s" . company-filter-candidates)
-    ("C-i" . company-complete-selection)
-    ("<tab>" . company-complete-common-or-cycle)
-    ("M-d" . company-show-doc-buffer))
-   :map company-search-map
-   (("C-n" . company-select-next)
-    ("C-p" . company-select-previous)))
-  :custom
-  (company-idle-delay nil)
+(after! company
+  ;; :bind
+  ;; (:map company-active-map
+  ;;  (("C-j" . company-select-next)
+  ;;   ("C-n" . company-select-next)
+  ;;   ("C-k" . company-select-previous)
+  ;;   ("C-p" . company-select-previous)
+  ;;   ("C-d" . company-show-doc-buffer)
+  ;;   ("M-n" . nil)
+  ;;   ("M-p" . nil)
+  ;;   ("C-n" . company-select-next)
+  ;;   ("C-p" . company-select-previous)
+  ;;   ("C-h" . nil)
+  ;;   ("C-s" . company-filter-candidates)
+  ;;   ("C-i" . company-complete-selection)
+  ;;   ("<tab>" . company-complete-common-or-cycle)
+  ;;   ("M-d" . company-show-doc-buffer))
+  ;;  :map company-search-map
+  ;;  (("C-n" . company-select-next)
+  ;;   ("C-p" . company-select-previous)))
   :config
-  (global-company-mode +1)
   (setq company-quickhelp-mode +1
-        company-idle-delay 0
+        company-idle-delay 0.2
         company-transformers '(company-sort-by-backend-importance)
         company-minimum-prefix-length 3
         company-selection-wrap-around t
-        completion-ignore-case t)
-  (set-company-backend! 'org-mode '(company-yasnippet company-capf company-files company-elisp))
-  (add-to-list 'company-backends '(company-capf company-files company-yasnippet)))
+        completion-ignore-case t))
 
-;; (setq company-dabbrev-downcase nil)
-
-(use-package! company-box
-  :hook (company-mode . company-box-mode))
+;;(add-to-list 'company-backends '(company-capf company-files company-yasnippet)))
 
 (use-package! selectrum
   :config
@@ -172,74 +138,21 @@
 
 (use-package! which-key
   :config
-  (setq which-key-idle-secondary-delay 0.05)
+  (setq which-key-idle-secondary-delay 0.05
+        which-key-idle-delay 0.6)
   (which-key-mode))
 
-(use-package! visual-fill-column
-  :config
-  (setq visual-fill-column-width 120
-        visual-fill-column-center-text t))
-
-(prettify-symbols-mode -1)
-(global-prettify-symbols-mode -1)
-(setq +pretty-code-enabled-modes nil)
-(remove-hook 'after-change-major-mode-hook #'+pretty-code-init-pretty-symbols-h)
-
-(unless (equal "Battery status not available"
-               (battery))
-  (display-battery-mode 1))
-
-(map!
- ;; general
- "<C-return>" #'other-window
- "C-c i" #'indent-region
- "C-c C-i" #'dabbrev-expand
- "C-c ;" #'comment-region
- "C-c :" #'uncomment-region
- "C-s" #'swiper
- "C-c s" #'query-replace
- "C-u" #'scroll-down
- "C-h" #'delete-backward-char
- "M-?" #'help-for-help
-
- ;; ivy
- "C-x b" #'ivy-switch-buffer
-
- ;; avy
- "C-:" #'avy-goto-char
- "C-'" #'avy-goto-char-2
-
- ;; org-mode
- "C-c l"  #'org-store-link
- "C-c a"  #'org-agenda
-
- ;; visual-regexp
- "C-c r" #'vr/replace
- "C-c q" #'vr/query-replace
- "C-c m" #'vr/mc-mark
-
- ;; org-roam
- "C-c n l" #'org-roam
- "C-c n t" #'org-roam-today
- "C-c n f" #'org-roam-find-file
- "C-c n i" #'org-roam-insert
- "C-c n g" #'org-roam-show-graph
- )
-
-;;;
-;;; old style bind
-;;;
-;; (bind-key "<C-return>" 'other-window)
-;; (bind-key "C-c i" 'indent-region)
-;; (bind-key "C-c C-i" 'dabbrev-expand)
-;; (bind-key "C-c ;" 'comment-region)
-;; (bind-key "C-c :" 'uncomment-region)
-;; (bind-key "C-c s" 'query-replace)
-;; (bind-key "C-u" 'scroll-down)
-;; (bind-key "C-h" 'delete-backward-char)
-;; (bind-key "M-?" 'help-for-help)
-;; (bind-key "M-n" 'goto-line)
-;; (bind-key "C-c c" 'org-capture)
+(when (equal system-type 'darwin)
+  ;; (setq mac-option-modifier 'super)
+  ;; (setq mac-command-modifier 'meta)
+  (setq ns-auto-hide-menu-bar nil)
+  (setq ns-use-proxy-icon nil)
+  (setq initial-frame-alist
+        (append
+         '((ns-transparent-titlebar . nil)
+           (ns-appearance . dark)
+           (vertical-scroll-bars . nil)
+           (internal-border-width . 0)))))
 
 (defun my/org-setup()
   (org-indent-mode)
@@ -268,15 +181,19 @@
            "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
           ("l" "Link" entry (file+headline "~/GatsbyDrive/org/links.org" "Links")
            "* %? %^L %^g \n%T" :prepend t)
-          ("i" "Idea" entry (file+headline "~/GatsbyDrive/org/idea.org" "Idea Topics:")
+          ("i" "Idea" entry (file+headline "~/GatsbyDrive/org/note.org" "Idea Topics:")
            "* %?\n%T" :prepend t)
           ("t" "To Do Item" entry (file+headline "~/GatsbyDrive/org/note.org" "INBOX")
            "* TODO %?\n%u\n" :prepend t)
           ("n" "Note" entry (file+headline "~/GatsbyDrive/org/note.org" "NOTE SPACE")
            "* %?\n%u\n" :prepend t)
+          ("m" "MTG" entry (file+headline "~/GatsbyDrive/org/note.org" "MTG Log")
+           "* %?\n%u\n" :prepend t)
           ("j" "Journal" entry (file+datetree "~/GatsbyDrive/org/journal.org")
-           "* %?\nEntered on %U\n  %i\n  %a")))
+           "* %?\nEntered on %U\n %i\n %a")))
+  (setq org-babel-python-command "python3")
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("go" . "src go"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
   :hook
@@ -285,6 +202,10 @@
                             (auto-save-mode)))
   (org-mode . my/org-setup))
 
+;; company
+(after! org
+  (set-company-backend! 'org-mode 'company-yasnippet 'company-capf 'company-files 'company-elisp))
+
 ;; agenda
 (setq org-agenda-custom-commands
       '(("x" "Unscheduled Tasks" tags-todo
@@ -292,7 +213,6 @@
         ("d" "Daily Tasks" agenda ""
          ((org-agenda-span 1)))))
 (setq org-agenda-skip-scheduled-if-done t)
-(setq org-babel-python-command "python3")
 
 (after! org
   (use-package! org-tempo)
@@ -310,24 +230,6 @@
 ;; github
 (setq org-github-issues-org-file (concat org-directory "/github.org"))
 
-;; org-roam
-(use-package! org-roam
-  :after org
-  :hook
-  (org-mode . org-roam-mode)
-  :init
-  (setq org-roam-directory org-directory)
-  :bind
-  ("C-c n l" . org-roam)
-  ("C-c n t" . org-roam-today)
-  ("C-c n f" . org-roam-find-file)
-  ("C-c n i" . org-roam-insert)
-  ("C-c n g" . org-roam-show-graph))
-
-;; (after! org-roam (use-package! company-org-roam
-;;  :config
-;;  (push 'company-org-roam company-backends)))
-
 ;; shortcut for note.org
 (defun my/show-org-buffer (file)
   "Show an org-file FILE on the current buffer."
@@ -342,20 +244,23 @@
 
 ;; Github
 (use-package! org-sync
+  :after org
   :config
   (defvar org-sync-backend-alist
     '(("github.com/\\(?:repos/\\)?[^/]+/[^/]+"  . org-sync-github-backend))))
 
 ;; JIRA
 ;; Refs. https://github.com/ahungry/org-jira
-(after! org (use-package! org-jira
-              :config
-              (setq jiralib-url "https://leapmind.atlassian.net")
-              (setq org-jira-working-dir (concat org-directory "jira"))
-              (defconst org-jira-progress-issue-flow
-                '(("To Do" . "In Progress")
-                  ("In Progress" . "Review")
-                  ("Review" . "DONE")))))
+
+(use-package! org-jira
+  :after org
+  :config
+  (setq jiralib-url "https://leapmind.atlassian.net")
+  (setq org-jira-working-dir (concat org-directory "jira"))
+  (defconst org-jira-progress-issue-flow
+    '(("To Do" . "In Progress")
+      ("In Progress" . "Review")
+      ("Review" . "DONE"))))
 
 ;; asana
 ;; USE ASANA_TOKEN in env
@@ -367,9 +272,8 @@
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
 
 (use-package! org-super-agenda
+  :after org-agenda
   :commands (org-super-agenda-mode))
-(after! org-agenda
-  (org-super-agenda-mode))
 
 (use-package! deft
   :after org
@@ -388,84 +292,38 @@
   (setq lsp-enable-snippet t
         lsp-auto-guess-root t
         lsp-enable-semantic-highlighting t
-        ;; (lsp-inhibit-message t)
+        lsp-inhibit-message t
         lsp-message-project-root-warning t
+        lsp-enable-file-watchers nil
         create-lockfiles nil)
-  (setq lsp-keymap-prefix "C-c l")
-  (setq lsp-prefer-capf t
+  (setq lsp-keymap-prefix "C-c l"
+        ;;lsp-prefer-capf t
         lsp-headerline-breadcrumb-mode t)
-  (setq lsp-terraform-server "/usr/local/bin/terraform-ls")
-  (setq lsp-terraform-enable-logging t)
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("/usr/local/bin/terraform-ls" "serve"))
-                    :major-modes '(terraform-mode)
-                    :server-id 'terraform-ls))
-  :hook
-  (terraform-mode-hook . #'lsp-deferred)
+  ;; :hook
   ;; (prog-major-mode . lsp-prog-major-mode-enable)
   )
 
-
 (use-package! lsp-ui
   :after lsp-mode
-  :custom
-  (scroll-margin 0)
-  (lsp-ui-doc-enable t)
-  (lsp-ui-doc-header t)
-  (lsp-ui-peek-enable t)
+  :config
+  (setq scroll-margin 0
+        lsp-ui-doc-enable t
+        lsp-ui-doc-header t
+        lsp-ui-peek-enable t)
   :hook
   (lsp-mode . lsp-ui-mode))
 
-(after! flycheck
-  :custom
-  (setq flycheck-check-syntax-automatically '(mode-enabled save)
-        flycheck-display-errors-delay 0.2
-        flycheck-display-errors-function nil
-        flycheck-idle-change-delay 1.0)
-  :config
-  (global-flycheck-mode t) )
-
-(use-package! flycheck-popup-tip
-  :after flycheck
-  :hook
-  (flycheck-mode . flycheck-popup-tip-mode))
-
-(use-package! bazel-build)
-(use-package! bazelrc-mode
-  :mode ((".bazelrc" . bazelrc-mode)))
-(use-package! bazel-mode)
 (use-package! bazel
-  :mode (("\\.bzl\\'" . bazel-build-mode)
-         ("BUILD\\'" . bazel-build-mode)
-         ("WORKSPACE\\'" . bazel-build-mode))
   :hook (before-save-hook . bazel-mode-buildifier)
   :config
-  (setq bazel-mode-buildifier-before-save t)
+  (setq bazel-buildifier-before-save t)
   (defun find-parent-directory-with-file(name)
-    (projectile-locate-dominating-file (file-truename (buffer-file-name)) name))
+    (projectile-locate-dominating-file (file-truename (buffer-file-name)) name)))
 
-  (defun bazel-build-current ()
-    "Build & test in the first parent directory containing BUILD."
-    (interactive)
-    (let ((default-directory (find-parent-directory-with-file  "BUILD")))
-      (if default-directory
-          (compile "bazel test ...  --test_output=all --test_arg=--log_level=message")
-        (error "BUILD file not found in the parent directories"))))
-
-  (defun bazel-build-workspace ()
-    "Build & test in the first parent directory containing WORKSPACE."
-    (interactive)
-    (let ((default-directory (find-parent-directory-with-file  "WORKSPACE")))
-      (if default-directory
-          (compile "bazel test ...")
-        (error "WORKSPACE file not found in the parent directories"))))
-  ;; (define-key c++-mode-map (kbd "C-c n") 'bazel-build-current)
-  ;; (define-key c++-mode-map (kbd "C-c b") 'bazel-build-workspace)
-  )
-
-;;(after! go-mode
-;;:config
-;; (setq tab-width 2)
+(after! go-mode
+  (set-company-backend! 'go-mode 'company-go 'company-yasnippet)
+  :config
+  (setq tab-width 2))
 ;;(setq completion-ignore-case t)
 ;;:bind
 ;;("M-." . godef-jump)
@@ -479,9 +337,13 @@
 ;;   :hook
 ;;   (go-mode-hook . go-eldoc-setup))
 
-;; (after! yaml-mode
-;;   :config
-;;   (setq yaml-indent-offset 2))
+(after! sh-script
+  (set-company-backend! 'sh-mode '(company-shell :with company-yasnippet))
+  (add-hook 'sh-mode #'lsp!))
+
+(after! terraform-mode
+  (setq lsp-terraform-enable-logging t)
+  (add-hook 'terraform-mode-hook #'lsp!))
 
 (after! k8s-mode
   :hook
@@ -490,41 +352,54 @@
   (setq k8s-indent-offset nil
         k8s-site-docs-version "v1.18"))
 
-(after! kubernetes
+(use-package! kubernetes
   :commands (kubernetes-overview))
 
-(use-package! whitespace
-  :config
-  (setq whitespace-style '(face
-                           trailing
-                           tabs
-                           spaces
-                           empty
-                           space-mark
-                           tab-mark
-                           ))
-  (setq whitespace-display-mappings
-        '((space-mark ?\u3000 [?\u25a1])
-          (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))
-        whitespace-action '(auto-cleanup))
-  ;;(setq whitespace-space-regexp "\\(\u3000+\\)")
-  (global-whitespace-mode 1)
+(global-unset-key "\C-h")
+(global-set-key "\C-h" 'delete-backward-char)
+(global-set-key "\M-?" 'help-for-help)
+(global-set-key "\C-r" 'anzu-query-reqlace)
+(global-set-key "\C-s" 'swiper-from-isearch)
+(global-set-key "\C-c;" 'comment-region)
+(global-set-key "\C-c:" 'uncomment-region)
+  ;; (global-set-key "\C-cs" 'query-replace)
+(global-set-key "\C-cu" 'scroll-down)
 
-  (defvar my/bg-color "#272727")
-  (set-face-attribute 'whitespace-trailing nil
-                      :background my/bg-color
-                      :foreground "DarkBlue"
-                      :underline t)
-  (set-face-attribute 'whitespace-tab nil
-                      :background my/bg-color
-                      :foreground "LightSkyBlue"
-                      :underline t)
-  (set-face-attribute 'whitespace-space nil
-                      :background my/bg-color
-                      :foreground "DarkGreen"
-                      :weight 'bold)
-  (set-face-attribute 'whitespace-empty nil
-                      :background my/bg-color))
+(map!
+ ;;"<C-return>" #'other-window
+ "C-c C-i" #'indent-region
+ "C-c ;" #'comment-region
+ "C-c :" #'uncomment-region
+ "C-s" #'swiper-from-isearch
+ "C-r" #'anzu-query-replace
+ "C-c s" #'query-replace
+ "C-c u" #'scroll-down
+ ;;"M-/"  #'undo-tree-redo
+
+ ;; ivy
+ "C-x b" #'ivy-switch-buffer
+ "C-c g" #'counsel-rg
+
+ ;; avy
+ "C-:" #'avy-goto-char
+ "C-'" #'avy-goto-char-2
+
+ ;; org-mode
+ ;;"C-c l"  #'org-store-link
+ "C-c a"  #'org-agenda
+
+ ;; visual-regexp
+ ;; "C-c r" #'vr/replace
+ ;; "C-c q" #'vr/query-replace
+ ;; "C-c m" #'vr/mc-mark
+
+ ;; org-roam
+ ;; "C-c n l" #'org-roam
+ ;; "C-c n t" #'org-roam-today
+ ;; "C-c n f" #'org-roam-find-file
+ ;; "C-c n i" #'org-roam-insert
+ ;; "C-c n g" #'org-roam-show-graph
+ )
 
 ;; Custom variables
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -547,8 +422,7 @@
 ;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
 ;; This will open documentation for it, including demos of how they are used.
 ;;
-;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how;
-                                        ; they are implemented.
+;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how they are implemented.
 
 (provide 'config)
 ;;; config.el ends here

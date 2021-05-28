@@ -8,19 +8,27 @@
 ;;
 ;; Basic configs
 ;;
+
 (setq user-full-name "Koichi Yoshigoe"
       user-mail-address "koichi.yoshigoe@gmail.com")
 
 ;; doom basics
-(setq doom-font (font-spec :family "Hack Nerd Font" :size 14)
-      doom-variable-pitch-font (font-spec :family "Hack Nerd Font Mono" :size 14)
+(setq doom-font (font-spec :family "Hack Nerd Font" :size 18)
+      doom-variable-pitch-font (font-spec :family "Hack Nerd Font Mono" :size 18)
       doom-serif-font (font-spec :family "UbuntuMono Nerd Font" :weight 'Regular)
+      doom-unicode-font (font-spec :family "Hack Nerd Font Mono" :size 18)
+      doom-big-font (font-spec :family "Hack Nerd Font Mono" :size 24)
       doom-theme 'doom-dark+
       +doom-dashboard-name "emacs")
+(doom-themes-org-config)
 
-(set-frame-parameter (selected-frame) 'alpha '(90 . 75))
+(set-frame-parameter (selected-frame) 'alpha '(93 . 75))
 
 (setq-default delete-by-moving-to-trash t)
+
+;; lsp-mode tuning
+(setq gc-cons-threshold 100000000
+      read-process-output-max (* 2048 2048))
 
 (setq delete-auto-save-files t
       display-line-numbers-type nil
@@ -30,13 +38,12 @@
       line-number-mode t
       column-number-mode t
 
-      ;; menu-bar
       menu-bar-mode nil
       scroll-bar-mode nil
       tool-bar-mode nil
-      visible-bell t
+      visible-bell nil
 
-      undo-limit 80000000
+      undo-limit 8000000
       ;; desktop file
       ;; (desktop-save-mode 1)
       ;; (setq desktop-save t)
@@ -58,6 +65,9 @@
       `((".*" ,temporary-file-directory t)))
 
 (display-time-mode 1)
+(setq display-time-24hr-format t
+      display-time-format "%H:%M")
+
 (global-subword-mode 1)
 
 (setq org-directory "~/GatsbyDrive/org/")
@@ -75,11 +85,25 @@
 ;; (put 'upcase-region 'disabled nil)
 ;; (add-to-list 'global-mode-string '(" %i"))
 
-(pyenv-mode -1)
+(set-language-environment "Japanese")
 #+end_src
-** ivy/counsel/swiper
+
+*** Mouse
+#+begin_src emacs-lisp :tangle no
+;; (xterm-mouse-mode t)
+;; (global-set-key   [mouse-4] '(lambda () (interactive) (scroll-down 1)))
+;; (global-set-key   [mouse-5] '(lambda () (interactive) (scroll-up   1)))
+#+end_src
+*** Battery Display
 #+begin_src emacs-lisp
-    (after! ivy
+(unless (equal "Battery status not available"
+               (battery))
+  (display-battery-mode 1))
+#+end_src
+
+** COMMENT ivy/counsel/swiper
+#+begin_src emacs-lisp
+(after! ivy
   (setq ivy-use-virtual-buffers t
         ivy-re-builders-alist
         '((t . ivy--regex-ignore-order))
@@ -114,8 +138,8 @@
   (ivy-rich-mode 1))
 
 (after! counsel
-  (counsel-mode 1)
-  (setq counsel-find-file-ignore-regexp (regexp-opt '("./" "../"))))
+  (counsel-mode 1))
+;; (setq counsel-find-file-ignore-regexp (regexp-opt '("./" "../"))))
 ;; :bind
 ;; ("M-y" . 'counsel-yank-pop)
 ;; ("M-s" . 'counsel-ibuffer))
@@ -124,21 +148,20 @@
 #+begin_src emacs-lisp
 (use-package! projectile
   :config
-  (projectile-mode t)
+  (projectile-mode +1)
   (projectile-load-known-projects))
 #+end_src
 ** hl-todo
 Highlite TODO strings
 #+begin_src emacs-lisp
 (use-package! hl-todo
-  ;; it, e.g. python-mode)
   :hook (prog-mode . hl-todo-mode)
   :config
   (setq hl-todo-highlight-punctuation ":")
   (global-hl-todo-mode 1))
 #+end_src
 ** yasnippet
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (after! yasnippet
   (yas-global-mode))
 #+end_src
@@ -173,13 +196,13 @@ Highlite TODO strings
   ;;   ("C-p" . company-select-previous)))
   :config
   (setq company-quickhelp-mode +1
-        company-idle-delay 0.3
+        company-idle-delay 0.2
         company-transformers '(company-sort-by-backend-importance)
         company-minimum-prefix-length 3
         company-selection-wrap-around t
-        completion-ignore-case t)
+        completion-ignore-case t))
 
-  (add-to-list 'company-backends '(company-capf company-files company-yasnippet)))
+;;(add-to-list 'company-backends '(company-capf company-files company-yasnippet)))
 #+end_src
 
 ** Selectrum
@@ -192,86 +215,32 @@ Highlite TODO strings
 #+begin_src emacs-lisp
 (use-package! which-key
   :config
-  (setq which-key-idle-secondary-delay 0.05)
+  (setq which-key-idle-secondary-delay 0.05
+        which-key-idle-delay 0.6)
   (which-key-mode))
 #+end_src
-** visual-fill
-#+begin_src emacs-lisp
+** visual-fill(disabled)
+#+begin_src emacs-lisp :tangle no
 (use-package! visual-fill-column
   :config
   (setq visual-fill-column-width 120
         visual-fill-column-center-text t))
 #+end_src
-
-** Disable symboles-mode
+** OS
+*** macOS
 #+begin_src emacs-lisp
-;; (prettify-symbols-mode -1)
-;; (global-prettify-symbols-mode -1)
-;; (setq +pretty-code-enabled-modes nil)
-;; (remove-hook 'after-change-major-mode-hook #'+pretty-code-init-pretty-symbols-h)
-
-(unless (equal "Battery status not available"
-               (battery))
-  (display-battery-mode 1))
+(when (equal system-type 'darwin)
+  ;; (setq mac-option-modifier 'super)
+  ;; (setq mac-command-modifier 'meta)
+  (setq ns-auto-hide-menu-bar nil)
+  (setq ns-use-proxy-icon nil)
+  (setq initial-frame-alist
+        (append
+         '((ns-transparent-titlebar . nil)
+           (ns-appearance . dark)
+           (vertical-scroll-bars . nil)
+           (internal-border-width . 0)))))
 #+end_src
-
-* Key Bindings
-doom style keybinding for global scope
-#+begin_src emacs-lisp
-(map!
- ;; general
- "<C-return>" #'other-window
- "C-c i" #'indent-region
- "C-c C-i" #'dabbrev-expand
- "C-c ;" #'comment-region
- "C-c :" #'uncomment-region
- "C-s" #'swiper
- "C-c s" #'query-replace
- "C-h" #'delete-backward-char
- "M-?" #'help-for-help
-
- ;; ivy
- "C-x b" #'ivy-switch-buffer
- "C-c g" #'counsel-rg
-
- ;; avy
- "C-:" #'avy-goto-char
- "C-'" #'avy-goto-char-2
-
- ;; org-mode
- "C-c l"  #'org-store-link
- "C-c a"  #'org-agenda
-
- ;; visual-regexp
- "C-c r" #'vr/replace
- "C-c q" #'vr/query-replace
- "C-c m" #'vr/mc-mark
-
- ;; org-roam
- "C-c n l" #'org-roam
- "C-c n t" #'org-roam-today
- "C-c n f" #'org-roam-find-file
- "C-c n i" #'org-roam-insert
- "C-c n g" #'org-roam-show-graph
- )
-
-;;;
-;;; old style bind
-;;;
-;; (bind-key "<C-return>" 'other-window)
-;; (bind-key "C-c i" 'indent-region)
-;; (bind-key "C-c C-i" 'dabbrev-expand)
-;; (bind-key "C-c ;" 'comment-region)
-;; (bind-key "C-c :" 'uncomment-region)
-;; (bind-key "C-c s" 'query-replace)
-;; (bind-key "C-u" 'scroll-down)
-;; (bind-key "C-h" 'delete-backward-char)
-;; (bind-key "M-?" 'help-for-help)
-;; (bind-key "M-n" 'goto-line)
-;; (bind-key "C-c c" 'org-capture)
-#+end_src
-
-#+RESULTS:
 
 * Org-mode
 *** Basics
@@ -303,14 +272,16 @@ doom style keybinding for global scope
            "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
           ("l" "Link" entry (file+headline "~/GatsbyDrive/org/links.org" "Links")
            "* %? %^L %^g \n%T" :prepend t)
-          ("i" "Idea" entry (file+headline "~/GatsbyDrive/org/idea.org" "Idea Topics:")
+          ("i" "Idea" entry (file+headline "~/GatsbyDrive/org/note.org" "Idea Topics:")
            "* %?\n%T" :prepend t)
           ("t" "To Do Item" entry (file+headline "~/GatsbyDrive/org/note.org" "INBOX")
            "* TODO %?\n%u\n" :prepend t)
           ("n" "Note" entry (file+headline "~/GatsbyDrive/org/note.org" "NOTE SPACE")
            "* %?\n%u\n" :prepend t)
+          ("m" "MTG" entry (file+headline "~/GatsbyDrive/org/note.org" "MTG Log")
+           "* %?\n%u\n" :prepend t)
           ("j" "Journal" entry (file+datetree "~/GatsbyDrive/org/journal.org")
-           "* %?\nEntered on %U\n  %i\n  %a")))
+           "* %?\nEntered on %U\n %i\n %a")))
   (setq org-babel-python-command "python3")
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
   (add-to-list 'org-structure-template-alist '("go" . "src go"))
@@ -350,12 +321,11 @@ doom style keybinding for global scope
           org-gcal-up-days 7)))
 #+end_src
 *** org other
+org-github-issues
 #+begin_src emacs-lisp
 ;; github
 (setq org-github-issues-org-file (concat org-directory "/github.org"))
-
 #+end_src
-
 
 #+begin_src emacs-lisp
 ;; shortcut for note.org
@@ -457,11 +427,12 @@ lsp-mode settings
   (setq lsp-enable-snippet t
         lsp-auto-guess-root t
         lsp-enable-semantic-highlighting t
-        ;; (lsp-inhibit-message t)
+        lsp-inhibit-message t
         lsp-message-project-root-warning t
+        lsp-enable-file-watchers nil
         create-lockfiles nil)
   (setq lsp-keymap-prefix "C-c l"
-        lsp-prefer-capf t
+        ;;lsp-prefer-capf t
         lsp-headerline-breadcrumb-mode t)
   ;; :hook
   ;; (prog-major-mode . lsp-prog-major-mode-enable)
@@ -482,7 +453,7 @@ lsp-ui settings
 #+end_src
 
 ** flycheck
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package! flycheck
   :custom
   (setq flycheck-check-syntax-automatically '(mode-enabled save)
@@ -500,39 +471,12 @@ lsp-ui settings
 ** Bazel
 Bazel related configs.
 #+begin_src emacs-lisp
-(use-package! bazel-build)
-(use-package! bazelrc-mode
-  :mode ((".bazelrc" . bazelrc-mode)))
-(use-package! bazel-mode)
 (use-package! bazel
-  :mode (("\\.bzl\\'" . bazel-build-mode)
-         ("BUILD\\'" . bazel-build-mode)
-         ("WORKSPACE\\'" . bazel-build-mode))
   :hook (before-save-hook . bazel-mode-buildifier)
   :config
-  (setq bazel-mode-buildifier-before-save t)
+  (setq bazel-buildifier-before-save t)
   (defun find-parent-directory-with-file(name)
-    (projectile-locate-dominating-file (file-truename (buffer-file-name)) name))
-
-  (defun bazel-build-current ()
-    "Build & test in the first parent directory containing BUILD."
-    (interactive)
-    (let ((default-directory (find-parent-directory-with-file  "BUILD")))
-      (if default-directory
-          (compile "bazel test ...  --test_output=all --test_arg=--log_level=message")
-        (error "BUILD file not found in the parent directories"))))
-
-  (defun bazel-build-workspace ()
-    "Build & test in the first parent directory containing WORKSPACE."
-    (interactive)
-    (let ((default-directory (find-parent-directory-with-file  "WORKSPACE")))
-      (if default-directory
-          (compile "bazel test ...")
-        (error "WORKSPACE file not found in the parent directories"))))
-  ;; (define-key c++-mode-map (kbd "C-c n") 'bazel-build-current)
-  ;; (define-key c++-mode-map (kbd "C-c b") 'bazel-build-workspace)
-  )
-
+    (projectile-locate-dominating-file (file-truename (buffer-file-name)) name)))
 #+end_src
 ** golang
 Install gopls
@@ -573,7 +517,7 @@ go-mode settings
 #+end_src
 
 #+RESULTS:
-** python
+** Python
 Install pyright
 #+begin_src shell :tangle no
 npm install -g pyright
@@ -585,14 +529,14 @@ pip install isort black pyflakes pytest nose
 pip install "python-language-server[all]"
 #+end_src
 
-** yaml
+** Yaml
 Set lsp tab-width
-#+begin_src emacs-lisp
-;; (after! yaml-mode;
+#+begin_src emacs-lisp :tangle no
+; (after! yaml-mode;
 ;   :config
 ;;   (setq yaml-indent-offset 2))
 #+end_src
-** shel
+** Shell
 #+begin_src emacs-lisp
 (after! sh-script
   (set-company-backend! 'sh-mode '(company-shell :with company-yasnippet))
@@ -620,7 +564,7 @@ Set lsp tab-width
 #+end_src
 * Whitespace
 set up whitespaces to show each symbols
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package! whitespace
   :config
   (setq whitespace-style '(face
@@ -631,11 +575,6 @@ set up whitespaces to show each symbols
                            space-mark
                            tab-mark
                            ))
-  (setq whitespace-display-mappings
-        '((space-mark ?\u3000 [?\u25a1])
-          (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t]))
-        whitespace-action '(auto-cleanup))
-  ;;(setq whitespace-space-regexp "\\(\u3000+\\)")
   (global-whitespace-mode 1)
 
   (defvar my/bg-color "#272727")
@@ -654,6 +593,60 @@ set up whitespaces to show each symbols
   (set-face-attribute 'whitespace-empty nil
                       :background my/bg-color))
 #+end_src
+
+* Key Bindings
+doom style keybinding for global scope
+#+begin_src emacs-lisp
+(global-unset-key "\C-h")
+(global-set-key "\C-h" 'delete-backward-char)
+(global-set-key "\M-?" 'help-for-help)
+(global-set-key "\C-r" 'anzu-query-reqlace)
+(global-set-key "\C-s" 'swiper-from-isearch)
+(global-set-key "\C-c;" 'comment-region)
+(global-set-key "\C-c:" 'uncomment-region)
+  ;; (global-set-key "\C-cs" 'query-replace)
+(global-set-key "\C-cu" 'scroll-down)
+#+end_src
+
+#+begin_src emacs-lisp
+(map!
+ ;;"<C-return>" #'other-window
+ "C-c C-i" #'indent-region
+ "C-c ;" #'comment-region
+ "C-c :" #'uncomment-region
+ "C-s" #'swiper-from-isearch
+ "C-r" #'anzu-query-replace
+ "C-c s" #'query-replace
+ "C-c u" #'scroll-down
+ ;;"M-/"  #'undo-tree-redo
+
+ ;; ivy
+ "C-x b" #'ivy-switch-buffer
+ "C-c g" #'counsel-rg
+
+ ;; avy
+ "C-:" #'avy-goto-char
+ "C-'" #'avy-goto-char-2
+
+ ;; org-mode
+ ;;"C-c l"  #'org-store-link
+ "C-c a"  #'org-agenda
+
+ ;; visual-regexp
+ ;; "C-c r" #'vr/replace
+ ;; "C-c q" #'vr/query-replace
+ ;; "C-c m" #'vr/mc-mark
+
+ ;; org-roam
+ ;; "C-c n l" #'org-roam
+ ;; "C-c n t" #'org-roam-today
+ ;; "C-c n f" #'org-roam-find-file
+ ;; "C-c n i" #'org-roam-insert
+ ;; "C-c n g" #'org-roam-show-graph
+ )
+#+end_src
+
+#+RESULTS:
 
 * Footer
 Load custom/secrets

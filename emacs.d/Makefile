@@ -3,9 +3,6 @@ default: help
 help:
 	@echo "makefile for emacs env"
 
-python:
-	pip install -r requirements.txt
-
 golang:
 	go get -u golang.org/x/tools/cmd/goimports
 	go get -u github.com/rogpeppe/godef
@@ -15,4 +12,4 @@ golang:
 link:
 	ln -s $(PWD) ~/
 
-all: python golang link
+all: golang link

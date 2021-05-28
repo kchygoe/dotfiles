@@ -1,5 +1,5 @@
 alias sed='gsed'
-alias e='emacsclient -nw -a ""'
+alias e='emacsclient -nw -c -a ""'
 alias ec='emacsclient -nw'
 alias er='emacs -nw -f read-only-mode'
 alias en='emacs -nw'
@@ -50,3 +50,4 @@ fi
 alias less='less -R'
 alias dnsclear='sudo killall -HUP mDNSResponder'
 alias master='git checkout master'
+alias gitbranchclean='git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do mergeBase=$(git merge-base master $branch) && [[ $(git cherry master $(git commit-tree $(git rev-parse $branch\^{tree}) -p $mergeBase -m _)) == "-"* ]] && git branch -D $branch; done'
